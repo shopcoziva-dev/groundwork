@@ -52,7 +52,8 @@ h2{margin:0;font-family:var(--hand);font-weight:700;font-size:clamp(48px,9vw,90p
 .rail::-webkit-scrollbar{display:none}
 .card{flex:0 0 min(78vw,560px);scroll-snap-align:center;border:2px solid rgba(243,241,231,.55);border-radius:10px;background:rgba(8,26,49,.78);padding:26px 24px;display:flex;flex-direction:column;gap:12px;text-align:left;position:relative;color:var(--chalk);text-decoration:none;transition:transform .25s,border-color .25s}
 .card:hover{border-color:var(--chalk);transform:translateY(-3px)}
-.card .stamp{position:absolute;top:20px;right:20px;font-size:11px;letter-spacing:.16em;padding:5px 10px;border:2px solid currentColor;border-radius:3px;transform:rotate(-3deg);display:flex;gap:6px;align-items:center}
+.ctop{display:flex;justify-content:space-between;align-items:center;gap:8px 12px;flex-wrap:wrap}
+.card .stamp{font-size:11px;letter-spacing:.16em;padding:5px 10px;border:2px solid currentColor;border-radius:3px;transform:rotate(-3deg);display:flex;gap:6px;align-items:center}
 .card .stamp svg{width:12px;height:12px}
 .b .stamp{color:var(--amber)}.s .stamp{color:var(--red)}
 .card h3{margin:0;font-family:var(--hand);font-size:clamp(56px,12vw,80px);line-height:.9}
@@ -86,12 +87,26 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
 .dlv b{font-family:var(--hand);font-size:clamp(22px,4vw,28px);line-height:1.05;color:var(--amber)}
 .dlv span{font-size:12.5px;color:var(--dim);line-height:1.45}
 #sd{padding-bottom:96px}
+#s3{padding-bottom:64px}
 .req[hidden]{display:none}
 .req{position:fixed;inset:0;z-index:20;background:rgba(8,26,49,.88);display:flex;align-items:center;justify-content:center;padding:16px}
 .req .rin{width:min(460px,100%);background:var(--board);border:2px solid var(--chalk);border-radius:10px;padding:22px;text-align:left;display:flex;flex-direction:column;gap:10px}
 .req h3{margin:0;font-family:var(--hand);font-size:44px;line-height:1}
 .req p{margin:0}.req .note{font-size:13px;color:var(--dim)}
 .req button{align-self:flex-start;min-height:42px;padding:0 18px;border-radius:5px;border:2px solid var(--chalk);background:transparent;color:var(--chalk);font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+
+.unsure{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;font-size:14px;color:var(--chalk)}
+.unsure button{min-height:42px;padding:0 18px;border-radius:5px;border:2px solid var(--line);background:transparent;color:var(--line);font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.unsure button:hover{background:rgba(111,211,255,.1)}
+.demos[hidden]{display:none}
+.demos{position:fixed;inset:0;z-index:20;background-color:var(--board);background-image:inherit;background-size:inherit;background-position:50% 50%;overflow:auto;display:flex;padding:24px 16px}
+.demos .din{margin:auto;width:min(980px,100%);display:flex;flex-direction:column;gap:14px;text-align:center}
+.demos .dhead{display:flex;justify-content:space-between;align-items:center}
+.demos .x{width:44px;height:44px;border-radius:50%;border:2px solid var(--faint);background:transparent;color:var(--chalk);font-size:16px;cursor:pointer}
+.dgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;text-align:left}
+@media (max-width:760px){.dgrid{grid-template-columns:minmax(0,1fr)}}
+.dcard{flex:none}
+.vid{aspect-ratio:16/9;border:1px dashed var(--faint);border-radius:8px;display:grid;place-items:center;color:var(--dim);font-size:13px;letter-spacing:.1em;text-transform:uppercase}
 @keyframes write{to{clip-path:inset(-0.3em -10% -0.3em -5%)}}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes rise{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
@@ -143,8 +158,7 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
     <h2 class="chalk reveal" id="h2">Pick your speed</h2>
     <div class="rail reveal" id="rail" aria-label="Beta and Solo" tabindex="0">
       <article class="card b" aria-label="Groundwork Beta, beta testing">
-        <span class="stamp"><svg aria-hidden="true"><use href="#lock"/></svg>BETA TESTING</span>
-        <span class="label">Groundwork</span>
+        <div class="ctop"><span class="label">Groundwork</span><span class="stamp"><svg aria-hidden="true"><use href="#lock"/></svg>BETA TESTING</span></div>
         <h3 class="chalk">Beta</h3>
         <p class="who">For beginners</p>
         <p class="kind chalk">New to e-commerce? Every step is taught, and the system runs it on your own accounts.</p>
@@ -157,8 +171,7 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
         <div class="acts"><button class="go" type="button" data-req="Beta">Request access →</button><a class="have" href="beta/">Have a code? Enter it</a></div>
       </article>
       <article class="card s" aria-label="Groundwork Solo, select invitational">
-        <span class="stamp"><svg aria-hidden="true"><use href="#lock"/></svg>SELECT INVITATIONAL</span>
-        <span class="label">Groundwork</span>
+        <div class="ctop"><span class="label">Groundwork</span><span class="stamp"><svg aria-hidden="true"><use href="#lock"/></svg>SELECT INVITATIONAL</span></div>
         <h3 class="chalk">Solo</h3>
         <p class="who">For people who already know the game</p>
         <p class="kind chalk">Know e-commerce? Niche to live campaign in under an hour.</p>
@@ -172,10 +185,20 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
       </article>
     </div>
     <div class="ctl reveal"><button type="button" id="prev" aria-label="Show Beta">←</button><div class="dots" aria-hidden="true"><i class="on"></i><i></i></div><button type="button" id="next" aria-label="Show Solo">→</button></div>
-    <span class="hint reveal">Swipe to see Solo</span>
+    <div class="unsure reveal"><span>Not sure which to pick?</span><button type="button" id="demoBtn">View demos →</button></div>
     <footer>© 2026 GTS Holdings</footer>
   </section>
 </main>
+<div class="demos" id="demos" hidden role="dialog" aria-modal="true" aria-labelledby="demosT">
+  <div class="din">
+    <div class="dhead"><span class="label">See it run</span><button type="button" id="demosClose" class="x" aria-label="Close demos">✕</button></div>
+    <h2 class="chalk" id="demosT">Demos</h2>
+    <div class="dgrid">
+      <div class="card b dcard"><div class="ctop"><span class="label">Groundwork</span><span class="stamp">BETA</span></div><h3 class="chalk">Beta</h3><div class="vid">Demo coming soon</div></div>
+      <div class="card s dcard"><div class="ctop"><span class="label">Groundwork</span><span class="stamp">SOLO</span></div><h3 class="chalk">Solo</h3><div class="vid">Demo coming soon</div></div>
+    </div>
+  </div>
+</div>
 <div class="req" id="req" hidden role="dialog" aria-modal="true" aria-labelledby="reqT">
   <div class="rin">
     <span class="label" id="reqK"></span>
@@ -224,6 +247,10 @@ document.addEventListener('click', function(e){ var a = e.target.closest && e.ta
     setTimeout(function(){ stage.classList.add('done'); }, 3000);
     setTimeout(function(){ s2.classList.add('ready'); }, 4300); }
   if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) play(); }); }, { threshold: 0.6 }).observe(s2); else play();
+  var demos = document.getElementById('demos');
+  document.getElementById('demoBtn').onclick = function(){ demos.hidden = false; document.getElementById('demosClose').focus(); };
+  document.getElementById('demosClose').onclick = function(){ demos.hidden = true; document.getElementById('demoBtn').focus(); };
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') demos.hidden = true; });
   // request access (form comes later)
   var req = document.getElementById('req');
   document.querySelectorAll('[data-req]').forEach(function(b){ b.addEventListener('click', function(){ var k = b.getAttribute('data-req');
