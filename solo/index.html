@@ -234,6 +234,7 @@ td.n,th.n{text-align:right}
 #sgate .stats b{font-family:var(--hand);font-size:52px;line-height:1;color:var(--amber)}
 #sgate .stats span{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)}
 #sgate .pick{display:flex;flex-direction:column;gap:16px;padding-top:8px}
+#sgate details.costs{scroll-margin-top:24px}
 #sgate details.costs summary{cursor:pointer;font-size:12.5px;color:var(--chalk-dim)}
 #sgate details.costs[open] summary{margin-bottom:8px}
 #sgate .rv{opacity:0;transform:translateY(14px);animation:rv .9s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--d,0s)}
@@ -241,9 +242,31 @@ td.n,th.n{text-align:right}
 @media (prefers-reduced-motion:reduce){#sgate .rv{opacity:1;transform:none;animation:none}#sgate .down svg{animation:none}}
 #sgate .in{width:min(980px,100%)}
 #sgate #sg3,#sgate #sg4{max-width:620px;width:100%;margin:0 auto}
+#sgate #sg0{max-width:720px;width:100%;margin:0 auto;min-height:calc(100svh - 80px);justify-content:center;gap:20px}
+#sgate .cbig{font-size:clamp(64px,13vw,120px);line-height:.9}
+#sgate .ctab td{padding:10px 8px;font-size:13.5px}
+#sgate .ctab td:first-child{white-space:nowrap}
+#sgate .ctab tr.tot td{font-size:15px;color:var(--chalk)}
+#sgate .ctab tr.tot td.note{color:var(--amber);font-family:var(--hand);font-size:24px}
 </style>
 <div id="sgate" role="dialog" aria-modal="true" aria-labelledby="sgT">
  <div class="in">
+
+  <section class="gp" id="sg0" hidden>
+   <span class="eb">Groundwork Solo · what it runs on</span>
+   <h2 class="chalk cbig">The running costs.</h2>
+   <p class="lede">If you're here for Solo, these aren't numbers you lose sleep over. They're the cost of moving fast.</p>
+   <div class="tw"><table class="ctab"><tbody>
+    <tr class="req"><td>Claude Max</td><td class="n">from $100/mo</td><td class="note">runs every decision in Solo</td></tr>
+    <tr><td>Shopify</td><td class="n">$1/mo</td><td class="note">first 3 months, then their regular plan</td></tr>
+    <tr><td>Domain</td><td class="n">~$10/yr</td><td class="note">bought before launch</td></tr>
+    <tr><td>Photos (image AI)</td><td class="n">~$5–15</td><td class="note">for 50 products, on your own key</td></tr>
+    <tr><td>Google Ads</td><td class="n">your budget</td><td class="note">starts at $30/day, only when you turn it on</td></tr>
+    <tr class="tot"><td>To start</td><td class="n">~$116</td><td class="note">Your time costs more than this.</td></tr>
+   </tbody></table></div>
+   <span class="note">You pay those companies directly. Solo's own price is next.</span>
+   <div class="nav"><a href="../#paths" class="note">← Groundwork</a><button class="btn primary big" id="sgGo" type="button">Start with Solo →</button></div>
+  </section>
 
   <section class="gp hero" id="sg1">
    <div class="hx">
@@ -287,7 +310,7 @@ td.n,th.n{text-align:right}
      <p class="fx">Profit = sales − refunds − (product + shipping) − ad spend</p>
      <span class="note">Example month: $60,000 sales − $1,500 refunds − $15,000 product − $28,500 ads = <b>$15,000 profit</b> → you pay <b>$1,500</b>. A month at zero or below: you pay $0, nothing carries over. <i>An illustration of the math, not a typical or promised result.</i></span>
     </div>
-    <details class="costs">
+    <details class="costs" id="sgCosts">
      <summary>What else your store costs you · from ~$116 to start</summary>
      <div class="tw"><table><tbody>
       <tr class="req"><td>Claude Max</td><td class="n">from $100/mo</td><td class="note">runs every decision in Solo</td></tr>
@@ -344,7 +367,7 @@ td.n,th.n{text-align:right}
   $('sgPrice').textContent = SOLO_PRICE;
   var INIT = true, CUR = 'sg1';
   document.getElementById('sgDown').onclick = function(){ document.getElementById('sgNote').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
-  function show0(id){ ['sg1', 'sg3', 'sg4'].forEach(function(x){ $(x).hidden = x !== id; }); g.scrollTop = 0; }
+  function show0(id){ ['sg0', 'sg1', 'sg3', 'sg4'].forEach(function(x){ $(x).hidden = x !== id; }); g.scrollTop = 0; }
   function show(id){ show0(id); if (!INIT && id !== CUR){ try { history.pushState({ sg: id }, ''); } catch (e) {} } CUR = id; }
   function hideGate(){ g.style.display = 'none'; }
   function agreement(plan){
@@ -417,8 +440,17 @@ td.n,th.n{text-align:right}
   $('sgNew').onclick = function(){ try { localStorage.removeItem(KEY); } catch (e) {} PLAN = null; Array.prototype.forEach.call(g.querySelectorAll('.plan'), function(q){ q.setAttribute('aria-checked', 'false'); });
     $('sgPlanNext').disabled = true; $('sgFormula').hidden = true; $('sgNew').hidden = true; $('sgDoneL').textContent = 'Step 3 of 3 · you\'re in'; show('sg1'); };
   if (SAVED && SAVED.hash){ done(SAVED); $('sgDoneL').textContent = 'You already signed up'; $('sgDoneH').textContent = 'Welcome back.'; $('sgNew').hidden = false; }
+  if (/^#costs$/.test(location.hash) && g.style.display !== 'none' && CUR === 'sg1') show('sg0');
   try { history.replaceState(g.style.display === 'none' ? { app: true } : { sg: CUR }, ''); } catch (e) {}
   INIT = false;
+  $('sgGo').onclick = function(){ show('sg1'); };
+  window.__gwGateNext = function(){
+    if (g.style.display === 'none' || !document.body.contains(g)) return false;
+    if (CUR === 'sg0'){ show('sg1'); return true; }
+    if (CUR === 'sg1'){ if (!PLAN) g.querySelector('.plan[data-plan="once"]').click(); $('sgPlanNext').click(); return true; }
+    if (CUR === 'sg3'){ READ = true; ['sa1', 'sa2', 'sa3'].forEach(function(id){ $(id).checked = true; }); if (!$('sgName').value) $('sgName').value = 'Test Tester'; if (!$('sgEmail').value) $('sgEmail').value = 'test@example.com'; ready(); $('sgSign').click(); return true; }
+    if (CUR === 'sg4'){ $('sgEnter').click(); return true; }
+    return false; };
   window.addEventListener('popstate', function(e){ var st = e.state || {};
     if (st.app){ if ((lsGet(KEY) || {}).hash) hideGate(); return; }
     if (st.sg){ var from = CUR; g.style.display = ''; show0(st.sg); CUR = st.sg; if (st.sg === 'sg1' && from === 'sg3') g.querySelector('.pick').scrollIntoView(); } });
@@ -1482,6 +1514,17 @@ RENDER.build = function(s){
   footer(w, s, !!Bd.done && rows.every(function(r){ return Bd.t[r[0]]; }), 'Run the setup, then tick each homepage section.');
   return w;
 };
+// ===== TEST MODE (temporary, remove before launch): a strip on the far right edge skips to the next thing
+function gwTestStrip(next){
+  var t = document.createElement('button'); t.type = 'button'; t.setAttribute('aria-label', 'Test mode: skip to the next screen'); t.textContent = 'TEST ›';
+  t.style.cssText = 'position:fixed;top:0;right:0;bottom:0;width:30px;z-index:2147483000;border:0;border-left:1px dashed rgba(255,212,121,.55);background:rgba(255,212,121,.06);color:rgba(255,212,121,.85);font:600 10px/1 ui-monospace,monospace;letter-spacing:.2em;writing-mode:vertical-rl;cursor:pointer;padding:0';
+  t.onclick = function(e){ e.preventDefault(); e.stopPropagation(); try { next(); } catch (err) { console.log('[test] ' + err.message); } };
+  document.body.appendChild(t);
+}
+gwTestStrip(function(){
+  if (window.__gwGateNext && window.__gwGateNext()) return;
+  var st = STEPS[S.at]; S.approved[st.id] = true; S.at = Math.min(STEPS.length - 1, S.at + 1); save(); render(); window.scrollTo(0, 0);
+});
 
 $('newStore').onclick = function(){ var m = S.mode; S = fresh(); S.mode = m; save(); render(); toast('Fresh store'); };
 $('modePill').onclick = function(){ S.mode = live() ? 'demo' : 'live'; save(); initLive(); render(); toast(live() ? 'Live: your engine does the work' : 'Demo: a replay of real runs'); };

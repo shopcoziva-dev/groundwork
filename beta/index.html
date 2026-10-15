@@ -226,7 +226,8 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
 .sigline .hand{font-size:40px;line-height:1;color:var(--chalk)}
 
 /* Beta intro before the plan picker */
-.gate #gp2{width:min(900px,calc(100vw - 32px));align-self:center}
+.gate #gp2{width:min(980px,calc(100vw - 32px));align-self:center;gap:28px}
+#bPick{color:var(--amber)}
 .bhero{min-height:100vh;min-height:100svh;margin-top:-16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;position:relative;padding-bottom:48px}
 .bgw{font-size:clamp(34px,7vw,56px);line-height:1;color:var(--chalk-dim)}
 .gate h1.bbig{font-family:var(--hand);font-weight:700;font-size:clamp(132px,34vw,280px);line-height:.8;margin:0}
@@ -254,6 +255,9 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
 .gate .rv{opacity:0;transform:translateY(14px);animation:brv .9s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--d,0s)}
 @keyframes brv{to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.gate .rv{opacity:1;transform:none;animation:none}.bdown svg{animation:none}}
+.bcosts summary{cursor:pointer;font-size:12.5px;color:var(--chalk-dim)}
+.bcosts[open] summary{margin-bottom:8px}
+.bcosts{scroll-margin-top:24px}
 </style>
 </head>
 <body>
@@ -264,7 +268,7 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
   <div class="in">
 
   <!-- 1 · welcome + costs -->
-  <section class="gp" id="gp1">
+  <section class="gp" id="gp1" hidden>
     <span class="label" id="gateEyebrow">Groundwork · beta</span>
     <h1 class="chalk write" id="gateTitle">Build the store.</h1>
     <svg class="splashline chalk" viewBox="0 0 420 16" aria-hidden="true"><path pathLength="1" d="M4 10 C 70 2, 150 15, 220 8 S 350 4, 416 10" fill="none" stroke="var(--line)" stroke-width="4" stroke-linecap="round"/></svg>
@@ -282,7 +286,6 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
       <span class="note">You pay those companies directly. Groundwork's own price is the next screen.</span>
     </div>
     <button class="primary big" id="startBtn" type="button">Start with Beta →</button>
-    <div class="row gl"><button class="linkish" id="codeBtn" type="button">Have an invite code?</button><a href="../#paths">← Groundwork</a><button class="small quiet" id="gateAdmin" type="button">Admin</button></div>
   </section>
 
   <!-- code (existing invites) -->
@@ -295,11 +298,11 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
       <button class="primary" id="gateGo" type="submit">Enter</button>
     </form>
     <div class="note" id="gateMsg" role="status">Codes look like XXXX-XXXX.</div>
-    <button class="linkish back" type="button" data-to="gp1">← Back</button>
+    <button class="linkish back" type="button" data-to="gp2">← Back</button>
   </section>
 
   <!-- 2 · pick a plan -->
-  <section class="gp" id="gp2" hidden>
+  <section class="gp" id="gp2">
     <div class="bhero">
       <span class="label rv" style="--d:0s">GTS Holdings presents</span>
       <span class="bgw hand rv" style="--d:.15s">Groundwork</span>
@@ -322,8 +325,7 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
       <div><span class="k">03</span><b class="hand">Your accounts, your store</b><span>It runs on your own accounts. The store and the skills are yours.</span></div>
     </div>
     <div class="bstats"><div><b class="hand">11</b><span>steps, each taught</span></div><div><b class="hand">50</b><span>products priced</span></div><div><b class="hand">you</b><span>drive it</span></div></div>
-    <span class="label" id="bPick">Step 1 of 3 · how you pay</span>
-    <h2 class="chalk gh2">Pick your plan</h2>
+    <span class="label" id="bPick">Step 1 of 3 · pick your price</span>
     <div class="plans" role="radiogroup" aria-label="Plan">
       <button type="button" class="plan" role="radio" aria-checked="false" data-plan="once">
         <span class="pt">Pay once</span>
@@ -349,7 +351,18 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
       </tbody></table>
       <div class="ex"><span class="label">Example month</span><span class="note">$20,000 sales − $500 refunds − $5,000 product − $9,500 ads = <b>$5,000 profit</b> → you pay <b>$500</b>. A month at zero or below: you pay $0, and nothing carries over. <i>An illustration of the math, not a typical or promised result.</i></span></div>
     </div>
-    <div class="row gl"><button class="linkish back" type="button" data-to="gp1">← Back</button><button class="primary" id="planNext" type="button" disabled>Next: the agreement →</button></div>
+    <details class="bcosts" id="bCosts">
+      <summary>What else your store costs you · from ~$36 to start</summary>
+      <table class="ct"><tbody>
+        <tr><td>Shopify</td><td class="n">$1/mo</td><td class="note">first 3 months, then their regular plan</td></tr>
+        <tr><td>Domain</td><td class="n">~$10/yr</td><td class="note">bought before launch</td></tr>
+        <tr><td>Claude</td><td class="n">$20/mo</td><td class="note">Pro works; Max is recommended</td></tr>
+        <tr><td>Photos (image AI)</td><td class="n">~$5–15</td><td class="note">for 50 products, on your own key</td></tr>
+        <tr><td>Google Ads</td><td class="n">your budget</td><td class="note">we start at $30/day, only when you turn it on</td></tr>
+      </tbody></table>
+      <span class="note">You pay those companies directly.</span>
+    </details>
+    <div class="row gl"><a href="../#paths">← Groundwork</a><span class="row" style="gap:12px"><button class="linkish" id="codeBtn" type="button">Have an invite code?</button><button class="small quiet" id="gateAdmin" type="button">Admin</button></span><button class="primary big" id="planNext" type="button" disabled>Next: the agreement →</button></div>
   </section>
 
   <!-- 3 · agreement + sign -->
@@ -1818,7 +1831,7 @@ var PLANS = { once: { name: 'Pay once', price: '$2,499.99 one time' }, partner: 
 function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 function gshow(id){ ['gp1', 'gpCode', 'gp2', 'gp3', 'gp4'].forEach(function(x){ $(x).hidden = x !== id; }); $('gate').scrollTop = 0; var h = $(id).querySelector('h1,h2,button,input'); if (h && h.tagName !== 'H1' && h.tagName !== 'H2') h.focus({ preventScroll: true }); }
 // Back (browser or phone) walks these screens instead of jumping into the build
-var GINIT = true, GCUR = 'gp1', _gs = gshow;
+var GINIT = true, GCUR = 'gp2', _gs = gshow;
 gshow = function(id){ _gs(id); if (!GINIT && id !== GCUR){ try { history.pushState({ gp: id }, ''); } catch (e) {} } GCUR = id; };
 
 function agreementHTML(plan){
@@ -1896,7 +1909,8 @@ function startFlow(){
     var t = c.text + '\n\nSigned electronically by ' + c.name + ' <' + c.email + '> on ' + new Date(c.at).toISOString() + '\nPlan: ' + PLANS[c.plan].name + '\nAgreement fingerprint (SHA-256): ' + c.hash + '\n';
     var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'text/plain' })); a.download = 'groundwork-beta-agreement.txt'; document.body.appendChild(a); a.click(); a.remove(); };
   $('enterBtn').onclick = function(){ var c = lsGet('gwb.contract'); if (c){ openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); try { history.pushState({ app: true }, ''); } catch (e) {} } };
-  if (/^#start$/.test(location.hash)) gshow('gp2');
+  if (/^#costs$/.test(location.hash)) gshow('gp1');
+  else if (TAG && !/^(start|costs)$/.test(TAG)) gshow('gpCode');   // an invite link: straight to the code box
 }
 startFlow();
 (function(){ var c = lsGet('gwb.contract'); if (!c || !c.hash || lsGet('gwb.unlock')) return;
@@ -1911,6 +1925,22 @@ GINIT = false;
 window.addEventListener('popstate', function(e){ var st = e.state || {};
   if (st.app){ var c = lsGet('gwb.contract'); if (c) openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); return; }
   if (st.gp){ var from = GCUR; $('gate').hidden = false; $('app').setAttribute('aria-hidden', 'true'); _gs(st.gp); GCUR = st.gp; if (st.gp === 'gp2' && from === 'gp3') $('bPick').scrollIntoView(); } });
+// ===== TEST MODE (temporary, remove before launch): a strip on the far right edge skips to the next thing
+function gwTestStrip(next){
+  var t = document.createElement('button'); t.type = 'button'; t.setAttribute('aria-label', 'Test mode: skip to the next screen'); t.textContent = 'TEST ›';
+  t.style.cssText = 'position:fixed;top:0;right:0;bottom:0;width:30px;z-index:2147483000;border:0;border-left:1px dashed rgba(255,212,121,.55);background:rgba(255,212,121,.06);color:rgba(255,212,121,.85);font:600 10px/1 ui-monospace,monospace;letter-spacing:.2em;writing-mode:vertical-rl;cursor:pointer;padding:0';
+  t.onclick = function(e){ e.preventDefault(); e.stopPropagation(); try { next(); } catch (err) { console.log('[test] ' + err.message); } };
+  document.body.appendChild(t);
+}
+gwTestStrip(function(){
+  if (!$('gate').hidden){
+    if (GCUR === 'gp1' || GCUR === 'gpCode'){ gshow('gp2'); return; }
+    if (GCUR === 'gp2'){ if (!PLAN) document.querySelector('.plan[data-plan="once"]').click(); $('planNext').click(); return; }
+    if (GCUR === 'gp3'){ AG_READ = true; ['ag1', 'ag2', 'ag3'].forEach(function(id){ $(id).checked = true; }); if (!$('sgName').value) $('sgName').value = 'Test Tester'; if (!$('sgEmail').value) $('sgEmail').value = 'test@example.com'; signReady(); $('signBtn').click(); return; }
+    if (GCUR === 'gp4'){ $('enterBtn').click(); return; }
+  }
+  var st = STEPS[S.at]; S.approved[st.id] = true; if (S.at < STEPS.length - 1) S.at++; save(); render(); window.scrollTo(0, 0);
+});
 })();
 </script>
 
