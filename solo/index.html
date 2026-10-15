@@ -152,18 +152,18 @@ td.n,th.n{text-align:right}
 </style>
 </head>
 <body>
-<div id="soloGate" role="dialog" aria-modal="true" aria-labelledby="sgT" style="position:fixed;inset:0;z-index:99;display:flex;align-items:center;justify-content:center;padding:16px;background-color:#0B2340;background-image:linear-gradient(rgba(111,211,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(111,211,255,.08) 1px,transparent 1px),linear-gradient(rgba(111,211,255,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(111,211,255,.15) 1px,transparent 1px);background-size:32px 32px,32px 32px,160px 160px,160px 160px;background-position:50% 50%;color:#F3F1E7;font-family:'IBM Plex Mono',ui-monospace,monospace">
+<div id="soloGate" role="dialog" aria-modal="true" aria-labelledby="sgT" style="position:fixed;inset:0;z-index:99;display:flex;align-items:center;justify-content:center;padding:16px;background:#000000;color:#ECEAE2;font-family:'IBM Plex Mono',ui-monospace,monospace">
  <div style="width:min(520px,100%);display:flex;flex-direction:column;gap:14px">
   <span style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#F2C66D">Groundwork · Solo · Private</span>
   <h1 id="sgT" style="margin:0;font-family:Caveat,cursive;font-weight:700;font-size:clamp(56px,13vw,96px);line-height:.95">Locked.</h1>
   <p style="margin:0;font-family:Caveat,cursive;font-size:28px;line-height:1.2">Solo is private. Type your access code.</p>
   <form id="sgF" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center" autocomplete="off">
    <label for="sgC" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Access code</label>
-   <input id="sgC" type="password" placeholder="XXXX-XXXX" maxlength="12" autocapitalize="characters" spellcheck="false" style="flex:1 1 220px;min-width:0;height:52px;background:transparent;border:none;border-bottom:2px dashed rgba(243,241,231,.6);color:#F3F1E7;font-family:inherit;font-size:24px;letter-spacing:.18em">
-   <button type="submit" style="min-height:46px;padding:0 20px;border-radius:5px;border:2px solid #F3F1E7;background:#F3F1E7;color:#0B2340;font-family:inherit;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer">Unlock</button>
+   <input id="sgC" type="password" placeholder="XXXX-XXXX" maxlength="12" autocapitalize="characters" spellcheck="false" style="flex:1 1 220px;min-width:0;height:52px;background:transparent;border:none;border-bottom:2px dashed rgba(236,234,226,.45);color:#ECEAE2;font-family:inherit;font-size:24px;letter-spacing:.18em">
+   <button type="submit" style="min-height:46px;padding:0 20px;border-radius:5px;border:2px solid #ECEAE2;background:#ECEAE2;color:#000;font-family:inherit;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer">Unlock</button>
   </form>
-  <div id="sgM" role="status" style="font-size:12.5px;color:rgba(243,241,231,.7)"></div>
-  <a href="../#paths" style="font-size:12px;color:#6FD3FF">← Groundwork</a>
+  <div id="sgM" role="status" style="font-size:12.5px;color:rgba(236,234,226,.6)"></div>
+  <a href="../#paths" style="font-size:12px;color:#F2C66D">← Groundwork</a>
  </div>
 </div>
 <script>
@@ -179,12 +179,8 @@ td.n,th.n{text-align:right}
     var inner = g.firstElementChild; document.getElementById('sgM').textContent = 'Unlocked.';
     if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { g.remove(); return; }
     inner.style.transition = 'opacity .5s ease-out, transform .5s ease-out'; inner.style.opacity = '0'; inner.style.transform = 'scale(.97)';
-    var veil = document.createElement('div'); veil.setAttribute('aria-hidden', 'true');
-    veil.style.cssText = 'position:absolute;inset:0;background:#000;opacity:0;transition:opacity .9s ease-in-out;pointer-events:none';
-    g.appendChild(veil); void veil.offsetWidth;
-    setTimeout(function(){ veil.style.opacity = '1'; }, 300);
-    setTimeout(function(){ g.style.background = '#000'; veil.remove(); g.style.transition = 'opacity .8s ease-out'; void g.offsetWidth; g.style.opacity = '0'; }, 1300);
-    setTimeout(function(){ g.remove(); }, 2200);
+    g.style.transition = 'opacity .7s ease-out .35s'; void g.offsetWidth; g.style.opacity = '0';
+    setTimeout(function(){ g.remove(); }, 1150);
   }
 })();
 </script>
