@@ -383,7 +383,6 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
   <section class="gp" id="gp3" hidden>
     <span class="label">Step 2 of 3 · the agreement</span>
     <h2 class="chalk gh2">Read it. Sign it.</h2>
-    <div class="draft" role="note">DRAFT for review. Not yet checked by a lawyer. Terms in [brackets] are placeholders.</div>
     <div class="agree" id="agree" tabindex="0" aria-label="Groundwork Beta agreement"></div>
     <span class="note" id="readNote">Scroll to the end to sign.</span>
     <ul class="ticks gticks">
@@ -404,6 +403,7 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
     <span class="label" id="doneL">Step 3 of 3 · you're in</span>
     <h2 class="chalk gh2" id="doneH">Signed.</h2>
     <div class="box" id="doneBox"></div>
+    <div class="note" id="copySt" role="status"></div><button class="small" id="copyRetry" type="button" hidden>Try saving again</button>
     <div class="row gl"><button class="linkish" id="doneBack" type="button">← Back</button><button class="small" id="dlCopy" type="button">Download my copy</button><button class="linkish" id="newAg" type="button" hidden>Start a new agreement</button><button class="primary" id="enterBtn" type="button">Open Groundwork Beta →</button></div>
   </section>
 
@@ -1837,6 +1837,16 @@ function card(name, lk, code, fresh0){
   r.appendChild(b1); r.appendChild(b2); r.appendChild(b3); o.appendChild(r); return o;
 }
 gate();
+function gwSaveCopy(product, c, st, enter, retry, keep){
+  st.textContent = 'Saving your signed copy with GTS Holdings…'; enter.disabled = true; retry.hidden = true;
+  fetch('/api/sign', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ product: product, v: c.v, plan: c.plan, name: c.name, email: c.email, at: c.at, hash: c.hash, text: c.text }) })
+    .then(function(r){ return r.json().catch(function(){ return { ok: false, why: 'HTTP ' + r.status }; }); })
+    .then(function(j){
+      if (j.ok){ c.saved = j.id; keep(c); st.textContent = 'Signed copy saved with GTS Holdings · reference ' + j.id + '. You can download your own copy too.'; enter.disabled = false; return; }
+      if (j.why === 'not-configured'){ st.textContent = 'Signed copies are being set up on our side. Download your copy and keep it.'; enter.disabled = false; return; }
+      st.textContent = 'Could not save your signed copy (' + (j.why || 'error') + '). Try again.'; retry.hidden = false; })
+    .catch(function(){ st.textContent = 'Could not reach GTS Holdings to save your signed copy. Check your connection and try again.'; retry.hidden = false; });
+}
 // "Congratulations, access granted": covers the screen, the app opens underneath, then it fades away
 function gwGranted(product, theme, onCovered){
   var o = document.createElement('div'); o.setAttribute('role', 'status');
@@ -1852,7 +1862,7 @@ function gwGranted(product, theme, onCovered){
 }
 
 // ===================================================================== Start with Beta: plan, agreement, signature
-var AG_V = 'beta-0.1 (draft)';
+var AG_V = 'beta-1.0';
 var PLAN = null, AG_READ = false;
 var PLANS = { once: { name: 'Pay once', price: '$2,499.99 one time' }, partner: { name: 'Beta partner', price: '$0 upfront, 10% of monthly profit' } };
 function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -1867,25 +1877,25 @@ function agreementHTML(plan){
     '<h3>Groundwork Beta agreement</h3>',
     '<p>This agreement is between <b>GTS Holdings LLC</b>, a Virginia limited liability company ("GTS", "we"), and the person who signs below ("you"). It covers your use of Groundwork Beta and includes a confidentiality agreement (section 6).</p>',
     '<h3>1 · What you get</h3>',
-    '<p>A personal, non-transferable license to use Groundwork Beta: the step-by-step site, its lessons and checks, and a private copy of the Groundwork engine code, to build and run your own online store [one store during the beta]. It is a beta: things may change, break or be fixed while you use it.</p>',
+    '<p>A personal, non-transferable license to use Groundwork Beta: the step-by-step site, its lessons and checks, and a private copy of the Groundwork engine code, to build and run your own online store (one store during the beta). It is a beta: things may change, break or be fixed while you use it.</p>',
     '<h3>2 · Your accounts, your store</h3>',
     '<p>You open and own every account the store needs (GitHub, Shopify, CJdropshipping, Google, Claude, your image AI) and pay those companies directly. Your keys stay in your own accounts; we never ask for them. You own your store, its brand, its products and its customers.</p>',
     '<h3>3 · Your plan and fees</h3>',
-    P(once, '<p><b>A. Pay once.</b> $2,499.99, paid before access opens. [Refund: in full within 7 days if you have not finished step 1; none after.] No share of your store, ever.</p>'),
+    P(once, '<p><b>A. Pay once.</b> $2,499.99, paid before access opens. Refund: in full within 7 days if you have not finished step 1; none after. No share of your store, ever.</p>'),
     P(!once, '<p><b>B. Beta partner.</b> No upfront fee. Instead you pay <b>10% of Monthly Profit</b> for every month your store makes a sale, starting with its first sale.</p>' +
       '<ul><li><b>Monthly Profit</b> = Shopify sales for the month (before tax) − refunds issued that month − what your supplier charged for those orders (product + shipping) − Google Ads cost for the month.</li>' +
       '<li>A month at zero or below: you owe nothing, and the loss does not carry over.</li>' +
-      '<li>You report and pay by the 15th of the next month [payment method to be set].</li>' +
+      '<li>You report and pay by the 15th of the next month, using the payment method GTS gives you.</li>' +
         '<li><b>Late payment:</b> if a monthly payment is more than 30 days late, the full buyout ($2,499.99 minus what you have already paid) becomes due at once.</li>' +
       '<li>While the share runs you give GTS <b>read-only</b> access to your Shopify reports and Google Ads account, used only to check the number.</li>' +
       '<li>You can buy out at any time by paying $2,499.99 minus what you have already paid.</li>' +
-      '<li>It applies to every store you build with Groundwork. [If you sell a store, what happens to the share at closing is to be set.]</li></ul>'),
+      '<li>It applies to every store you build with Groundwork.</li></ul>'),
     '<h3>4 · No earnings promise</h3>',
     '<p>Groundwork teaches a method and runs checks. It does <b>not</b> guarantee sales, profit, ad or product approval, or any result. Numbers and examples you see are illustrations, not typical results. Many new stores lose money in their first months. You can lose your ad spend and setup costs. You decide what to spend and when ads run.</p>',
     '<h3>5 · Your responsibilities</h3>',
     '<p>You follow the law and every platform\'s rules (Google Ads, Merchant Center, Shopify, your supplier), make only honest product claims, handle your own taxes, licences and customer service, and check every listing before it goes live.</p>',
     '<h3>6 · Confidentiality</h3>',
-    '<p>"Confidential Information" means Groundwork\'s lessons, rulebook, formulas, checklists, prompts and engine code, and anything else marked confidential that you get through the beta. You will not share, publish, resell or teach it, or use it to build a competing product, during the beta and for [3] years after. It does not cover what was already public, what you knew before, or your own store\'s data. You may keep using what you learned for your own stores.</p>',
+    '<p>"Confidential Information" means Groundwork\'s lessons, rulebook, formulas, checklists, prompts and engine code, and anything else marked confidential that you get through the beta. You will not share, publish, resell or teach it, or use it to build a competing product, during the beta and for 3 years after. It does not cover what was already public, what you knew before, or your own store\'s data. You may keep using what you learned for your own stores.</p>',
     '<p>Your store data that we see (beta partner plan) is confidential to us too: we use it only to work out what you owe, and we do not share it.</p>',
     '<h3>7 · The engine code</h3>',
     '<p>Your copy of the engine is for your own stores. No redistributing, sublicensing or selling it, and keep its notices in place.</p>',
@@ -1896,7 +1906,7 @@ function agreementHTML(plan){
     '<h3>10 · Warranty and liability</h3>',
     '<p>Groundwork is provided as is, without warranties. Our total liability is limited to what you paid us in the 12 months before a claim, and neither side is liable for indirect or lost-profit damages.</p>',
     '<h3>11 · The rest</h3>',
-    '<p>Virginia law applies; disputes go to the courts of [Fairfax County], Virginia. This is the whole agreement between us on Groundwork Beta. Typing your name below is your electronic signature and is as binding as a handwritten one.</p>',
+    '<p>Virginia law applies; disputes go to the courts of Fairfax County, Virginia. This is the whole agreement between us on Groundwork Beta. Typing your name below is your electronic signature and is as binding as a handwritten one.</p>',
     '<p class="end">Version ' + AG_V + ' · your plan: <b>' + PLANS[plan].name + '</b> · end of agreement</p>'
   ].join('');
 }
@@ -1914,7 +1924,6 @@ function doneView(c){
   var rows = [['Plan', PLANS[c.plan].name + ' · ' + PLANS[c.plan].price], ['Signed by', c.name + ' · ' + c.email], ['Date', new Date(c.at).toLocaleString()], ['Agreement', 'version ' + c.v + ' · fingerprint ' + c.hash.slice(0, 12)],
     c.plan === 'once' ? ['Payment', 'Checkout (Stripe) connects here next. This preview skips it.'] : ['Access', 'Read-only Shopify and Google Ads access is set up at launch (step 11), not now.']];
   var t = el('table', 'ct'); var tb = el('tbody'); rows.forEach(function(r){ var tr = el('tr'); tr.appendChild(el('td', null, r[0])); tr.appendChild(el('td', 'note', r[1])); tb.appendChild(tr); }); t.appendChild(tb); b.appendChild(t);
-  b.appendChild(el('div', 'note', 'Preview: your signature is saved in this browser only, not sent anywhere yet.'));
 }
 function startFlow(){
   document.querySelector('.bhero').addEventListener('click', function(e){ if (e.target.closest('a,button')) return; $('bNote').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
@@ -1935,7 +1944,8 @@ function startFlow(){
   ['sgName', 'sgEmail'].forEach(function(id){ $(id).oninput = signReady; });
   $('signBtn').onclick = function(){ $('signBtn').disabled = true; var txt = agreementText();
     sha(txt).then(function(h){ var c = { v: AG_V, plan: PLAN, name: $('sgName').value.trim(), email: $('sgEmail').value.trim(), at: Date.now(), hash: h, text: txt };
-      lsSet('gwb.contract', c); doneView(c); gshow('gp4'); }); };
+      lsSet('gwb.contract', c); doneView(c); gshow('gp4'); gwSaveCopy('beta', c, $('copySt'), $('enterBtn'), $('copyRetry'), function(x){ lsSet('gwb.contract', x); }); }); };
+  $('copyRetry').onclick = function(){ var c = lsGet('gwb.contract'); if (c) gwSaveCopy('beta', c, $('copySt'), $('enterBtn'), $('copyRetry'), function(x){ lsSet('gwb.contract', x); }); };
   $('dlCopy').onclick = function(){ var c = lsGet('gwb.contract'); if (!c) return;
     var t = c.text + '\n\nSigned electronically by ' + c.name + ' <' + c.email + '> on ' + new Date(c.at).toISOString() + '\nPlan: ' + PLANS[c.plan].name + '\nAgreement fingerprint (SHA-256): ' + c.hash + '\n';
     var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'text/plain' })); a.download = 'groundwork-beta-agreement.txt'; document.body.appendChild(a); a.click(); a.remove(); };
