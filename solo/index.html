@@ -390,8 +390,6 @@ function gwSaveCopy(product, c, st, enter, retry, keep){
     .catch(function(){ st.textContent = 'Could not reach GTS Holdings to save your signed copy. Check your connection and try again.'; retry.hidden = false; });
 }
 (function(){
-  /* TEST MODE (GW_TEST_FRESH): every load is a first-time visit; remove before launch */
-  try { ['gws.contract', 'gw-solo-c'].forEach(function(k){ localStorage.removeItem(k); }); } catch (e) {}
   var SOLO_PRICE = '$3,999.99';   // the pay-once price
   var V = 'solo-1.0', KEY = 'gws.contract';
   var g = document.getElementById('sgate'), $ = function(id){ return document.getElementById(id); };
