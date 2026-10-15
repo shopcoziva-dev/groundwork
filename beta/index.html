@@ -287,6 +287,9 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
   .ctab tr.tot{border-top:2px solid var(--amber);border-bottom:0;padding-top:10px}
 }
 .gate button.bdown,.gate button.bdown:hover{background:none;border:0;box-shadow:none;min-height:0;height:52px;padding:0;color:var(--chalk)}
+.gate .rvr{opacity:0;animation:brvo .7s ease forwards;animation-delay:var(--d,0s)}
+@keyframes brvo{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.gate .rvr{opacity:1;animation:none}}
 </style>
 </head>
 <body>
@@ -298,20 +301,20 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
 
   <!-- 1 · welcome + costs -->
   <section class="gp" id="gp1">
-    <span class="label" id="gateEyebrow">Groundwork Beta · what it runs on</span>
+    <span class="label rv" style="--d:.1s" id="gateEyebrow">Groundwork Beta · what it runs on</span>
     <h1 class="chalk write cbig" id="gateTitle">The running costs.</h1>
     <svg class="splashline chalk" viewBox="0 0 420 16" aria-hidden="true"><path pathLength="1" d="M4 10 C 70 2, 150 15, 220 8 S 350 4, 416 10" fill="none" stroke="var(--line)" stroke-width="4" stroke-linecap="round"/></svg>
-    <p class="hand lede">Less than most courses cost, and at the end you own a real store.</p>
-    <table class="ct ctab"><tbody>
-      <tr><td>Shopify</td><td class="n">$1/mo</td><td class="note">first 3 months, then their regular plan</td></tr>
-      <tr><td>Domain</td><td class="n">~$10/yr</td><td class="note">bought before launch</td></tr>
-      <tr><td>Claude</td><td class="n">$20/mo</td><td class="note">Pro works; Max is recommended</td></tr>
-      <tr><td>Photos (image AI)</td><td class="n">~$5–15</td><td class="note">for 50 products, on your own key</td></tr>
-      <tr><td>Google Ads</td><td class="n">your budget</td><td class="note">we start at $30/day, only when you turn it on</td></tr>
-      <tr class="tot"><td>To start</td><td class="n">~$36</td><td class="note">A small price to learn the real thing.</td></tr>
+    <p class="hand lede rv" style="--d:.9s">Less than most courses cost, and at the end you own a real store.</p>
+    <table class="ct ctab rv" style="--d:1.05s"><tbody>
+      <tr class="rvr" style="--d:1.15s"><td>Shopify</td><td class="n">$1/mo</td><td class="note">first 3 months, then their regular plan</td></tr>
+      <tr class="rvr" style="--d:1.27s"><td>Domain</td><td class="n">~$10/yr</td><td class="note">bought before launch</td></tr>
+      <tr class="rvr" style="--d:1.39s"><td>Claude</td><td class="n">$20/mo</td><td class="note">Pro works; Max is recommended</td></tr>
+      <tr class="rvr" style="--d:1.51s"><td>Photos (image AI)</td><td class="n">~$5–15</td><td class="note">for 50 products, on your own key</td></tr>
+      <tr class="rvr" style="--d:1.63s"><td>Google Ads</td><td class="n">your budget</td><td class="note">we start at $30/day, only when you turn it on</td></tr>
+      <tr class="tot rvr" style="--d:1.85s"><td>To start</td><td class="n">~$36</td><td class="note">A small price to learn the real thing.</td></tr>
     </tbody></table>
-    <span class="note">You pay those companies directly. Beta's own price is next.</span>
-    <div class="row gl"><a href="../#paths">← Groundwork</a><button class="primary big" id="startBtn" type="button">Start with Beta →</button></div>
+    <span class="note rv" style="--d:2.0s">You pay those companies directly. Beta's own price is next.</span>
+    <div class="row gl rv" style="--d:2.15s"><a href="../#paths">← Groundwork</a><button class="primary big" id="startBtn" type="button">Start with Beta →</button></div>
   </section>
 
   <!-- code (existing invites) -->
