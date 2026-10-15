@@ -1,0 +1,96 @@
+name: Groundwork engine
+# Runs one Groundwork Beta step on YOUR copy, with YOUR keys (repo Settings > Secrets and variables > Actions).
+# The Beta page starts it; you can also start it here (Actions > Groundwork engine > Run workflow).
+run-name: "${{ inputs.command }} ${{ inputs.tag }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "step: doctor, gate, demand, override, ref, kit, set, golive, copy, setup, shelf, batch, ads, ladder, status"
+        required: true
+        type: string
+      args:
+        description: "arguments for the step"
+        required: false
+        default: ""
+        type: string
+      tag:
+        description: "set by the Beta page to find this run"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: groundwork-engine
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      HAS_CLAUDE_SUB: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+    steps:
+      - name: Only the Beta steps
+        env:
+          CMD: ${{ inputs.command }}
+        run: |
+          case "$CMD" in
+            doctor|gate|demand|override|ref|kit|set|golive|cj-shops|profile|copy|setup|shelf|batch|ads|ladder|status) echo "step: $CMD" ;;
+            *) echo "not a Beta step: $CMD"; exit 1 ;;
+          esac
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: engine/requirements.txt
+      - run: pip install -q -r engine/requirements.txt
+      - name: Claude Code (only when your Claude subscription is connected)
+        if: env.HAS_CLAUDE_SUB == 'true'
+        run: npm install -g @anthropic-ai/claude-code >/dev/null 2>&1 && claude --version
+      - name: Run the step
+        env:
+          GW_ENGINE: rules
+          CMD: ${{ inputs.command }}
+          ARGS: ${{ inputs.args }}
+          STORE: store
+          CJ_API_KEY: ${{ secrets.CJ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GW_SHOPIFY_CLIENT_ID: ${{ secrets.SHOPIFY_CLIENT_ID }}
+          GW_SHOPIFY_CLIENT_SECRET: ${{ secrets.SHOPIFY_CLIENT_SECRET }}
+          GW_SHOPIFY_ADMIN_TOKEN: ${{ secrets.SHOPIFY_ADMIN_TOKEN }}
+          GOOGLE_ADS_DEVELOPER_TOKEN: ${{ secrets.GOOGLE_ADS_DEVELOPER_TOKEN }}
+          GOOGLE_ADS_CLIENT_ID: ${{ secrets.GOOGLE_ADS_CLIENT_ID }}
+          GOOGLE_ADS_CLIENT_SECRET: ${{ secrets.GOOGLE_ADS_CLIENT_SECRET }}
+          GOOGLE_ADS_REFRESH_TOKEN: ${{ secrets.GOOGLE_ADS_REFRESH_TOKEN }}
+          GOOGLE_ADS_CUSTOMER_ID: ${{ secrets.GOOGLE_ADS_CUSTOMER_ID }}
+        run: python engine/groundwork/ci.py
+      - name: Photos for review (not committed)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: photos-${{ github.run_id }}
+          path: engine/stores/*/work/
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Save the results to your copy
+        if: always()
+        run: |
+          git config user.name groundwork-engine; git config user.email groundwork-engine@users.noreply.github.com
+          git add engine/stores 2>/dev/null || true
+          git reset -q -- 'engine/stores/*/work' 2>/dev/null || true
+          git diff --cached --quiet && { echo "nothing to save"; exit 0; }
+          git commit -qm "Groundwork: ${{ inputs.command }} [skip ci]"
+          for i in 1 2 3 4 5; do
+            git push -q origin "HEAD:${{ github.ref_name }}" && exit 0
+            git pull -q --rebase origin "${{ github.ref_name }}" || { git rebase --abort; exit 1; }
+            sleep 3
+          done
+          exit 1

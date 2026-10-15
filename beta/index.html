@@ -276,7 +276,7 @@ function copyText(t, btn){
 
 // ---------- state ----------
 var KEY = 'gwb.s.guest';
-function fresh(){ return { at: 0, approved: {}, dir: { sample: [{}, {}, {}], searches_: [{}, {}] }, ref: { best: [{}, {}, {}, {}, {}], colors: [], order: [] }, brand: { logo: 'text', fonts: 'modern', pal: {} },
+function fresh(){ return { at: 0, approved: {}, accounts: {}, runs: {}, dir: { sample: [{}, {}, {}], searches_: [{}, {}] }, ref: { best: [{}, {}, {}, {}, {}], colors: [], order: [] }, brand: { logo: 'text', fonts: 'modern', pal: {} },
   signup: {}, build: {}, copy: {}, photos: { set: { bg: 'clean white', scene: 'a bright, lived-in home', model: 'yes', ar: '4:5', avoid: 'text, logos, watermarks, extra hands' }, tests: [{ name: '', shots: {} }, { name: '', shots: {} }] },
   pricing: { cat: 'other', searches: [{}, {}], landed: '', set: { code: 0.10, ad: 40, compareOn: false, compareAt: 30 } },
   catalog: { markets: {}, items: [], batches: {} }, pre: {}, launch: { cfg: null }, upd: 0 }; }
@@ -331,12 +331,13 @@ function demandJudge(searches, cpc){
 
 // ---------- steps ----------
 var STEPS = [
-  { id: 'dir', n: 1, name: 'Direction', you: '45m' }, { id: 'ref', n: 2, name: 'Reference store', you: '20m' }, { id: 'brand', n: 3, name: 'Brand kit', you: '20m' },
-  { id: 'signup', n: 4, name: 'New store sign-up', you: '15m' }, { id: 'build', n: 5, name: 'Site build', you: '1h 30m' }, { id: 'copy', n: 6, name: 'Copy', you: '20m' },
-  { id: 'photos', n: 7, name: 'Photos', you: '1h' }, { id: 'pricing', n: 8, name: 'Pricing', you: '15m' }, { id: 'catalog', n: 9, name: 'Catalog', you: '5h' },
+  { id: 'accounts', n: 0, name: 'Your accounts', you: '25m' },
+  { id: 'dir', n: 1, name: 'Direction', you: '15m' }, { id: 'ref', n: 2, name: 'Reference store', you: '20m' }, { id: 'brand', n: 3, name: 'Brand kit', you: '20m' },
+  { id: 'signup', n: 4, name: 'New store sign-up', you: '15m' }, { id: 'build', n: 5, name: 'Site build', you: '1h' }, { id: 'copy', n: 6, name: 'Copy', you: '20m' },
+  { id: 'photos', n: 7, name: 'Photos', you: '20m' }, { id: 'pricing', n: 8, name: 'Pricing', you: '15m' }, { id: 'catalog', n: 9, name: 'Catalog', you: '1h' },
   { id: 'pre', n: 10, name: 'Before launch', you: '45m' }, { id: 'launch', n: 11, name: 'Ads + launch', you: '30m' }, { id: 'office', n: '+', name: 'Your files', you: '2m' }
 ];
-var MINS = { dir: 45, ref: 20, brand: 20, signup: 15, build: 90, copy: 20, photos: 60, pricing: 15, catalog: 300, pre: 45, launch: 30, office: 2 };
+var MINS = { accounts: 25, dir: 15, ref: 20, brand: 20, signup: 15, build: 60, copy: 20, photos: 20, pricing: 15, catalog: 60, pre: 45, launch: 30, office: 2 };
 function unlocked(i){ for (var j = 0; j < i; j++) if (!S.approved[STEPS[j].id]) return false; return true; }
 function hm(m){ var h = Math.floor(m / 60), r = m % 60; return (h ? h + 'h ' : '') + (r ? r + 'm' : h ? '' : '0m'); }
 
@@ -373,7 +374,7 @@ function renderSheet(){
 function shell(s, lede){
   var w = el('section', 'col'); w.setAttribute('aria-labelledby', 'h-' + s.id);
   var h = el('div', 'shead'); var h1 = el('h1', 'chalk write', (s.n === '+' ? '' : 'Step ' + s.n + ' · ') + s.name); h1.id = 'h-' + s.id; h.appendChild(h1);
-  h.appendChild(el('span', 'meta', 'your time ~' + s.you)); if (lede) h.appendChild(el('p', null, lede)); w.appendChild(h); return w;
+  h.appendChild(el('span', 'meta', (s.n === 0 ? 'once · ' : '') + 'your time ~' + s.you)); if (lede) h.appendChild(el('p', null, lede)); w.appendChild(h); return w;
 }
 // lesson: {n, title, points:[...] (strings may use **bold**), ex: {label, lines:[...]}, dia: svgString}
 function lesson(o){
@@ -445,6 +446,79 @@ function priceBox(searches, onchange, hint){ // two "paste the first 5 ad prices
   return g;
 }
 function mkt(searches){ return market(searches.map(function(s){ return nums(s.raw); })); }
+
+// ===================================================================== the engine on the user's own GitHub
+// Their copy of the Groundwork engine runs each step (Actions), with their keys (repo secrets). This page only starts a
+// run, waits for it, and reads the result file from their copy. Their GitHub token stays in this browser.
+var GH = (function(){ try { return JSON.parse(localStorage.getItem('gwb.gh') || 'null') || {}; } catch (e) { return {}; } })();
+function ghSave(){ try { localStorage.setItem('gwb.gh', JSON.stringify(GH)); } catch (e) {} }
+function ghReady(){ return !!(GH.repo && GH.token && /^[\w.-]+\/[\w.-]+$/.test(GH.repo)); }
+function ghApi(path, opt){
+  opt = opt || {};
+  return fetch('https://api.github.com/repos/' + GH.repo + path, { method: opt.method || 'GET', cache: 'no-store',
+    headers: Object.assign({ Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + GH.token, 'X-GitHub-Api-Version': '2022-11-28' }, opt.body ? { 'Content-Type': 'application/json' } : {}),
+    body: opt.body ? JSON.stringify(opt.body) : undefined })
+    .then(function(r){ if (r.status === 204) return {}; return r.json().catch(function(){ return {}; }).then(function(j){ if (!r.ok) throw { code: r.status, message: j.message || ('GitHub said ' + r.status) }; return j; }); });
+}
+function b64dec(t){ return decodeURIComponent(escape(atob(String(t).replace(/\s/g, '')))); }
+function b64enc(t){ return btoa(unescape(encodeURIComponent(t))); }
+var STORE_DIR = 'engine/stores/store/';
+function readFile(name){ return ghApi('/contents/' + STORE_DIR + name + '?ref=main&t=' + Date.now()).then(function(j){ return { data: JSON.parse(b64dec(j.content)), sha: j.sha }; }); }
+function writeFile(name, data, msg){
+  return readFile(name).then(function(f){ return f.sha; }, function(){ return null; }).then(function(sha){
+    return ghApi('/contents/' + STORE_DIR + name, { method: 'PUT', body: Object.assign({ message: msg || ('Groundwork page: ' + name), content: b64enc(JSON.stringify(data, null, 1) + '\n'), branch: 'main' }, sha ? { sha: sha } : {}) }); });
+}
+function lastLog(cmd){
+  return ghApi('/contents/' + STORE_DIR + 'runs?ref=main&t=' + Date.now()).then(function(list){
+    var f = (list || []).filter(function(x){ return x.name.indexOf('-' + cmd + '.md') > 0; }).sort(function(a, b){ return a.name < b.name ? 1 : -1; })[0];
+    if (!f) return '';
+    return ghApi('/contents/' + STORE_DIR + 'runs/' + f.name + '?ref=main').then(function(j){ return b64dec(j.content); });
+  }).catch(function(){ return ''; });
+}
+// run one step on their copy: resolves with the result file (or {} when no file), rejects with a plain reason
+function engineRun(cmd, args, file, onLine){
+  if (!ghReady()) return Promise.reject({ message: 'connect your GitHub copy first (step 0)' });
+  var tag = Math.random().toString(36).slice(2, 10), since = Date.now();
+  onLine && onLine('asking your GitHub to run ' + cmd);
+  return ghApi('/actions/workflows/engine.yml/dispatches', { method: 'POST', body: { ref: 'main', inputs: { command: cmd, args: args || '', tag: tag } } }).then(function(){
+    return new Promise(function(res, rej){
+      var tries = 0, seen = null, lastStatus = '';
+      (function poll(){
+        tries++;
+        ghApi('/actions/workflows/engine.yml/runs?per_page=15&t=' + Date.now()).then(function(j){
+          var run = (j.workflow_runs || []).filter(function(r){ return (r.display_title || '').indexOf(tag) >= 0; })[0];
+          if (run && !seen){ seen = run; onLine && onLine('running on your GitHub'); }
+          if (run && run.status !== lastStatus){ lastStatus = run.status; }
+          var mins = Math.floor((Date.now() - since) / 60000);
+          if (run && run.status === 'completed'){
+            if (run.conclusion !== 'success'){
+              return lastLog(cmd).then(function(t){ var stop = (t.match(/STOP: (.*)/) || [])[1]; rej({ message: stop || ('the run ' + run.conclusion), url: run.html_url }); });
+            }
+            onLine && onLine('done, reading the result');
+            if (!file) return res({ url: run.html_url });
+            return readFile(file).then(function(f){ f.data._run = run.html_url; res(f.data); }, function(){ return lastLog(cmd).then(function(t){ var stop = (t.match(/STOP: (.*)/) || [])[1]; rej({ message: stop || 'the step finished but saved no result', url: run.html_url }); }); });
+          }
+          if (tries % 4 === 0 && onLine) onLine((run ? run.status.replace('_', ' ') : 'waiting for GitHub') + ' · ' + mins + ' min');
+          if (mins > 160) return rej({ message: 'took over 2.5 hours; open the run on GitHub', url: run && run.html_url });
+          setTimeout(poll, tries < 6 ? 5000 : 10000);
+        }).catch(function(e){ if (tries < 4) setTimeout(poll, 8000); else rej(e); });
+      })();
+    });
+  });
+}
+// the "your engine at work" box, the same idea as Solo's machine box
+function runBox(stepId, cmd, args, file, mins, onResult){
+  var box0 = el('div', 'box'); box0.appendChild(el('h3', null, 'Your engine at work'));
+  var log = el('div', 'note'); log.setAttribute('role', 'status'); log.style.whiteSpace = 'pre-wrap'; box0.appendChild(log);
+  box0.appendChild(el('div', 'note', 'Usually ~' + mins + ' min. You can leave this page; the run keeps going on your GitHub.'));
+  S.runs[stepId] = { cmd: cmd, at: Date.now() }; save();
+  function line(t){ log.textContent = (log.textContent ? log.textContent + '\n' : '') + t; }
+  engineRun(cmd, args, file, line).then(function(r){ delete S.runs[stepId]; save(); onResult(r); }, function(e){
+    delete S.runs[stepId]; save(); line('stopped: ' + ((e && e.message) || 'error'));
+    if (e && e.url) box0.appendChild(link('Open the run on GitHub ↗', e.url));
+  });
+  return box0;
+}
 
 // ---------- chalk diagrams ----------
 var DIA = {
@@ -1056,6 +1130,390 @@ RENDER.office = function(s){
     saveFile((B.name || 'store') + '-sheet.md', t, 'text/markdown'); };
   var r = el('div', 'row'); r.appendChild(cs); r.appendChild(md); a.appendChild(r); w.appendChild(a);
   footer(w, s, true);
+  return w;
+};
+
+// ===================================================================== Beta steps on the engine
+function shq(t){ return "'" + String(t).replace(/'/g, "'\"'\"'") + "'"; }
+function runSeq(stepId, list, mins, onResult){
+  // list: [[cmd, args, file], ...] run one after another; onResult gets the last result
+  var box0 = el('div', 'box'); box0.appendChild(el('h3', null, 'Your engine at work'));
+  var log = el('div', 'note'); log.setAttribute('role', 'status'); log.style.whiteSpace = 'pre-wrap'; box0.appendChild(log);
+  box0.appendChild(el('div', 'note', 'Usually ~' + mins + ' min. You can leave this page; the run keeps going on your GitHub.'));
+  function line(t){ log.textContent = (log.textContent ? log.textContent + '\n' : '') + t; }
+  var i = 0, last = null;
+  (function next(){
+    if (i >= list.length){ onResult(last); return; }
+    var it = list[i++]; line('— ' + it[0]);
+    engineRun(it[0], it[1] || '', it[2] || null, line).then(function(r){ last = r; next(); }, function(e){
+      line('stopped: ' + ((e && e.message) || 'error')); if (e && e.url) box0.appendChild(link('Open the run on GitHub ↗', e.url)); });
+  })();
+  return box0;
+}
+function secretRow(name, how, href){
+  var li = el('li'); var t = el('div', 'tt');
+  var hd = el('div', 'row'); hd.style.gap = '6px 12px'; hd.appendChild(el('code', null, name));
+  var cp = el('button', 'small quiet', 'Copy name'); cp.type = 'button'; cp.onclick = function(){ copyText(name, cp); }; hd.appendChild(cp);
+  if (ghReady()) hd.appendChild(link('Add it on GitHub ↗', 'https://github.com/' + GH.repo + '/settings/secrets/actions/new'));
+  t.appendChild(hd); var n = el('span', 'note', how); t.appendChild(n); if (href) t.appendChild(link('Get it ↗', href)); li.appendChild(t); return li;
+}
+function okState(x){ return !x ? 'wait' : x.ok === true ? 'ok' : x.ok === null ? 'warn' : 'bad'; }
+
+// ---------------- 0 · your accounts
+RENDER.accounts = function(s){
+  var A = S.accounts; var w = shell(s, 'Your store runs on your own accounts. Set them up once.');
+  w.appendChild(lesson({ n: 0, title: 'Your own engine', points: [
+    'Groundwork runs on **your own GitHub**: a private copy of the engine that does the work for every step.',
+    'Your keys go into **your GitHub secrets**. This page never sees them, and neither do we.',
+    'Your **Claude plan** does three jobs only: market prices, "is this really the product?", and product copy. Everything else is code.',
+    'You pay those companies directly. The cost table is on the first screen.'] }));
+  var a = box('1 · Your copy of the engine');
+  a.appendChild(ticks([['ghacct', 'Make a free GitHub account', 'https://github.com/signup', 'Skip if you have one.'],
+    ['ghcopy', 'Make your private copy of the engine', 'https://github.com/new?template_name=groundwork&template_owner=shopcoziva-dev&name=my-groundwork&visibility=private', 'Name it anything (my-groundwork), keep it Private, then Create.']], A));
+  a.appendChild(field('Your copy (owner/name)', GH.repo, function(v){ GH.repo = v.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\/$/, ''); ghSave(); render(); }, { ph: 'yourname/my-groundwork', note: 'From the address bar of your copy: github.com/yourname/my-groundwork' }));
+  w.appendChild(a);
+  var b = box('2 · Let this page start your runs');
+  b.appendChild(bullets(['Open the token page below. Token name: Groundwork. Expiration: 90 days.', 'Repository access: Only select repositories → your copy.',
+    'Permissions → Repository: Actions = Read and write, Contents = Read and write.', 'Generate, copy, paste it here. It stays in this browser only.']));
+  b.appendChild(el('div', 'links')).appendChild(link('Make the token on GitHub ↗', 'https://github.com/settings/personal-access-tokens/new'));
+  var tf = el('form', 'row'); var ti = el('input'); ti.type = 'password'; ti.placeholder = GH.token ? 'saved in this browser' : 'github_pat_…'; ti.style.flex = '1 1 240px'; ti.setAttribute('aria-label', 'GitHub token'); ti.autocomplete = 'off'; tf.appendChild(ti);
+  var tb = el('button', 'primary', GH.token ? 'Replace' : 'Connect'); tb.type = 'submit'; tf.appendChild(tb); b.appendChild(tf);
+  var tmsg = el('div', 'note', A.ghok ? 'Connected to ' + GH.repo : ''); b.appendChild(tmsg);
+  tf.onsubmit = function(e){ e.preventDefault(); var v = ti.value.trim() || GH.token; if (!/^(github_pat_|ghp_)/.test(v || '')){ toast('That does not look like a GitHub token'); return; }
+    if (!/^[\w.-]+\/[\w.-]+$/.test(GH.repo || '')){ toast('Add your copy (owner/name) first'); return; }
+    GH.token = v; tb.disabled = true; tmsg.textContent = 'Checking…';
+    ghApi('').then(function(r){ return ghApi('/actions/workflows/engine.yml').then(function(){ return r; }); }).then(function(r){ ghSave(); A.ghok = true; A.private = !!r.private; save(); render(); toast('Connected'); },
+      function(err){ tb.disabled = false; A.ghok = false; save(); tmsg.textContent = 'GitHub said: ' + ((err && err.message) || 'error') + (err && err.code === 404 ? ' (check the copy name and that the token can see it)' : ''); }); };
+  w.appendChild(b);
+  var c = box('3 · Your keys, as GitHub secrets');
+  c.appendChild(el('div', 'note', 'For each one: copy the name, open "Add it on GitHub", paste the name, paste the key, Add secret.'));
+  var ul = el('ul', 'ticks');
+  ul.appendChild(secretRow('CJ_API_KEY', 'CJdropshipping: My CJ → Authorization → API → generate the key.', 'https://cjdropshipping.com/myCJ.html#/apikey'));
+  ul.appendChild(secretRow('GEMINI_API_KEY', 'Google AI Studio → Create API key (makes your product photos; pay as you go).', 'https://aistudio.google.com/apikey'));
+  ul.appendChild(secretRow('CLAUDE_CODE_OAUTH_TOKEN', 'Your Claude Pro or Max plan. On a computer: install Claude Code, run  claude setup-token  in a terminal, sign in, copy the token it prints.', 'https://docs.claude.com/en/docs/claude-code/overview'));
+  c.appendChild(ul);
+  c.appendChild(el('div', 'note', 'Shopify keys come in step 4, after you have a name for the store.'));
+  w.appendChild(c);
+  var d = box('4 · Check everything');
+  var dr = A.doctor;
+  if (dr) d.appendChild(checksList([{ k: 'CJ', state: okState(dr.cj), text: (dr.cj || {}).text || '' }, { k: 'Photos', state: okState(dr.gemini), text: (dr.gemini || {}).text || '' }, { k: 'Claude', state: okState(dr.claude), text: (dr.claude || {}).text || '' }]));
+  var go = el('button', 'primary', dr ? 'Check again' : 'Check my accounts'); go.type = 'button'; go.disabled = !A.ghok; d.appendChild(go);
+  var slot = el('div'); d.appendChild(slot); w.appendChild(d);
+  go.onclick = function(){ go.disabled = true; slot.appendChild(runBox('accounts', 'doctor', '', 'doctor.json', 2, function(r){ A.doctor = r; save(); render(); })); };
+  var ok = A.ghok && dr && (dr.cj || {}).ok && (dr.gemini || {}).ok && (dr.claude || {}).ok;
+  footer(w, s, !!ok, !A.ghok ? 'Connect your GitHub copy first.' : 'All three must say PASS.');
+  return w;
+};
+
+// ---------------- 1 · direction
+function showGate(g, d){
+  var c = box('Verdict');
+  var V = g.verdict || {};
+  var pass = g.ok && (V.badge !== 'fail' || V.override);
+  c.appendChild(el('div', 'verdict chalk ' + (pass ? 'go' : 'no'), (pass ? (V.override ? 'Overridden: ' : 'Passes: ') : 'Not yet: ') + g.niche));
+  var ch = g.checks || {};
+  function st(x){ return !x ? 'wait' : x.ok ? (x.warn ? 'warn' : 'ok') : 'bad'; }
+  var dm = g.demand || {}, tr = g.trend || {};
+  c.appendChild(checksList([{ k: 'Policy', state: st(ch.policy), text: (ch.policy || {}).text || '' }, { k: 'Market', state: st(ch.market), text: (ch.market || {}).text || '' },
+    { k: 'Supply', state: st(ch.supply), text: (ch.supply || {}).text || '' }, { k: 'Profit', state: st(ch.profit), text: (ch.profit || {}).text || '' },
+    { k: 'Season', state: st(ch.season), text: (ch.season || {}).text || '' },
+    { k: 'Demand', state: dm.status === 'pass' ? 'ok' : dm.status === 'fail' ? 'bad' : 'warn', text: (dm.text || 'Keyword Planner: not checked').replace(/^Keyword Planner: /, '') + (dm.status === 'unavailable' ? ' (does not block)' : '') },
+    { k: 'Trend', state: tr.status === 'pass' ? (tr.tag === 'seasonal' ? 'warn' : 'ok') : tr.status === 'fail' ? 'bad' : 'warn', text: (tr.text || 'Trends: unavailable').replace(/^Trends: /, '') }]));
+  if (tr.series && tr.series.length){ c.appendChild(el('span', 'fl', 'Google Trends, 5 years (US)')); c.appendChild(spark(tr.series.map(function(x){ return +x[1] || 0; }))); }
+  if (g.ok && V.badge === 'fail' && !V.override){
+    if ((V.fails || []).indexOf('margin') >= 0) c.appendChild(el('div', 'note', 'The margin check is the profit floor: it cannot be overridden.'));
+    else { c.appendChild(el('div', 'note', 'Flagged: ' + (V.why || ''))); c.appendChild(field('Keep it anyway: why?', d.ovr, function(v){ d.ovr = v; save(); }, { ph: 'e.g. range is 10K–100K; my exact number is higher' }));
+      var ob = el('button', 'small', 'Override'); ob.type = 'button'; c.appendChild(ob); var os0 = el('div'); c.appendChild(os0);
+      ob.onclick = function(){ ob.disabled = true; os0.appendChild(runBox('dir', 'override', '--reason ' + shq(d.ovr || 'my call'), 'gate.json', 1, function(r){ d.g = r; save(); render(); })); }; }
+  }
+  if (!g.ok && g.reason) c.appendChild(el('div', 'note', g.reason));
+  if (g.sample && g.sample.length){
+    var det = el('details'); det.appendChild(el('summary', null, 'The ' + g.sample.length + ' real products it priced'));
+    var tw = el('div', 'tw'); var t = el('table'); t.innerHTML = '<thead><tr><th>Product</th><th class="n">Landed</th><th class="n">Price</th><th class="n">You keep</th><th>Result</th></tr></thead>'; var tb = el('tbody');
+    g.sample.forEach(function(p){ var tr2 = el('tr'); tr2.appendChild(el('td', null, String(p.name).slice(0, 48))); tr2.appendChild(el('td', 'n', money(p.landed))); tr2.appendChild(el('td', 'n', p.price ? money(p.price) : '—')); tr2.appendChild(el('td', 'n', p.keep != null ? money(p.keep) : '—'));
+      var td = el('td'); td.appendChild(el('span', 'tag ' + (p.badge === 'pass' || (p.decision === 'PRICE' && !p.badge) ? 'go' : 'no'), p.badge === 'pass' || (p.decision === 'PRICE' && !p.badge) ? 'CLEARS' : 'PARKED')); tr2.appendChild(td); tb.appendChild(tr2); });
+    t.appendChild(tb); tw.appendChild(t); det.appendChild(tw); c.appendChild(det);
+  }
+  return { el: c, pass: pass };
+}
+RENDER.dir = function(s){
+  var d = S.dir; var w = shell(s, 'Pick a whole store, not a product. Your engine proves it with real numbers.');
+  w.appendChild(lesson({ n: 1, title: 'General niches win', tag: '7 checks', dia: DIA.dir, points: [
+    'Shoppers trust a **whole store** (heated apparel), not a one-product page (heated socks).',
+    'A crowded market is **good**: it proves people already buy it online.',
+    'Name **3 product types** you can fill 50 products with.',
+    'Ad prices of **$70–$250**: with ~$40 of ads per sale and a $20 profit floor, cheaper markets cannot work.',
+    'Never: ' + NEVER + '. Google Ads will not run them.'],
+    ex: { label: 'Real example · Heated Apparel', lines: ['91 real products on CJ · 22 stores in the ads · 20 of 20 sample products clear the floor', 'Trend: seasonal, peaks in December → launch by October'] } }));
+  var a = box('Starting points · checked this week');
+  var tw = el('div', 'tw'); var t = el('table'); t.innerHTML = '<thead><tr><th>Niche</th><th class="n">On CJ</th><th>5-yr trend</th><th></th></tr></thead>'; var tb = el('tbody');
+  DATA.niches.forEach(function(n){ var tr = el('tr'); var td = el('td'); td.appendChild(el('b', null, n.niche)); td.appendChild(el('div', 'note', n.why)); tr.appendChild(td);
+    tr.appendChild(el('td', 'n', String(n.supply))); var tt = el('td'); tt.appendChild(spark(n.trend.series)); tt.appendChild(el('span', 'note', n.trend.tag + (n.trend.tag === 'seasonal' ? ' · peaks ' + n.trend.peaks.join(' ') : ''))); tr.appendChild(tt);
+    var tu = el('td'); var u = el('button', 'small', d.niche === n.niche ? 'Picked' : 'Use'); u.type = 'button'; u.onclick = function(){ S.dir = { niche: n.niche, cat: n.category === 'apparel' ? 'apparel' : n.category === 'home' ? 'home' : 'other', types: (n.cj || []).join(', ') }; delete S.approved.dir; save(); render(); }; tu.appendChild(u); tr.appendChild(tu); tb.appendChild(tr); });
+  t.appendChild(tb); tw.appendChild(t); a.appendChild(tw); w.appendChild(a);
+  var b = box('Your niche');
+  var g0 = el('div', 'grid2');
+  g0.appendChild(field('Store niche', d.niche, function(v){ d.niche = v.trim(); save(); }, { ph: 'e.g. Heated Apparel' }));
+  var cf = el('div', 'field'); var cl = el('label', null, 'Category'); cl.htmlFor = 'dirCat'; cf.appendChild(cl); var cs = el('select'); cs.id = 'dirCat';
+  [['apparel', 'Apparel ($34 ad cost per sale)'], ['home', 'Home ($40)'], ['other', 'Everything else ($40)']].forEach(function(o){ var op = el('option', null, o[1]); op.value = o[0]; if ((d.cat || 'other') === o[0]) op.selected = true; cs.appendChild(op); });
+  cs.onchange = function(){ d.cat = cs.value; save(); }; cf.appendChild(cs); g0.appendChild(cf); b.appendChild(g0);
+  b.appendChild(field('3 product types (comma separated)', d.types, function(v){ d.types = v; save(); }, { ph: 'heated jackets, heated vests, heated gloves', note: 'Plural, the way shoppers search. Your engine searches CJ and the ads for each.' }));
+  b.appendChild(el('span', 'fl', 'Demand (optional): Keyword Planner'));
+  b.appendChild(el('div', 'links')).appendChild(link('Open Keyword Planner ↗', 'https://ads.google.com/aw/keywordplanner/home'));
+  var g1 = el('div', 'grid2');
+  g1.appendChild(field('Avg. monthly searches', d.searches, function(v){ d.searches = v; save(); }, { ph: '10K – 100K' }));
+  g1.appendChild(field('Top of page bid (high) $', d.cpc, function(v){ d.cpc = v; save(); }, { ph: '1.20' })); b.appendChild(g1);
+  var go = el('button', 'primary', d.g ? 'Check again' : 'Check this niche'); go.type = 'button'; b.appendChild(go);
+  b.appendChild(el('div', 'note', 'Your engine reads the ads, CJ and Google Trends, and prices 20 real products with the live formula. ~4 min.'));
+  var slot = el('div'); b.appendChild(slot); w.appendChild(b);
+  go.onclick = function(){
+    var types = String(d.types || '').split(',').map(function(x){ return x.trim(); }).filter(Boolean);
+    if (!d.niche || types.length < 2){ toast('Add the niche and 2-3 product types'); return; }
+    go.disabled = true; delete S.approved.dir;
+    var pre = d.searches ? writeFile('keyword_planner.json', { niches: (function(o){ o[d.niche] = { searches: d.searches, cpc: d.cpc || null }; return o; })({}) }, 'Keyword Planner numbers') : Promise.resolve();
+    pre.catch(function(){}).then(function(){ slot.appendChild(runBox('dir', 'gate', '--niche ' + shq(d.niche) + ' --types ' + shq(types.join(', ')) + ' --category ' + (d.cat || 'other'), 'gate.json', 4, function(r){ d.g = r; save(); render(); })); });
+  };
+  var pass = false;
+  if (d.g){ var sg = showGate(d.g, d); w.appendChild(sg.el); pass = sg.pass; }
+  footer(w, s, pass, d.g ? 'Every hard check must pass (demand and trend can be overridden).' : 'Run the check first.');
+  return w;
+};
+
+// ---------------- 2 · reference store
+var LAYNAME = { announcement: 'Announcement bar', header: 'Header + menu', hero: 'Hero banner', 'quick-links': 'Quick links', 'category-tiles': 'Shop by category', 'product-carousel': 'Best sellers grid',
+  'product-grid': 'Best sellers grid', 'trust-bar': 'Trust bar (shipping, returns)', 'feature-cards': 'Benefits / icons', editorial: 'Image with text', stats: 'Image with text', reviews: 'Real reviews',
+  'press-logos': null, newsletter: 'Newsletter', footer: 'Footer', other: null };
+RENDER.ref = function(s){
+  var r = S.ref; var w = shell(s, 'Model one store that already sells your niche. Copy its shape, never its words or photos.');
+  w.appendChild(lesson({ n: 2, title: 'Steal the shape, not the store', dia: DIA.ref, points: [
+    'Find it in the **Google ads**: the stores paying for clicks today are the ones selling.',
+    'Your engine checks it: **own brand**, live, **your price range**, mostly your niche, not luxury.',
+    '**1,000+ reviews** is the strong signal it really sells.',
+    'It reads their **homepage section order**, colours and best sellers. You copy the shape, never text, photos or the name.'] }));
+  var a = box('Find it');
+  a.appendChild(el('div', 'links')).appendChild(link('Google search: ' + (S.dir.niche || 'your niche') + ' ↗', 'https://www.google.com/search?q=' + enc(S.dir.niche || '')));
+  a.appendChild(bullets(['Look at the Sponsored results at the top', 'Open the first 5 stores', 'Paste the one that looks best']));
+  a.appendChild(field('Store link', r.url, function(v){ r.url = v.trim(); save(); }, { type: 'url', ph: 'https://' }));
+  var go = el('button', 'primary', r.res ? 'Check another' : 'Check this store'); go.type = 'button'; a.appendChild(go);
+  var slot = el('div'); a.appendChild(slot); w.appendChild(a);
+  go.onclick = function(){ if (!/^https?:\/\//.test(r.url || '')){ toast('Paste the full link, starting with https://'); return; } go.disabled = true; delete S.approved.ref;
+    slot.appendChild(runBox('ref', 'ref', '--url ' + shq(r.url), 'reference.json', 2, function(res){ r.res = res;
+      readFile('rip.json').then(function(f){ r.layout = f.data.layout; }, function(){}).then(function(){ var L = (r.layout && r.layout.home) || [];
+        r.order = L.map(function(x){ return LAYNAME[x.type]; }).filter(function(x, i, arr){ return x && arr.indexOf(x) === i; }); r.colors = ((res.look || {}).colors || []).slice(0, 5); r.name = res.name; save(); render(); }); })); };
+  var res = r.res;
+  if (res){
+    var c = box('The checks');
+    c.appendChild(el('div', 'verdict chalk ' + (res.ok ? 'go' : 'no'), res.ok ? res.name : 'Not this one'));
+    c.appendChild(checksList((res.checks || []).map(function(x){ return { ok: x.ok, text: x.text }; })));
+    if (!res.ok) c.appendChild(el('div', 'note', 'Paste another store.'));
+    if (res.ok){
+      if (res.price_range) c.appendChild(el('div', 'note', 'Price range ' + res.price_range + ' · ' + (res.platform === 'shopify' ? 'Shopify' : 'not Shopify') + (res.products ? ' · ' + res.products + ' products' : '')));
+      if (res.best_sellers && res.best_sellers.length){ c.appendChild(el('span', 'fl', 'Their best sellers')); c.appendChild(bullets(res.best_sellers.slice(0, 5).map(function(b){ return link(b.title + (b.price ? ' · $' + b.price : ''), b.url); }))); }
+      if (r.colors && r.colors.length){ var sw = el('div', 'sw'); r.colors.forEach(function(h){ var i = el('i'); i.style.background = h; i.title = h; sw.appendChild(i); }); c.appendChild(el('span', 'fl', 'Their colours')); c.appendChild(sw); }
+      if (r.order && r.order.length){ c.appendChild(el('span', 'fl', 'Their homepage, top to bottom')); c.appendChild(el('div', 'note', r.order.join(' → '))); }
+    }
+    w.appendChild(c);
+  }
+  footer(w, s, !!(res && res.ok), res ? 'This store failed a check. Paste another.' : 'Check a store first.');
+  return w;
+};
+
+// ---------------- 3 · brand kit (saved by the engine)
+var _brand = RENDER.brand;
+RENDER.brand = function(s){
+  var B = S.brand; var w = _brand(s); var f = w.querySelector('.foot'); if (f) f.remove();
+  var bx = box('Save it');
+  var go = el('button', 'primary', B.saved ? 'Save changes' : 'Save my brand kit'); go.type = 'button'; go.disabled = !(B.name && B.com && B.tm); bx.appendChild(go);
+  if (B.saved) bx.appendChild(el('div', 'note', 'Saved to your engine.'));
+  var slot = el('div'); bx.appendChild(slot); w.appendChild(bx);
+  go.onclick = function(){ go.disabled = true; var P = Object.assign({ text: '#1E1410', background: '#FAF3EC', card: '#F1E2D3', accent: '#C2410C', muted: '#8A8A8A' }, B.pal || {}); var F = FONTS[B.fonts || 'modern'];
+    var kit = { name: B.name, domain: (B.name || '').toLowerCase().replace(/[^a-z0-9]/g, '') + '.com', tagline: B.tagline || '', palette: P, fonts: { heading: F[0], body: F[1] }, icon: B.logo === 'icon' };
+    slot.appendChild(runBox('brand', 'kit', '--json ' + shq(JSON.stringify(kit)), 'brand.json', 1, function(){ B.saved = Date.now(); save(); render(); })); };
+  footer(w, s, !!(B.name && B.com && B.tm && B.saved), 'Name it, tick both checks, and save the kit.');
+  return w;
+};
+
+// ---------------- 4 · new store sign-up (+ real writes on)
+RENDER.signup = function(s){
+  var U = S.signup, B = S.brand; var w = shell(s, 'Now the store gets made, under the right name, and your engine gets the keys to it.');
+  w.appendChild(lesson({ n: 4, title: 'Why sign up this late', points: [
+    'Nothing before this step needs Shopify, so a niche that fails costs you **nothing**.',
+    'The store is **named right** from day one.',
+    'Your engine gets an **app key** to your store, so it can build pages and list products.',
+    'CJ connects to the store so **orders reach the supplier** on their own.'] }));
+  var a = box('1 · Accounts');
+  var T = [['shop', 'Shopify: start a store named ' + (B.name || 'your brand'), 'https://www.shopify.com/free-trial', 'Use the brand name from step 3.'],
+    ['app', 'Shopify: create an app for your engine', 'https://admin.shopify.com/settings/apps/development', 'Settings → Apps → Develop apps → Create app → Configure Admin API scopes: read/write products, inventory, publications, online store pages, navigation, legal policies, themes; read orders → Install.'],
+    ['cjlink', 'CJ: connect your Shopify store', 'https://cjdropshipping.com/myCJ.html#/store-authorization', 'Authorize the new store so orders go to CJ.']];
+  a.appendChild(ticks(T, U)); w.appendChild(a);
+  var b = box('2 · Store keys, as GitHub secrets');
+  var ul = el('ul', 'ticks');
+  ul.appendChild(secretRow('SHOPIFY_CLIENT_ID', 'Your app → API credentials → Client ID.'));
+  ul.appendChild(secretRow('SHOPIFY_CLIENT_SECRET', 'Your app → API credentials → Client secret.'));
+  b.appendChild(ul);
+  var g = el('div', 'grid2');
+  g.appendChild(field('Your store address', U.shop, function(v){ U.shop = v.trim().toLowerCase(); save(); }, { ph: 'yourstore.myshopify.com' }));
+  g.appendChild(field('SKU prefix (2-4 letters)', U.sku, function(v){ U.sku = v.trim().toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4); save(); render(); }, { ph: (B.name || 'GW').slice(0, 2).toUpperCase() }));
+  g.appendChild(field('Support email (shown on your policies)', U.email, function(v){ U.email = v.trim(); save(); }, { type: 'text', ph: 'hello@yourbrand.com' }));
+  g.appendChild(field('Business city (never your street)', U.city, function(v){ U.city = v.trim(); save(); }, { ph: 'Austin, TX' }));
+  b.appendChild(g);
+  var go = el('button', 'primary', U.doctor ? 'Check again' : 'Connect my store'); go.type = 'button'; b.appendChild(go);
+  var dr = U.doctor; if (dr) b.appendChild(checksList([{ k: 'Shopify', state: okState(dr.shopify), text: (dr.shopify || {}).text || '' }]));
+  var slot = el('div'); b.appendChild(slot); w.appendChild(b);
+  go.onclick = function(){ if (!/\.myshopify\.com$/.test(U.shop || '') || !(U.sku || '').length){ toast('Add your store address and a SKU prefix'); return; } go.disabled = true;
+    var pairs = ['shop_domain=' + U.shop, 'sku_prefix=' + U.sku].concat(U.email ? ['support_email=' + U.email] : []).concat(U.city ? ['business_city=' + U.city] : []).map(shq).join(' ');
+    slot.appendChild(runSeq('signup', [['set', pairs, null], ['doctor', '', 'doctor.json']], 3, function(r){ U.doctor = r; save(); render(); })); };
+  var shopOk = dr && (dr.shopify || {}).ok;
+  var c = box('3 · Link CJ and turn on real writes');
+  c.appendChild(el('div', 'note', 'Until now your engine only practised (dry run). This turns on real writes to your store and CJ.'));
+  if (U.shops && U.shops.length){
+    var sf = el('div', 'field'); var sl = el('label', null, 'Your store in CJ'); sl.htmlFor = 'cjShop'; sf.appendChild(sl); var ss = el('select'); ss.id = 'cjShop';
+    U.shops.forEach(function(x){ var id = x.shopId || x.id; var op = el('option', null, (x.shopName || x.name || id) + ' · ' + id); op.value = id; if (U.cjShop === id) op.selected = true; ss.appendChild(op); });
+    ss.onchange = function(){ U.cjShop = ss.value; save(); }; if (!U.cjShop){ U.cjShop = ss.value; } sf.appendChild(ss); c.appendChild(sf);
+  }
+  var fb = el('button', 'small', 'Find my CJ store'); fb.type = 'button'; fb.disabled = !shopOk; c.appendChild(fb);
+  var lb = el('button', 'primary', U.live ? 'Real writes are ON' : 'Turn on real writes'); lb.type = 'button'; lb.disabled = !(shopOk && U.cjShop) || U.live; c.appendChild(lb);
+  var slot2 = el('div'); c.appendChild(slot2); w.appendChild(c);
+  fb.onclick = function(){ fb.disabled = true; slot2.appendChild(runBox('signup', 'cj-shops', '', 'cj_shops.json', 1, function(r){ U.shops = (r && r.shops) || []; if (!U.shops.length) toast('No store found in CJ yet: connect it in CJ first'); save(); render(); })); };
+  lb.onclick = function(){ lb.disabled = true; slot2.appendChild(runSeq('signup', [['set', 'cj_shop_id=' + U.cjShop, null], ['golive', '--confirm store', 'store.json']], 2, function(r){ U.live = r && r.dry_run === false; save(); render(); })); };
+  footer(w, s, allTicked(T, U) && !!shopOk && !!U.live, 'Tick the accounts, connect the store, then turn on real writes.');
+  return w;
+};
+
+// ---------------- 5 · site build
+var _build = RENDER.build;
+RENDER.build = function(s){
+  var Bd = S.build; var w = _build(s); var f = w.querySelector('.foot'); if (f) f.remove();
+  ['t-pol', 't-pages'].forEach(function(id){ var x = w.querySelector('#' + id); if (x) x.closest('li').remove(); });   // the engine does these now
+  var bx = box('Your engine: policies, pages, collections, menu');
+  bx.appendChild(el('div', 'note', 'Refund, shipping, privacy, terms and contact policies; About, FAQ, Shipping, Returns and Contact pages; one collection per product type; the main menu.'));
+  var go = el('button', 'primary', Bd.setup ? 'Run again' : 'Set up my store'); go.type = 'button'; bx.appendChild(go);
+  if (Bd.setup) bx.appendChild(checksList([{ state: 'ok', text: (Bd.setup.writes || []).length + ' store changes made' }].concat((Bd.setup.checklist || []).slice(0, 6).map(function(x){ return { state: 'warn', text: x }; }))));
+  var slot = el('div'); bx.appendChild(slot);
+  var lesson0 = w.querySelector('.lesson'); lesson0.parentNode.insertBefore(bx, lesson0.nextSibling);
+  go.onclick = function(){ go.disabled = true; slot.appendChild(runBox('build', 'setup', '', 'store_setup.json', 3, function(r){ Bd.setup = r; save(); render(); })); };
+  var order = (S.ref.order || []).filter(function(x){ return x !== 'Real reviews'; });
+  var T0 = ['theme', 'colors', 'fonts', 'logo'].map(function(k){ return [k]; }), T1 = order.map(function(_, i){ return ['sec' + i]; });
+  footer(w, s, !!Bd.setup && order.length >= 3 && allTicked(T0.concat(T1, [['pol'], ['pages'], ['dummy']]).filter(function(x){ return x[0] !== 'pol' && x[0] !== 'pages'; }), Bd), 'Run the setup, then tick every section.');
+  return w;
+};
+
+// ---------------- 6 · copy
+RENDER.copy = function(s){
+  var C = S.copy; var w = shell(s, 'One copy pattern for every listing. Your engine writes each listing from it.');
+  w.appendChild(lesson({ n: 6, title: 'Write like the search box', points: [
+    'Google title: **product type first**, then the 2 features people search, then who it is for, then colour/size. **150 characters max.**',
+    'Description: one line on what it is and who it is for, then **4–6 facts** a shopper can check.',
+    'Facts come **only from the supplier spec sheet**. Never invent specs, reviews or delivery times.',
+    'Your Claude writes each listing to this pattern; if it is busy, a template fills in so nothing stops.'] }));
+  var a = box('Your pattern');
+  a.appendChild(field('Anything to add? (optional)', C.params, function(v){ C.params = v; save(); }, { area: true, ph: 'e.g. always mention the battery is included', note: 'Applied only inside the rules.' }));
+  var go = el('button', 'primary', C.pat ? 'Make it again' : 'Make my copy pattern'); go.type = 'button'; a.appendChild(go);
+  var slot = el('div'); a.appendChild(slot); w.appendChild(a);
+  go.onclick = function(){ go.disabled = true; slot.appendChild(runBox('copy', 'copy', C.params ? '--params ' + shq(C.params) : '', 'copy.json', 1, function(r){ C.pat = r; save(); render(); })); };
+  if (C.pat){ var b = box('The pattern'); b.appendChild(checksList([{ state: 'ok', k: 'Google title', text: C.pat.title }, { state: 'ok', k: 'Example', text: C.pat.title_example || '' }, { state: 'ok', k: 'Site title', text: C.pat.site || '' },
+    { state: 'ok', k: 'Facts', text: (C.pat.fact_types || []).join(', ') }, { state: 'ok', k: 'FAQ', text: (C.pat.faq || []).join(' · ') }])); w.appendChild(b); }
+  footer(w, s, !!C.pat, 'Make the pattern first.');
+  return w;
+};
+
+// ---------------- 7 · photos (the first 2 real listings)
+function shopAdmin(){ var h = (S.signup.shop || '').replace('.myshopify.com', ''); return h ? 'https://admin.shopify.com/store/' + h + '/products' : 'https://admin.shopify.com'; }
+function readListings(){
+  return ghApi('/contents/' + STORE_DIR + 'listings?ref=main&t=' + Date.now()).then(function(list){
+    return Promise.all((list || []).filter(function(x){ return /\.json$/.test(x.name); }).slice(-60).map(function(x){ return ghApi('/contents/' + STORE_DIR + 'listings/' + x.name + '?ref=main').then(function(j){ return JSON.parse(b64dec(j.content)); }, function(){ return null; }); }));
+  }).then(function(a){ return a.filter(Boolean); }, function(){ return []; });
+}
+function listingRows(rows){
+  var tw = el('div', 'tw'); var t = el('table'); t.innerHTML = '<thead><tr><th>SKU</th><th>Listing</th><th>Status</th></tr></thead>'; var tb = el('tbody');
+  rows.forEach(function(r){ var tr = el('tr'); tr.appendChild(el('td', null, r.sku)); var td = el('td'); td.appendChild(link(((r.copy || {}).title || r.key || '').slice(0, 70) + ' ↗', shopAdmin() + '?query=' + enc(r.sku))); tr.appendChild(td);
+    var ts = el('td'); ts.appendChild(el('span', 'tag ' + (/ACTIVE|DRAFT|LIVE/.test(r.status || '') ? 'go' : 'no'), r.status || '?')); tr.appendChild(ts); tb.appendChild(tr); });
+  t.appendChild(tb); tw.appendChild(t); return tw;
+}
+RENDER.photos = function(s){
+  var P = S.photos; var w = shell(s, 'Your engine makes 5 photos per product with your image key. Test 2 products first.');
+  w.appendChild(lesson({ n: 7, title: 'Five shots sell it', points: [
+    '**01 Studio** on a clean background: the one Google shows. No text, no logo.',
+    '**02 In use**, **03 Angle**, **04 Detail**, **05 Feature**: answer the questions before they ask.',
+    'Supplier photos are only a **reference**. Copying them gets you flagged.',
+    'This makes your first **2 real listings** (drafts in Shopify) so you can judge the photos before the other 48.'] }));
+  var a = box('Make 2 test listings');
+  a.appendChild(el('div', 'note', 'Drafts your 50-product shelf first if it is not there yet, then builds 2 listings: copy, 5 photos, price, CJ link. ~15 min, about $1 of image credits.'));
+  var go = el('button', 'primary', P.rows && P.rows.length ? 'Make 2 more' : 'Make my 2 test listings'); go.type = 'button'; a.appendChild(go);
+  var slot = el('div'); a.appendChild(slot); w.appendChild(a);
+  go.onclick = function(){ go.disabled = true; var seq = (S.catalog.sh ? [] : [['shelf', '', 'shelf50.json']]).concat([['batch', '--n 2 --lanes 1', null]]);
+    slot.appendChild(runSeq('photos', seq, 15, function(){ readFile('shelf50.json').then(function(f){ S.catalog.sh = f.data; }, function(){}).then(readListings).then(function(rows){ P.rows = rows; save(); render(); }); })); };
+  if (P.rows && P.rows.length){ var b = box('Your test listings'); b.appendChild(listingRows(P.rows)); b.appendChild(el('div', 'note', 'Open each one in Shopify and check the photos. Happy with them? Approve. Not happy? Tell us what is off.')); w.appendChild(b); }
+  footer(w, s, !!(P.rows && P.rows.length >= 2), 'Make 2 test listings and check their photos in Shopify.');
+  return w;
+};
+
+// ---------------- 8 · pricing: the "was" price setting goes to the engine
+var _pricing = RENDER.pricing;
+RENDER.pricing = function(s){
+  var P = S.pricing; var w = _pricing(s);
+  var bx = box('Save the "was" price setting');
+  bx.appendChild(el('div', 'note', P.set.compareOn ? 'Listings will show a was-price of price + $30.' : 'Listings show real prices only (recommended).'));
+  bx.appendChild(el('div', 'note', 'Your engine prices every product with this formula on its own. Pricing one by hand above is practice, not required.'));
+  var saved = P.savedCompare === !!P.set.compareOn;
+  var go = el('button', saved ? 'small' : 'primary', saved ? 'Saved · save again' : 'Save to my engine'); go.type = 'button'; bx.appendChild(go); var slot = el('div'); bx.appendChild(slot);
+  go.onclick = function(){ go.disabled = true; var v = !!P.set.compareOn; slot.appendChild(runBox('pricing', 'set', 'compare_at=' + (v ? 'true' : 'false'), null, 1, function(){ P.savedCompare = v; save(); toast('Saved'); render(); })); };
+  var f = w.querySelector('.foot'); if (f) f.remove(); w.appendChild(bx);
+  footer(w, s, saved, 'Save the "was" price setting to your engine.');
+  return w;
+};
+
+// ---------------- 9 · catalog: the engine's shelf, built 10 at a time
+RENDER.catalog = function(s){
+  var K = S.catalog; var w = shell(s, '50 products that all clear the floor, spread across your types. Built 10 at a time.');
+  w.appendChild(lesson({ n: 9, title: 'A shelf, not a pile', dia: DIA.catalog, points: [
+    '**50 products**, every one priced by the formula and clearing the floor and the bad-ad-day check.',
+    'Spread across your **3 product types** and price bands. No type above ~30%.',
+    'Only products with **US delivery in 12 days or less** and real stock.',
+    'Built in **batches of 10**. Look at batch 1 hard; 2–5 follow the same rules.'] }));
+  var a = box('Your shelf');
+  var go = el('button', K.sh ? 'small' : 'primary', K.sh ? 'Draft it again' : 'Draft my 50'); go.type = 'button'; a.appendChild(go);
+  var slot = el('div'); a.appendChild(slot);
+  go.onclick = function(){ go.disabled = true; slot.appendChild(runBox('catalog', 'shelf', '', 'shelf50.json', 10, function(r){ K.sh = r; save(); render(); })); };
+  var sh = K.sh;
+  if (sh){
+    var drop = sh.dropped || [];
+    var items = (sh.items || []).filter(function(x){ return drop.indexOf(x.pid) < 0; });
+    var div = sh.diversity || {};
+    a.appendChild(checksList([{ ok: (sh.items || []).length >= 50, text: (sh.items || []).length + ' of 50 on the shelf, ' + (sh.reserve || []).length + ' in reserve' }, { ok: (div.score || 0) >= 70, text: 'diversity ' + (div.score || 0) + ' (need 70) · ' + Object.keys(div.types || {}).map(function(k){ return k + ' ' + div.types[k]; }).join(', ') }]));
+    var tw = el('div', 'tw tall'); var t = el('table'); t.innerHTML = '<thead><tr><th>Product</th><th>Type</th><th class="n">Landed</th><th class="n">Price</th><th class="n">You keep</th><th></th></tr></thead>'; var tb = el('tbody');
+    items.forEach(function(x){ var tr = el('tr'); tr.appendChild(el('td', null, x.name)); tr.appendChild(el('td', null, x.type)); tr.appendChild(el('td', 'n', money(x.landed))); tr.appendChild(el('td', 'n', money(x.price))); tr.appendChild(el('td', 'n', money(x.keep)));
+      var td = el('td'); var b0 = el('button', 'small quiet', 'Drop'); b0.type = 'button'; b0.onclick = function(){ b0.disabled = true; sh.dropped = drop.concat([x.pid]); save(); render();
+        writeFile('shelf50.json', Object.assign({}, sh, { _run: undefined }), 'drop a product').catch(function(){ toast('Could not save the drop to your copy'); }); }; td.appendChild(b0); tr.appendChild(td); tb.appendChild(tr); });
+    t.appendChild(tb); tw.appendChild(t); a.appendChild(tw);
+    a.appendChild(el('div', 'note', 'Dropping one pulls in the next best from the reserve when the batch is built.'));
+  }
+  w.appendChild(a);
+  var bb = box('Build in batches of 10'); K.batch = K.batch || 0;
+  for (var i = 1; i <= 5; i++){ var row = el('div', 'row'); row.appendChild(el('b', null, 'Batch ' + i)); row.appendChild(el('span', 'tag ' + (K.batch >= i ? 'go' : 'maybe'), K.batch >= i ? 'BUILT' : i === 1 ? 'REVIEW AFTER' : 'AFTER BATCH 1')); bb.appendChild(row); }
+  var gb = el('button', 'primary', K.batch === 0 ? 'Build batch 1' : K.batch === 1 ? 'Batch 1 looks good: build 2-5' : K.batch >= 5 ? 'All 5 built' : 'Continue'); gb.type = 'button'; gb.disabled = !sh || K.batch >= 5 || !!S.runs.catalog; bb.appendChild(gb);
+  var slot2 = el('div'); bb.appendChild(slot2);
+  if (K.rows && K.rows.length){ bb.appendChild(el('span', 'fl', K.rows.length + ' listings so far')); bb.appendChild(listingRows(K.rows.slice(-12))); }
+  w.appendChild(bb);
+  gb.onclick = function(){ gb.disabled = true; var n = K.batch === 0 ? 1 : 5 - K.batch, seq = []; for (var j = 0; j < n; j++) seq.push(['batch', '--n 10 --lanes 4', null]);
+    slot2.appendChild(runSeq('catalog', seq, n * 25, function(){ K.batch = Math.min(5, K.batch + n); readListings().then(function(rows){ K.rows = rows; save(); render(); }); })); };
+  footer(w, s, K.batch >= 5, 'Approve when all 5 batches are built.');
+  return w;
+};
+
+// ---------------- 11 · ads: the engine writes the campaign plan
+var _launch = RENDER.launch;
+RENDER.launch = function(s){
+  var L = S.launch; var w = _launch(s);
+  var bx = box('Your campaign plan');
+  var go = el('button', 'primary', L.plan ? 'Write it again' : 'Write my campaign'); go.type = 'button'; bx.appendChild(go); var slot = el('div'); bx.appendChild(slot);
+  go.onclick = function(){ go.disabled = true; slot.appendChild(runBox('launch', 'ads', '', 'ads.json', 2, function(r){ L.plan = r; save(); render(); })); };
+  if (L.plan){ var p = L.plan; var be = p.break_even || {};
+    bx.appendChild(checksList([{ state: 'ok', k: 'Campaign', text: (p.campaign || {}).name || '' }, { state: 'ok', k: 'Break-even', text: 'cost per order up to $' + (be.break_even_cost_per_order || '?') + ' · ~' + (be.orders_needed_per_month_to_break_even || '?') + ' orders a month' }]));
+    var a = (p.campaign || {}).asset_group || p.asset_group || {}; if (a.headlines){ bx.appendChild(el('span', 'fl', 'Headlines')); bx.appendChild(el('div', 'note', a.headlines.join(' · '))); }
+    if (p.stop_rules) bx.appendChild(bullets(p.stop_rules)); }
+  var lesson0 = w.querySelector('.lesson'); lesson0.parentNode.insertBefore(bx, lesson0.nextSibling);
+  Array.prototype.forEach.call(w.querySelectorAll('li'), function(li){ if (/Break-even ROAS shows once/.test(li.textContent)) li.remove(); });   // the engine's plan carries break-even
   return w;
 };
 

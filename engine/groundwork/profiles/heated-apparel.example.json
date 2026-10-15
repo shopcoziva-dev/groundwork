@@ -1,0 +1,108 @@
+{
+ "_about": "Coziva's proven rules written as a Groundwork niche profile. It is the worked example Claude sees when it writes a new niche's profile, so the quality bar carries over. Wording distilled from scripts/stage4.py, autogen.py and RULES.md (owner rules 2026-10-07..10).",
+ "niche": "heated and winter-cozy apparel",
+ "voice": "Plain, warm and specific. Say what the product does and why it beats cheaper look-alikes, only with real listed facts. No hype words without a fact behind them.",
+ "audience": "US adults who get cold outdoors or at home: commuters, outdoor workers, hunters, skiers, people who run cold.",
+ "genders": ["women", "men"],
+ "colour_preference": {
+  "men": ["black", "navy", "blue", "gray", "dark green", "olive"],
+  "women": ["light coffee", "beige", "camel", "cream", "light blue", "black", "navy", "soft gray"],
+  "unisex": ["black", "navy", "gray"]
+ },
+ "copy": {
+  "short_title_pattern": "[Women's/Men's] Heated [ONE use OR ONE real heat feature] [item], e.g. \"Men's Heated Ski Gloves\", \"Women's 31-Zone Heated Hoodie\". One use only; never lead with a minor feature (USB, battery, touchscreen). If it has a zone count, say it.",
+  "must": [
+   "Only facts in the supplier listing text, variant names and photos. Never invent battery life, temperatures, wattage, materials or waterproofing.",
+   "Say why THIS product is worth its price versus cheaper look-alikes, with real features only.",
+   "If the product has no electric heating element, never write heated / heating / heat zones."
+  ],
+  "never": ["power bank included (unless stated)", "medical claims", "discounts or was/now prices", "fake urgency", "supplier names (CJ, AliExpress, China)"],
+  "tags_base": ["heated", "winter"],
+  "faq_topics": ["power and battery", "where it heats / how it works", "fit and sizing", "shipping and returns"]
+ },
+ "photo_rules": [
+  "Rechargeable gear is shown CORDLESS: no charging cable, USB cable or plug anywhere (truly corded items keep their cable).",
+  "Every item of clothing and footwear the model wears is UNBRANDED: no logos, letters or stripes.",
+  "Never a second layer of the same garment; modest outfit that fits a cold scene.",
+  "The hero never looks into the camera.",
+  "A heated product's warmth shows only as a soft amber tint inside the product itself: no halo, aura, rim light or orange wash over the scene."
+ ],
+ "types": {
+  "jacket": {
+   "match": ["jacket", "vest", "hoodie", "coat", "sweater", "top"],
+   "category": "apparel",
+   "collection": "Heated Jackets",
+   "people": true,
+   "framing": "Waist-up with clear headroom above the head, so the whole head and hair are fully in frame and nothing is cropped.",
+   "face": true,
+   "poses": ["standing square-on, arms relaxed at the sides", "one hand resting in a jacket pocket, a very small body turn", "arms lightly crossed low, chin slightly up"],
+   "outfit_hint": "a plain fitted top under it and plain dark trousers",
+   "hero_scene": "outdoors on a cold quiet morning",
+   "hero_moment": "pausing on a walk, hands relaxed, looking down the path",
+   "alone": "ghost-mannequin style (invisible support, natural undistorted shape), front view, the whole garment including collar or hood, sleeves and hem visible",
+   "feature": {"kind": "effect", "describe": "the FRONT and the BACK of the product side by side, the heating zones glowing", "effect": "The heating elements glow soft warm orange-amber through the fabric at exactly the real zones and nowhere else; the glow stays inside the panels, no halo, no flames, no cartoon look."},
+   "rules": []
+  },
+  "gloves": {
+   "match": ["glove", "mitten"],
+   "category": "apparel",
+   "collection": "Heated Gloves",
+   "people": true,
+   "framing": "Waist-up with clear headroom and BOTH hands clearly visible in front of the body, fingers together and gently curved (no spread or interlaced fingers, no overlapping hands), exactly five fingers on each hand, the gloves large and clear.",
+   "face": true,
+   "poses": ["hands held relaxed in front of the waist", "one hand raised to chest height, palm in"],
+   "outfit_hint": "a long-sleeve top or coat with sleeves",
+   "hero_scene": "outdoors on a cold morning",
+   "hero_moment": "zipping a coat collar with gloved hands",
+   "alone": "a pair laid side by side, one palm down and one palm up",
+   "feature": {"kind": "effect", "describe": "the pair laid flat, the heated areas glowing", "effect": "a soft warm orange-amber glow at the back of the hand and fingers only"},
+   "rules": ["BOTH hands wear the gloves, exactly two hands, five fingers each."]
+  },
+  "socks": {
+   "match": ["sock"],
+   "category": "apparel",
+   "collection": "Heated Footwear",
+   "people": true,
+   "framing": "Mid-shin to floor ONLY: NO knees, NO thighs, NO trousers and NO torso in frame; the lower legs and feet fill the frame on a plain studio floor. Exactly two feet and two legs.",
+   "face": false,
+   "poses": ["standing, feet shoulder-width apart", "one foot slightly forward"],
+   "outfit_hint": "no shoes; shorts or rolled-up trousers ending above the sock tops",
+   "hero_scene": "at home on a cosy living-room floor",
+   "hero_moment": "feet up on a footstool by the sofa",
+   "alone": "a pair laid flat side by side, exactly two items",
+   "feature": {"kind": "none"},
+   "rules": ["BOTH feet wear the SAME sock (one on each foot), no shoes, no other socks; exactly two feet."]
+  },
+  "blanket": {
+   "match": ["blanket", "throw", "shawl", "wrap"],
+   "category": "home",
+   "collection": "Heated Home",
+   "people": true,
+   "framing": "Waist-up, whole head and hair in frame, the blanket worn like a cape around the shoulders and held closed at the chest with both hands, large and clearly visible with its natural drape.",
+   "face": true,
+   "poses": ["cheek tucked softly into the blanket collar, both hands holding it closed at the chest", "head tilted the other way, one hand holding the blanket closed"],
+   "outfit_hint": "soft loungewear",
+   "expression": "a blissful, relaxed 'ahh, so warm' smile with soft eyes, never a flat stare",
+   "hero_scene": "sitting on a sofa by a rainy window in a softly lit living room in the evening",
+   "hero_moment": "both hands around a warm mug, the blanket around her shoulders and lap, gazing out of the window",
+   "alone": "neatly folded with one corner turned back, the controller beside it",
+   "feature": {"kind": "none"},
+   "corded": true,
+   "rules": []
+  }
+ },
+ "sourcing": {
+  "price_band": [3, 45],
+  "max_ship_days": 12,
+  "min_stock": 100,
+  "max_per_type": 2,
+  "blocklist": ["vevor", "ororo", "milwaukee", "dewalt", "the north face", "columbia", "nike", "adidas"],
+  "vetoes": ["cartoon", "novelty", "massage gun"]
+ },
+ "collections": [
+  {"title": "Heated Jackets", "tag": "type-jacket"},
+  {"title": "Heated Gloves", "tag": "type-gloves"},
+  {"title": "Heated Footwear", "tag": "type-socks"},
+  {"title": "Heated Home", "tag": "type-blanket"}
+ ]
+}
