@@ -1765,6 +1765,9 @@ var PLAN = null, AG_READ = false;
 var PLANS = { once: { name: 'Pay once', price: '$2,499.99 one time' }, partner: { name: 'Beta partner', price: '$0 upfront, 10% of monthly profit' } };
 function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 function gshow(id){ ['gp1', 'gpCode', 'gp2', 'gp3', 'gp4'].forEach(function(x){ $(x).hidden = x !== id; }); $('gate').scrollTop = 0; var h = $(id).querySelector('h1,h2,button,input'); if (h && h.tagName !== 'H1' && h.tagName !== 'H2') h.focus({ preventScroll: true }); }
+// Back (browser or phone) walks these screens instead of jumping into the build
+var GINIT = true, GCUR = 'gp1', _gs = gshow;
+gshow = function(id){ _gs(id); if (!GINIT && id !== GCUR){ try { history.pushState({ gp: id }, ''); } catch (e) {} } GCUR = id; };
 
 function agreementHTML(plan){
   var once = plan === 'once', P = function(on, html){ return '<div' + (on ? ' class="yours"' : '') + '>' + html + '</div>'; };
@@ -1839,7 +1842,7 @@ function startFlow(){
   $('dlCopy').onclick = function(){ var c = lsGet('gwb.contract'); if (!c) return;
     var t = c.text + '\n\nSigned electronically by ' + c.name + ' <' + c.email + '> on ' + new Date(c.at).toISOString() + '\nPlan: ' + PLANS[c.plan].name + '\nAgreement fingerprint (SHA-256): ' + c.hash + '\n';
     var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'text/plain' })); a.download = 'groundwork-beta-agreement.txt'; document.body.appendChild(a); a.click(); a.remove(); };
-  $('enterBtn').onclick = function(){ var c = lsGet('gwb.contract'); if (c) openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); };
+  $('enterBtn').onclick = function(){ var c = lsGet('gwb.contract'); if (c){ openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); try { history.pushState({ app: true }, ''); } catch (e) {} } };
   if (/^#start$/.test(location.hash)) gshow('gp2');
 }
 startFlow();
@@ -1849,6 +1852,12 @@ startFlow();
   openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); })();
 $('newAg').onclick = function(){ try { localStorage.removeItem('gwb.contract'); } catch (e) {} PLAN = null; Array.prototype.forEach.call(document.querySelectorAll('.plan'), function(q){ q.setAttribute('aria-checked', 'false'); });
   $('planNext').disabled = true; $('formula').hidden = true; $('newAg').hidden = true; $('doneL').textContent = 'Step 3 of 3 · you\'re in'; gshow('gp2'); };
+
+try { history.replaceState($('gate').hidden ? { app: true } : { gp: GCUR }, ''); } catch (e) {}
+GINIT = false;
+window.addEventListener('popstate', function(e){ var st = e.state || {};
+  if (st.app){ var c = lsGet('gwb.contract'); if (c) openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); return; }
+  if (st.gp){ $('gate').hidden = false; $('app').setAttribute('aria-hidden', 'true'); _gs(st.gp); GCUR = st.gp; } });
 })();
 </script>
 

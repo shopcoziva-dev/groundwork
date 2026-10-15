@@ -85,7 +85,11 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
 .card .have:hover{color:var(--chalk)}
 @media (min-width:900px){
   .rail{max-width:1120px;overflow:visible;scroll-snap-type:none;padding:8px 0 18px;justify-content:center}
-  .card{flex:1 1 0;max-width:540px}
+  .rail{display:grid;grid-template-columns:repeat(2,minmax(0,540px));grid-template-rows:repeat(7,auto);column-gap:18px;row-gap:0}
+  .card{grid-row:span 7;display:grid;grid-template-rows:subgrid;row-gap:12px;align-items:start;max-width:none}
+  .card .who,.card .acts{justify-self:start}
+  .card .nums{align-self:start}
+  .card .acts{align-self:start}
   .hint,.ctl{display:none}
 }
 .dlv{list-style:none;margin:0;padding:0;width:100%;max-width:900px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:48px;text-align:left}

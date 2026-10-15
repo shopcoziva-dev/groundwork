@@ -321,11 +321,14 @@ td.n,th.n{text-align:right}
   function lsGet(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
   function lsSet(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   var SAVED = lsGet(KEY);
-  if (SAVED && SAVED.hash && !/^#start$/.test(location.hash)){ g.remove(); return; }
+  if (SAVED && SAVED.hash && !/^#start$/.test(location.hash)){ g.style.display = 'none'; }
   var PLAN = null, READ = false;
   var PLANS = { once: { name: 'Pay once', price: SOLO_PRICE + ' one time' }, partner: { name: 'Solo partner', price: '$0 upfront, 10% of monthly profit' } };
   $('sgPrice').textContent = SOLO_PRICE;
-  function show(id){ ['sg1', 'sg3', 'sg4'].forEach(function(x){ $(x).hidden = x !== id; }); g.scrollTop = 0; }
+  var INIT = true, CUR = 'sg1';
+  function show0(id){ ['sg1', 'sg3', 'sg4'].forEach(function(x){ $(x).hidden = x !== id; }); g.scrollTop = 0; }
+  function show(id){ show0(id); if (!INIT && id !== CUR){ try { history.pushState({ sg: id }, ''); } catch (e) {} } CUR = id; }
+  function hideGate(){ g.style.display = 'none'; }
   function agreement(plan){
     var once = plan === 'once', Y = function(on, h){ return '<div' + (on ? ' class="yours"' : '') + '>' + h + '</div>'; };
     return ['<h3>Groundwork Solo agreement</h3>',
@@ -389,13 +392,18 @@ td.n,th.n{text-align:right}
   $('sgDl').onclick = function(){ var c = lsGet(KEY); if (!c) return;
     var t = c.text + '\n\nSigned electronically by ' + c.name + ' <' + c.email + '> on ' + new Date(c.at).toISOString() + '\nPlan: ' + PLANS[c.plan].name + '\nAgreement fingerprint (SHA-256): ' + c.hash + '\n';
     var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'text/plain' })); a.download = 'groundwork-solo-agreement.txt'; document.body.appendChild(a); a.click(); a.remove(); };
-  $('sgEnter').onclick = function(){
-    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ g.remove(); return; }
+  $('sgEnter').onclick = function(){ try { history.pushState({ app: true }, ''); } catch (e) {}
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ hideGate(); return; }
     var inner = g.firstElementChild; inner.style.transition = 'opacity .5s ease-out'; inner.style.opacity = '0';
-    g.style.transition = 'opacity .7s ease-out .35s'; void g.offsetWidth; g.style.opacity = '0'; setTimeout(function(){ g.remove(); }, 1150); };
+    g.style.transition = 'opacity .7s ease-out .35s'; void g.offsetWidth; g.style.opacity = '0'; setTimeout(function(){ hideGate(); g.style.opacity = ''; g.style.transition = ''; inner.style.opacity = ''; inner.style.transition = ''; }, 1150); };
   $('sgNew').onclick = function(){ try { localStorage.removeItem(KEY); } catch (e) {} PLAN = null; Array.prototype.forEach.call(g.querySelectorAll('.plan'), function(q){ q.setAttribute('aria-checked', 'false'); });
     $('sgPlanNext').disabled = true; $('sgFormula').hidden = true; $('sgNew').hidden = true; $('sgDoneL').textContent = 'Step 3 of 3 · you\'re in'; show('sg1'); };
   if (SAVED && SAVED.hash){ done(SAVED); $('sgDoneL').textContent = 'You already signed up'; $('sgDoneH').textContent = 'Welcome back.'; $('sgNew').hidden = false; }
+  try { history.replaceState(g.style.display === 'none' ? { app: true } : { sg: CUR }, ''); } catch (e) {}
+  INIT = false;
+  window.addEventListener('popstate', function(e){ var st = e.state || {};
+    if (st.app){ if ((lsGet(KEY) || {}).hash) hideGate(); return; }
+    if (st.sg){ g.style.display = ''; show0(st.sg); CUR = st.sg; } });
 })();
 </script>
 
