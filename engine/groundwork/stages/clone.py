@@ -156,8 +156,8 @@ Old collection handles: {old_handles}"""
 
 def run(store: Store, log: Log) -> dict:
     from ..lib import engine
-    if engine.rules():
-        raise Stop("Beta builds the homepage in Shopify's theme editor from your reference store's section list (step 5); the Solo ripper needs Coziva's theme")
+    if engine.rules() or engine.solo_max():
+        raise Stop("your copy builds the homepage in Shopify's theme editor from your reference store's section list (step 5); the ripper needs Coziva's theme")
     brand = store.load("brand.json") or {}
     if not brand.get("name"):
         raise Stop("pick the brand first (gw.py brand --pick NAME)")

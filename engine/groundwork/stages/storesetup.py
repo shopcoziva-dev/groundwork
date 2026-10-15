@@ -36,7 +36,7 @@ from overseas partner warehouses: say delivery times honestly. These are templat
 
 def run(store: Store, log: Log) -> dict:
     brand, profile = store.load("brand.json") or {}, store.load("profile.json")
-    if not profile and engine.rules():
+    if not profile and (engine.rules() or engine.solo_max()):
         from . import profile as _prof
         profile = _prof.run(store, log)
     if not profile:

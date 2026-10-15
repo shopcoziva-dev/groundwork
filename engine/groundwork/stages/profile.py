@@ -102,6 +102,11 @@ def run(store: Store, log: Log) -> dict:
         log(f"profile (rules): {len(p['types'])} product types ({', '.join(p['types'])}), genders {p['genders']}, product-only photos")
         return p
     scout = store.load("scout.json")
+    g = store.load("gate.json") or {}
+    if not scout and g.get("niche"):   # Solo v4: the gate is the direction; one corner = the gated niche and its types
+        scout = {"niche": g["niche"], "approved": [g["niche"]], "corners": [{"name": g["niche"], "why": "passed the gate", "category": g.get("category"),
+                 "products": g.get("types") or [g["niche"]], "gendered": False, "typical_price": 0, "season_note": ""}]}
+        store.save("scout.json", scout)
     if not scout:
         raise Stop("run scout first")
     approved = scout.get("approved") or []

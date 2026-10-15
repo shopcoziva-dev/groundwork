@@ -37,7 +37,7 @@ def _check(a) -> list[str]:
 
 def run(store: Store, log: Log, daily: float = 30.0) -> dict:
     profile, scout, brand = store.load("profile.json"), store.load("scout.json"), store.load("brand.json") or {}
-    if not profile and engine.rules():
+    if not profile and (engine.rules() or engine.solo_max()):
         from . import profile as _prof
         profile = _prof.run(store, log)
     if not profile or (not scout and not engine.rules()):

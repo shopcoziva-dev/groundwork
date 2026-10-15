@@ -60,9 +60,9 @@ def _count(r: dict) -> None:
 
 def ask(system: str, content: list | str, *, web: int = 0, max_tokens: int = 4000, model: str | None = None) -> str:
     """One Claude answer as text. web=N lets Claude run up to N web searches first."""
-    if engine.cli_mode():   # Beta: the user's own Claude subscription through Claude Code
+    if engine.cli_mode():   # Beta / Solo customer: the user's own Claude subscription through Claude Code
         USAGE["calls"] += 1
-        return engine.cli_ask(system, content, web=web)
+        return engine.cli_ask(system, content, web=web, model=model)
     if isinstance(content, str):
         content = [{"type": "text", "text": content}]
     messages = [{"role": "user", "content": content}]

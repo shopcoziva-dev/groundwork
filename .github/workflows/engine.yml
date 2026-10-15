@@ -1,5 +1,5 @@
 name: Groundwork engine
-# Runs one Groundwork Beta step on YOUR copy, with YOUR keys (repo Settings > Secrets and variables > Actions).
+# Runs one Groundwork Beta or Solo step on YOUR copy, with YOUR keys (repo Settings > Secrets and variables > Actions).
 # The Beta page starts it; you can also start it here (Actions > Groundwork engine > Run workflow).
 run-name: "${{ inputs.command }} ${{ inputs.tag }}"
 
@@ -15,8 +15,13 @@ on:
         required: false
         default: ""
         type: string
+      engine:
+        description: "rules (Beta) or max (Solo: every decision by your Claude Max plan)"
+        required: false
+        default: "rules"
+        type: string
       tag:
-        description: "set by the Beta page to find this run"
+        description: "set by the Beta or Solo page to find this run"
         required: false
         default: ""
         type: string
@@ -35,13 +40,19 @@ jobs:
     env:
       HAS_CLAUDE_SUB: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
     steps:
-      - name: Only the Beta steps
+      - name: Only Groundwork steps
         env:
           CMD: ${{ inputs.command }}
+          ENGINE: ${{ inputs.engine }}
         run: |
           case "$CMD" in
-            doctor|gate|demand|override|ref|kit|set|golive|cj-shops|profile|copy|setup|shelf|batch|ads|ladder|status) echo "step: $CMD" ;;
-            *) echo "not a Beta step: $CMD"; exit 1 ;;
+            doctor|gate|suggest|demand|override|ref|recs|kit|set|golive|cj-shops|profile|copy|setup|shelf|batch|ads|ladder|status) echo "step: $CMD" ;;
+            *) echo "not a Groundwork step: $CMD"; exit 1 ;;
+          esac
+          case "$ENGINE" in
+            rules) ;;
+            max) [ "$HAS_CLAUDE_SUB" = "true" ] || { echo "STOP: Solo needs your Claude Max plan: add the CLAUDE_CODE_OAUTH_TOKEN secret (step 0)"; exit 1; } ;;
+            *) echo "unknown engine: $ENGINE"; exit 1 ;;
           esac
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -55,7 +66,7 @@ jobs:
         run: npm install -g @anthropic-ai/claude-code >/dev/null 2>&1 && claude --version
       - name: Run the step
         env:
-          GW_ENGINE: rules
+          GW_ENGINE: ${{ inputs.engine == 'max' && 'max' || 'rules' }}
           CMD: ${{ inputs.command }}
           ARGS: ${{ inputs.args }}
           STORE: store
