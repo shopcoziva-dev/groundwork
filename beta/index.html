@@ -1827,7 +1827,7 @@ function doneView(c){
 function startFlow(){
   $('startBtn').onclick = function(){ gshow('gp2'); };
   $('codeBtn').onclick = function(){ gshow('gpCode'); $('gateCode').focus(); };
-  Array.prototype.forEach.call(document.querySelectorAll('.gp .back'), function(b){ b.onclick = function(){ gshow(b.dataset.to); }; });
+  Array.prototype.forEach.call(document.querySelectorAll('.gp .back'), function(b){ b.onclick = function(){ if (history.state && history.state.gp && history.length > 1) history.back(); else gshow(b.dataset.to); }; });   // Back = the page you came from (the landing page when you came in through Start with Beta)
   Array.prototype.forEach.call(document.querySelectorAll('.plan'), function(p){ p.onclick = function(){ PLAN = p.dataset.plan;
     Array.prototype.forEach.call(document.querySelectorAll('.plan'), function(q){ q.setAttribute('aria-checked', q === p ? 'true' : 'false'); });
     $('formula').hidden = PLAN !== 'partner'; $('planNext').disabled = false; }; });
