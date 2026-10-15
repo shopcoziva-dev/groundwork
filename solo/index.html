@@ -208,51 +208,81 @@ td.n,th.n{text-align:right}
 #sgate .lk{all:unset;cursor:pointer;color:var(--amber);font-size:12.5px;text-decoration:underline;text-underline-offset:3px}
 #sgate .big{min-height:50px;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
 #sgate .note{font-size:12px;color:var(--chalk-dim);line-height:1.5}
+
+#sgate .hero{gap:28px}
+#sgate .hx{min-height:min(78svh,720px);display:flex;flex-direction:column;justify-content:center;gap:6px}
+#sgate .gw{font-family:var(--hand);font-size:clamp(34px,7vw,56px);line-height:1;color:var(--chalk-dim)}
+#sgate h1.solo{font-size:clamp(132px,36vw,300px);line-height:.78;letter-spacing:-.01em;margin:0 0 6px -.04em}
+#sgate h1.solo .dot{color:var(--amber)}
+#sgate .hero .lede{font-size:clamp(28px,5.4vw,40px)}
+#sgate .why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){#sgate .why{grid-template-columns:minmax(0,1fr)}}
+#sgate .why div{border-top:1px solid var(--chalk-faint);padding-top:12px;display:flex;flex-direction:column;gap:6px}
+#sgate .why .k{font-size:11px;letter-spacing:.16em;color:var(--amber)}
+#sgate .why b{font-family:var(--hand);font-size:30px;line-height:1.05;font-weight:700}
+#sgate .why span:last-child{font-size:12.5px;line-height:1.55;color:var(--chalk-dim)}
+#sgate .stats{display:flex;gap:28px;flex-wrap:wrap;border-top:1px dashed var(--chalk-faint);border-bottom:1px dashed var(--chalk-faint);padding:14px 0}
+#sgate .stats div{display:flex;flex-direction:column}
+#sgate .stats b{font-family:var(--hand);font-size:52px;line-height:1;color:var(--amber)}
+#sgate .stats span{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)}
+#sgate .pick{display:flex;flex-direction:column;gap:16px;padding-top:8px}
+#sgate details.costs summary{cursor:pointer;font-size:12.5px;color:var(--chalk-dim)}
+#sgate details.costs[open] summary{margin-bottom:8px}
+#sgate .rv{opacity:0;transform:translateY(14px);animation:rv .9s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--d,0s)}
+@keyframes rv{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#sgate .rv{opacity:1;transform:none;animation:none}}
+#sgate .in{width:min(980px,100%)}
+#sgate #sg3,#sgate #sg4{max-width:620px;width:100%;margin:0 auto}
 </style>
 <div id="sgate" role="dialog" aria-modal="true" aria-labelledby="sgT">
  <div class="in">
 
-  <section class="gp" id="sg1">
-   <span class="eb">Groundwork · Solo</span>
-   <h1 id="sgT" class="chalk">Niche to campaign. Fast.</h1>
-   <p class="lede">Your Claude Max plan does the work on your own accounts. You approve each step.</p>
-   <div>
-    <span class="label">What your store costs you</span>
-    <div class="tw"><table><tbody>
-     <tr class="req"><td>Claude Max</td><td class="n">from $100/mo</td><td class="note">runs every decision in Solo</td></tr>
-     <tr><td>Shopify</td><td class="n">$1/mo</td><td class="note">first 3 months, then their regular plan</td></tr>
-     <tr><td>Domain</td><td class="n">~$10/yr</td><td class="note">bought before launch</td></tr>
-     <tr><td>Photos (image AI)</td><td class="n">~$5–15</td><td class="note">for 50 products, on your own key</td></tr>
-     <tr><td>Google Ads</td><td class="n">your budget</td><td class="note">starts at $30/day, only when you turn it on</td></tr>
-     <tr class="tot"><td>Lowest to start</td><td class="n">~$116</td><td class="note">plus your ad budget and Solo itself (next)</td></tr>
-    </tbody></table></div>
-    <span class="note">You pay those companies directly.</span>
+  <section class="gp hero" id="sg1">
+   <div class="hx">
+    <span class="eb rv" style="--d:0s">GTS Holdings presents</span>
+    <span class="gw rv" style="--d:.15s">Groundwork</span>
+    <h1 id="sgT" class="chalk solo rv" style="--d:.3s">Solo<span class="dot">.</span></h1>
+    <p class="lede rv" style="--d:.55s">Niche in. Live campaign out. In under an hour.</p>
    </div>
-   <button class="btn primary big" id="sgStart" type="button">Start with Solo →</button>
-   <div class="nav"><a href="../#paths" class="note">← Groundwork</a><span class="note">Already signed? This browser remembers you.</span></div>
-  </section>
+   <div class="why rv" style="--d:.8s">
+    <div><span class="k">01</span><b>Your Claude Max does the work</b><span>Every decision: the niche check, the reference store, pricing, copy, photos and a 50-product catalog.</span></div>
+    <div><span class="k">02</span><b>You approve, it builds</b><span>11 steps. Each one is checked before you move on. No lessons, no busywork.</span></div>
+    <div><span class="k">03</span><b>Your accounts, your store</b><span>It runs on your own GitHub, Shopify and supplier. The store is yours.</span></div>
+   </div>
+   <div class="stats rv" style="--d:1s"><div><b>&lt;1h</b><span>niche to campaign</span></div><div><b>11</b><span>steps you approve</span></div><div><b>50</b><span>products priced</span></div></div>
 
-  <section class="gp" id="sg2" hidden>
-   <span class="eb">Step 1 of 3 · how you pay</span>
-   <h2 class="chalk">Pick your plan</h2>
-   <div class="plans" role="radiogroup" aria-label="Plan">
-    <button type="button" class="plan" role="radio" aria-checked="false" data-plan="once">
-     <span class="pt">Pay once</span><span class="pp chalk" id="sgPrice"></span>
-     <span class="pd">One payment. You keep <b>100%</b> of your profit.</span>
-     <ul><li>Full Solo: all 11 steps on your Claude Max</li><li>Your engine copy and its updates</li><li>No share of your store, ever</li></ul>
-    </button>
-    <button type="button" class="plan" role="radio" aria-checked="false" data-plan="partner">
-     <span class="pt">Solo partner</span><span class="pp chalk">$0 now</span>
-     <span class="pd"><b>10% of your profit</b>, paid monthly, for as long as your store sells. Buy out any time.</span>
-     <ul><li>Same Solo, nothing held back</li><li>Pay nothing if your store makes no profit</li><li>Read-only access to your Shopify and Google Ads reports, so the number is never a guess</li></ul>
-    </button>
+   <div class="pick rv" style="--d:1.15s">
+    <span class="eb">Step 1 of 3 · pick your price</span>
+    <div class="plans" role="radiogroup" aria-label="Plan">
+     <button type="button" class="plan" role="radio" aria-checked="false" data-plan="once">
+      <span class="pt">Pay once</span><span class="pp chalk" id="sgPrice"></span>
+      <span class="pd">One payment. You keep <b>100%</b> of your profit.</span>
+      <ul><li>Full Solo: all 11 steps on your Claude Max</li><li>Your engine copy and its updates</li><li>No share of your store, ever</li></ul>
+     </button>
+     <button type="button" class="plan" role="radio" aria-checked="false" data-plan="partner">
+      <span class="pt">Solo partner</span><span class="pp chalk">$0 now</span>
+      <span class="pd"><b>10% of your profit</b>, paid monthly, for as long as your store sells. Buy out any time.</span>
+      <ul><li>Same Solo, nothing held back</li><li>Pay nothing if your store makes no profit</li><li>Read-only access to your Shopify and Google Ads reports, so the number is never a guess</li></ul>
+     </button>
+    </div>
+    <div class="formula" id="sgFormula" hidden>
+     <span class="label">The profit formula</span>
+     <p class="fx">Profit = sales − refunds − (product + shipping) − ad spend</p>
+     <span class="note">Example month: $6,000 sales − $200 refunds − $1,500 product − $3,000 ads = <b>$1,300 profit</b> → you pay <b>$130</b>. A month at zero or below: you pay $0, nothing carries over.</span>
+    </div>
+    <details class="costs">
+     <summary>What else your store costs you · from ~$116 to start</summary>
+     <div class="tw"><table><tbody>
+      <tr class="req"><td>Claude Max</td><td class="n">from $100/mo</td><td class="note">runs every decision in Solo</td></tr>
+      <tr><td>Shopify</td><td class="n">$1/mo</td><td class="note">first 3 months, then their regular plan</td></tr>
+      <tr><td>Domain</td><td class="n">~$10/yr</td><td class="note">bought before launch</td></tr>
+      <tr><td>Photos (image AI)</td><td class="n">~$5–15</td><td class="note">for 50 products, on your own key</td></tr>
+      <tr><td>Google Ads</td><td class="n">your budget</td><td class="note">starts at $30/day, only when you turn it on</td></tr>
+     </tbody></table></div>
+     <span class="note">You pay those companies directly.</span>
+    </details>
+    <div class="nav"><a href="../#paths" class="note">← Groundwork</a><button class="btn primary big" id="sgPlanNext" type="button" disabled>Next: the agreement →</button></div>
    </div>
-   <div class="formula" id="sgFormula" hidden>
-    <span class="label">The profit formula</span>
-    <p class="fx">Profit = sales − refunds − (product + shipping) − ad spend</p>
-    <span class="note">Example month: $6,000 sales − $200 refunds − $1,500 product − $3,000 ads = <b>$1,300 profit</b> → you pay <b>$130</b>. A month at zero or below: you pay $0, nothing carries over.</span>
-   </div>
-   <div class="nav"><button class="lk" type="button" data-to="sg1">← Back</button><button class="btn primary" id="sgPlanNext" type="button" disabled>Next: the agreement →</button></div>
   </section>
 
   <section class="gp" id="sg3" hidden>
@@ -271,7 +301,7 @@ td.n,th.n{text-align:right}
     <div class="field"><label for="sgEmail">Email</label><input type="text" id="sgEmail" autocomplete="email" inputmode="email" placeholder="you@email.com"></div>
    </div>
    <div class="sig"><span class="hand" id="sgSig">&nbsp;</span><span class="note" id="sgDate"></span></div>
-   <div class="nav"><button class="lk" type="button" data-to="sg2">← Back</button><button class="btn primary" id="sgSign" type="button" disabled>Sign and continue →</button></div>
+   <div class="nav"><button class="lk" type="button" data-to="sg1">← Back</button><button class="btn primary" id="sgSign" type="button" disabled>Sign and continue →</button></div>
   </section>
 
   <section class="gp" id="sg4" hidden>
@@ -295,7 +325,7 @@ td.n,th.n{text-align:right}
   var PLAN = null, READ = false;
   var PLANS = { once: { name: 'Pay once', price: SOLO_PRICE + ' one time' }, partner: { name: 'Solo partner', price: '$0 upfront, 10% of monthly profit' } };
   $('sgPrice').textContent = SOLO_PRICE;
-  function show(id){ ['sg1', 'sg2', 'sg3', 'sg4'].forEach(function(x){ $(x).hidden = x !== id; }); g.scrollTop = 0; }
+  function show(id){ ['sg1', 'sg3', 'sg4'].forEach(function(x){ $(x).hidden = x !== id; }); g.scrollTop = 0; }
   function agreement(plan){
     var once = plan === 'once', Y = function(on, h){ return '<div' + (on ? ' class="yours"' : '') + '>' + h + '</div>'; };
     return ['<h3>Groundwork Solo agreement</h3>',
@@ -337,8 +367,7 @@ td.n,th.n{text-align:right}
     $('sgSign').disabled = !(READ && $('sa1').checked && $('sa2').checked && $('sa3').checked && n.split(/\s+/).length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e));
     $('sgSig').textContent = n || ' '; $('sgRead').textContent = READ ? 'Read to the end. ✓' : 'Scroll to the end to sign.';
   }
-  $('sgStart').onclick = function(){ show('sg2'); };
-  Array.prototype.forEach.call(g.querySelectorAll('[data-to]'), function(b){ b.onclick = function(){ show(b.dataset.to); }; });
+  Array.prototype.forEach.call(g.querySelectorAll('[data-to]'), function(b){ b.onclick = function(){ show(b.dataset.to); if (b.dataset.to === 'sg1') g.querySelector('.pick').scrollIntoView(); }; });
   Array.prototype.forEach.call(g.querySelectorAll('.plan'), function(p){ p.onclick = function(){ PLAN = p.dataset.plan;
     Array.prototype.forEach.call(g.querySelectorAll('.plan'), function(q){ q.setAttribute('aria-checked', q === p ? 'true' : 'false'); });
     $('sgFormula').hidden = PLAN !== 'partner'; $('sgPlanNext').disabled = false; }; });
@@ -364,9 +393,8 @@ td.n,th.n{text-align:right}
     var inner = g.firstElementChild; inner.style.transition = 'opacity .5s ease-out'; inner.style.opacity = '0';
     g.style.transition = 'opacity .7s ease-out .35s'; void g.offsetWidth; g.style.opacity = '0'; setTimeout(function(){ g.remove(); }, 1150); };
   $('sgNew').onclick = function(){ try { localStorage.removeItem(KEY); } catch (e) {} PLAN = null; Array.prototype.forEach.call(g.querySelectorAll('.plan'), function(q){ q.setAttribute('aria-checked', 'false'); });
-    $('sgPlanNext').disabled = true; $('sgFormula').hidden = true; $('sgNew').hidden = true; $('sgDoneL').textContent = 'Step 3 of 3 · you\'re in'; show('sg2'); };
+    $('sgPlanNext').disabled = true; $('sgFormula').hidden = true; $('sgNew').hidden = true; $('sgDoneL').textContent = 'Step 3 of 3 · you\'re in'; show('sg1'); };
   if (SAVED && SAVED.hash){ done(SAVED); $('sgDoneL').textContent = 'You already signed up'; $('sgDoneH').textContent = 'Welcome back.'; $('sgNew').hidden = false; }
-  else if (/^#start$/.test(location.hash)) show('sg2');
 })();
 </script>
 
