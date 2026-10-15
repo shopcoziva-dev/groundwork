@@ -269,7 +269,7 @@ td.n,th.n{text-align:right}
     <tr><td>Domain</td><td class="n">~$10/yr</td><td class="note">bought before launch</td></tr>
     <tr><td>Photos (image AI)</td><td class="n">~$5–15</td><td class="note">for 50 products, on your own key</td></tr>
     <tr><td>Google Ads</td><td class="n">your budget</td><td class="note">starts at $30/day, only when you turn it on</td></tr>
-    <tr class="tot"><td>To start</td><td class="n">~$116</td><td class="note">A number that shouldn't bother a business like yours.</td></tr>
+    <tr class="tot"><td>To start</td><td class="n">~$116</td><td class="note"><i>If this number worries you, you're not ready for Solo.</i></td></tr>
    </tbody></table></div>
    <span class="note">You pay those companies directly. Solo's own price is next.</span>
    <div class="nav"><a href="../#paths" class="note">← Groundwork</a><button class="btn primary big" id="sgGo" type="button">Start with Solo →</button></div>
@@ -381,7 +381,7 @@ function gwGranted(product, theme, onCovered){
   function lsGet(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
   function lsSet(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   var SAVED = lsGet(KEY);
-  if (SAVED && SAVED.hash && !/^#start$/.test(location.hash)){ g.style.display = 'none'; }
+  if (SAVED && SAVED.hash && !/^#(start|costs)$/.test(location.hash)){ g.style.display = 'none'; }
   var PLAN = null, READ = false;
   var PLANS = { once: { name: 'Pay once', price: SOLO_PRICE + ' one time' }, partner: { name: 'Solo partner', price: '$0 upfront, 10% of monthly profit' } };
   $('sgPrice').textContent = SOLO_PRICE;
@@ -459,10 +459,10 @@ function gwGranted(product, theme, onCovered){
   $('sgNew').onclick = function(){ try { localStorage.removeItem(KEY); } catch (e) {} PLAN = null; Array.prototype.forEach.call(g.querySelectorAll('.plan'), function(q){ q.setAttribute('aria-checked', 'false'); });
     $('sgPlanNext').disabled = true; $('sgFormula').hidden = true; $('sgNew').hidden = true; $('sgDoneL').textContent = 'Step 3 of 3 · you\'re in'; show('sg1'); };
   if (SAVED && SAVED.hash){ done(SAVED); $('sgDoneL').textContent = 'You already signed up'; $('sgDoneH').textContent = 'Welcome back.'; $('sgNew').hidden = false; }
-  if (!/^#start$/.test(location.hash) && g.style.display !== 'none' && CUR === 'sg1') show('sg0');   // no hash or #costs: the costs sheet first
+  if (g.style.display !== 'none' && (/^#costs$/.test(location.hash) || (!/^#start$/.test(location.hash) && CUR === 'sg1'))) show('sg0');   // no hash or #costs: the costs sheet first, even after signing
   try { history.replaceState(g.style.display === 'none' ? { app: true } : { sg: CUR }, ''); } catch (e) {}
   INIT = false;
-  $('sgGo').onclick = function(){ show('sg1'); };
+  $('sgGo').onclick = function(){ show((lsGet(KEY) || {}).hash ? 'sg4' : 'sg1'); };   // already signed: the welcome-back screen
   window.__gwGateNext = function(){
     if (g.style.display === 'none' || !document.body.contains(g)) return false;
     if (CUR === 'sg0'){ show('sg1'); return true; }

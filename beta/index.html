@@ -1913,7 +1913,7 @@ function doneView(c){
 }
 function startFlow(){
   $('bDown').onclick = function(){ $('bNote').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
-  $('startBtn').onclick = function(){ gshow('gp2'); };
+  $('startBtn').onclick = function(){ gshow(lsGet('gwb.contract') ? 'gp4' : 'gp2'); };   // already signed: the welcome-back screen
   $('codeBtn').onclick = function(){ gshow('gpCode'); $('gateCode').focus(); };
   Array.prototype.forEach.call(document.querySelectorAll('.gp .back'), function(b){ b.onclick = function(){ if (history.state && history.state.gp && history.length > 1) history.back(); else gshow(b.dataset.to); }; });   // Back = the page you came from (the landing page when you came in through Start with Beta)
   Array.prototype.forEach.call(document.querySelectorAll('.plan'), function(p){ p.onclick = function(){ PLAN = p.dataset.plan;
@@ -1938,6 +1938,7 @@ function startFlow(){
 }
 startFlow();
 (function(){ var c = lsGet('gwb.contract'); if (!c || !c.hash || lsGet('gwb.unlock')) return;
+  if (/^#costs$/.test(location.hash)){ PLAN = c.plan; doneView(c); $('doneL').textContent = 'You already signed up'; $('doneH').textContent = 'Welcome back.'; $('newAg').hidden = false; return; }   // "See the costs first" always shows the costs, even after signing
   if (/^#start$/.test(location.hash)){   // came back through "Start with Beta": show where they are instead of jumping in
     PLAN = c.plan; doneView(c); $('doneL').textContent = 'You already signed up'; $('doneH').textContent = 'Welcome back.'; $('newAg').hidden = false; gshow('gp4'); return; }
   openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); })();
