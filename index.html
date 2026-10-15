@@ -58,6 +58,8 @@ h2{margin:0;font-family:var(--hand);font-weight:700;font-size:clamp(48px,9vw,90p
 .card .stamp svg{width:12px;height:12px}
 .b .stamp{color:var(--amber)}.s .stamp{color:var(--pass)}
 .card h3{margin:0;font-family:var(--hand);font-size:clamp(56px,12vw,80px);line-height:.9}
+.card .who{margin:0;align-self:flex-start;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1.5px solid currentColor}
+.b .who{color:var(--amber)}.s .who{color:var(--pass)}
 .card .kind{font-family:var(--hand);font-size:clamp(26px,5vw,32px);line-height:1.1;margin:0}
 .card ul{margin:0;padding-left:18px;color:var(--dim);font-size:14px;display:flex;flex-direction:column;gap:4px}
 .card .nums{display:flex;gap:22px;border-top:1px dashed var(--faint);padding-top:12px}
@@ -110,7 +112,8 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
         <span class="stamp"><svg aria-hidden="true"><use href="#lock"/></svg>INVITE ONLY</span>
         <span class="label">Groundwork</span>
         <h3 class="chalk">Beta</h3>
-        <p class="kind chalk">Hands-on. The system runs on your own accounts, every step taught.</p>
+        <p class="who">For beginners</p>
+        <p class="kind chalk">New to e-commerce? Every step is taught, and the system runs it on your own accounts.</p>
         <ul>
           <li>A chalkboard lesson at the start of each step</li>
           <li>The real checks: niche verdict, pricing formula, launch ladder</li>
@@ -123,7 +126,8 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
         <span class="stamp"><svg aria-hidden="true"><use href="#lock"/></svg>PRIVATE</span>
         <span class="label">Groundwork</span>
         <h3 class="chalk">Solo</h3>
-        <p class="kind chalk">Straightforward. The machine builds it, you approve.</p>
+        <p class="who">For people who already know the game</p>
+        <p class="kind chalk">You know e-commerce and want the fastest path. The machine builds it, you approve.</p>
         <ul>
           <li>Real supplier, ad and cost data pulled for you</li>
           <li>Site, copy, photos and 50 priced products built for you</li>
@@ -139,6 +143,11 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
   </section>
 </main>
 <script>
+// every reload starts at the opening screen
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+window.addEventListener('load', function(){ var m = document.getElementById('main'); m.style.scrollBehavior = 'auto'; m.scrollTop = 0; window.scrollTo(0, 0); m.style.scrollBehavior = ''; });
+window.addEventListener('pageshow', function(e){ if (e.persisted) location.reload(); });
 (function(){
   var rail = document.getElementById('rail'), cards = rail.querySelectorAll('.card'), dots = document.querySelectorAll('.dots i');
   function go(i){ cards[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); }

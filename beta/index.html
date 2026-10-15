@@ -168,8 +168,8 @@ td input[type=text],td input[type=number]{height:32px;font-size:13px;width:100%}
 .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-top:1.5px dashed var(--chalk-faint);padding-top:16px}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--chalk);color:var(--board);padding:10px 16px;border-radius:5px;font-size:13px;z-index:40;max-width:calc(100vw - 32px)}
 /* gate / splash */
-.gate{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:16px;background-color:var(--board);background-image:inherit;background-size:inherit;overflow:auto}
-.gate .in{width:min(560px,100%);display:flex;flex-direction:column;gap:16px}
+.gate{position:fixed;inset:0;z-index:30;display:flex;align-items:flex-start;justify-content:center;padding:16px;background-color:var(--board);background-image:inherit;background-size:inherit;overflow:auto}
+.gate .in{margin:auto 0;width:min(560px,100%);display:flex;flex-direction:column;gap:16px}
 .gate h1{font-family:var(--hand);font-size:clamp(56px,12vw,104px);line-height:.95;font-weight:700}
 .gate .code{font-size:26px;letter-spacing:.2em;text-transform:uppercase;height:52px}
 .splashline{width:min(420px,80vw);height:16px}
@@ -181,6 +181,9 @@ td input[type=text],td input[type=number]{height:32px;font-size:13px;width:100%}
 .out{background:var(--board-deep);border:1px solid var(--line-faint);border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:8px}
 .out code{font-size:13px;overflow-wrap:anywhere;color:var(--chalk)}
 .out .cbig{font-size:26px;letter-spacing:.18em;color:var(--amber)}
+.costs{border:1.5px dashed rgba(255,212,121,.6);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.costs .label{color:var(--amber)}
+.ct{min-width:0;font-size:13px}.ct td{padding:5px 6px;border-bottom:1px solid rgba(111,211,255,.15)}.ct td.n{white-space:nowrap;color:var(--amber);text-align:right}
 [hidden]{display:none!important}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
@@ -202,6 +205,18 @@ td input[type=text],td input[type=number]{height:32px;font-size:13px;width:100%}
     </form>
     <div class="note" id="gateMsg" role="status">Checking…</div>
     <div class="row"><a href="../" style="font-size:12px">← Groundwork</a><button class="small quiet" id="gateAdmin" type="button">Admin</button></div>
+    <div class="costs" id="costs" aria-labelledby="costsH">
+      <span class="label" id="costsH">Before you start · what it costs you</span>
+      <table class="ct"><tbody>
+        <tr><td>Shopify</td><td class="n">$1/mo</td><td class="note">first 3 months, then their regular plan</td></tr>
+        <tr><td>Domain</td><td class="n">~$10/yr</td><td class="note">bought before launch</td></tr>
+        <tr><td>Claude</td><td class="n">$20/mo</td><td class="note">Pro plan, runs your market checks</td></tr>
+        <tr><td>Photos (image AI)</td><td class="n">~$5–15</td><td class="note">for 50 products, on your own key</td></tr>
+        <tr><td>Supplier (CJ)</td><td class="n">free</td><td class="note">you pay per order, after a customer pays you</td></tr>
+        <tr><td>Google Ads</td><td class="n">your budget</td><td class="note">we start at $30/day, only when you turn it on</td></tr>
+      </tbody></table>
+      <span class="note">Everything runs on your own accounts. You pay those companies directly, never us.</span>
+    </div>
   </div>
 </div>
 
