@@ -37,6 +37,9 @@ def _check(a) -> list[str]:
 
 def run(store: Store, log: Log, daily: float = 30.0) -> dict:
     profile, scout, brand = store.load("profile.json"), store.load("scout.json"), store.load("brand.json") or {}
+    if not profile and engine.rules():
+        from . import profile as _prof
+        profile = _prof.run(store, log)
     if not profile or (not scout and not engine.rules()):
         raise Stop("run scout and profile first")
     listings = [store.load(f"listings/{p.name}") for p in store.path("listings").glob("*.json")]
