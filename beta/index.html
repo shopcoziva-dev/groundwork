@@ -399,7 +399,7 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
     <span class="label" id="doneL">Step 3 of 3 · you're in</span>
     <h2 class="chalk gh2" id="doneH">Signed.</h2>
     <div class="box" id="doneBox"></div>
-    <div class="row gl"><button class="small" id="dlCopy" type="button">Download my copy</button><button class="linkish" id="newAg" type="button" hidden>Start a new agreement</button><button class="primary" id="enterBtn" type="button">Open Groundwork Beta →</button></div>
+    <div class="row gl"><button class="linkish" id="doneBack" type="button">← Back</button><button class="small" id="dlCopy" type="button">Download my copy</button><button class="linkish" id="newAg" type="button" hidden>Start a new agreement</button><button class="primary" id="enterBtn" type="button">Open Groundwork Beta →</button></div>
   </section>
 
   </div>
@@ -1832,6 +1832,19 @@ function card(name, lk, code, fresh0){
   r.appendChild(b1); r.appendChild(b2); r.appendChild(b3); o.appendChild(r); return o;
 }
 gate();
+// "Congratulations, access granted": covers the screen, the app opens underneath, then it fades away
+function gwGranted(product, theme, onCovered){
+  var o = document.createElement('div'); o.setAttribute('role', 'status');
+  o.style.cssText = 'position:fixed;inset:0;z-index:2147482000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px;opacity:0;transition:opacity .5s ease-out;background:' + theme.bg + ';color:' + theme.fg;
+  o.innerHTML = '<span style="font:600 12px/1 ' + theme.mono + ';letter-spacing:.22em;text-transform:uppercase;color:' + theme.accent + '">Groundwork ' + product + '</span>' +
+    '<span style="font-family:' + theme.hand + ';font-weight:700;font-size:clamp(56px,13vw,120px);line-height:.95">Congratulations.</span>' +
+    '<span style="font-family:' + theme.hand + ';font-size:clamp(28px,6vw,44px);line-height:1.1;color:' + theme.accent + '">' + product + ' access granted.</span>';
+  document.body.appendChild(o);
+  var quick = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  requestAnimationFrame(function(){ o.style.opacity = '1'; });
+  setTimeout(function(){ try { onCovered(); } catch (e) {} window.scrollTo(0, 0); }, quick ? 50 : 600);
+  setTimeout(function(){ o.style.transition = 'opacity .8s ease-in'; o.style.opacity = '0'; setTimeout(function(){ o.remove(); }, 850); }, quick ? 900 : 2600);
+}
 
 // ===================================================================== Start with Beta: plan, agreement, signature
 var AG_V = 'beta-0.1 (draft)';
@@ -1917,7 +1930,9 @@ function startFlow(){
   $('dlCopy').onclick = function(){ var c = lsGet('gwb.contract'); if (!c) return;
     var t = c.text + '\n\nSigned electronically by ' + c.name + ' <' + c.email + '> on ' + new Date(c.at).toISOString() + '\nPlan: ' + PLANS[c.plan].name + '\nAgreement fingerprint (SHA-256): ' + c.hash + '\n';
     var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'text/plain' })); a.download = 'groundwork-beta-agreement.txt'; document.body.appendChild(a); a.click(); a.remove(); };
-  $('enterBtn').onclick = function(){ var c = lsGet('gwb.contract'); if (c){ openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); try { history.pushState({ app: true }, ''); } catch (e) {} } };
+  $('enterBtn').onclick = function(){ var c = lsGet('gwb.contract'); if (!c) return;
+    gwGranted('Beta', { bg: '#0B2340', fg: '#F3F1E7', accent: '#FFD479', hand: "'Caveat',cursive", mono: "'IBM Plex Mono',monospace" }, function(){ openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); try { history.pushState({ app: true }, ''); } catch (e) {} }); };
+  $('doneBack').onclick = function(){ if (history.length > 1) history.back(); else gshow('gp2'); };
   if (/^#start$/.test(location.hash)) gshow('gp2');   // no hash or #costs: the costs sheet first
   else if (TAG && !/^(start|costs)$/.test(TAG)) gshow('gpCode');   // an invite link: straight to the code box
 }
