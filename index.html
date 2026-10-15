@@ -97,9 +97,9 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
 .req p{margin:0}.req .note{font-size:13px;color:var(--dim)}
 .req button{align-self:flex-start;min-height:42px;padding:0 18px;border-radius:5px;border:2px solid var(--chalk);background:transparent;color:var(--chalk);font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
 
-.unsure{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;font-size:14px;color:var(--chalk)}
-.unsure button{min-height:42px;padding:0 18px;border-radius:5px;border:2px solid var(--line);background:transparent;color:var(--line);font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
-.unsure button:hover{background:rgba(111,211,255,.1)}
+.unsure{margin:-6px 0 0;font-size:13px;color:var(--dim)}
+.unsure button{border:none;background:none;padding:4px 2px;color:var(--line);font-family:var(--mono);font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.unsure button:hover{color:var(--chalk)}
 .demos[hidden]{display:none}
 .demos{position:fixed;inset:0;z-index:20;background-color:var(--board);background-image:inherit;background-size:inherit;background-position:50% 50%;overflow:auto;display:flex;padding:24px 16px}
 .demos .din{margin:auto;width:min(980px,100%);display:flex;flex-direction:column;gap:14px;text-align:center}
@@ -160,6 +160,7 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
   <section class="screen" id="s3" aria-labelledby="h2">
     <span class="label reveal">Two ways to build</span>
     <h2 class="chalk reveal" id="h2">Pick your speed</h2>
+    <p class="unsure reveal">Not sure which to pick? <button type="button" id="demoBtn">View demos →</button></p>
     <div class="rail reveal" id="rail" aria-label="Beta and Solo" tabindex="0">
       <article class="card b" aria-label="Groundwork Beta, beta testing">
         <div class="ctop"><span class="label">Groundwork</span><span class="stamp"><svg aria-hidden="true"><use href="#lock"/></svg>BETA TESTING</span></div>
@@ -189,7 +190,6 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
       </article>
     </div>
     <div class="ctl reveal"><button type="button" id="prev" aria-label="Show Beta">←</button><div class="dots" aria-hidden="true"><i class="on"></i><i></i></div><button type="button" id="next" aria-label="Show Solo">→</button></div>
-    <div class="unsure reveal"><span>Not sure which to pick?</span><button type="button" id="demoBtn">View demos →</button></div>
     <footer>© 2026 GTS Holdings</footer>
   </section>
 </main>
