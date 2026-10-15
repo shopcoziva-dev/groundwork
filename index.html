@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 :root{--board:#0B2340;--grid:rgba(111,211,255,.08);--grid-major:rgba(111,211,255,.15);
-  --chalk:#F3F1E7;--dim:rgba(243,241,231,.7);--faint:rgba(243,241,231,.28);--line:#6FD3FF;--amber:#FFD479;--pass:#7BE0A6;
+  --chalk:#F3F1E7;--dim:rgba(243,241,231,.7);--faint:rgba(243,241,231,.28);--line:#6FD3FF;--amber:#FFD479;--pass:#7BE0A6;--red:#FF4D40;
   --hand:'Caveat',cursive;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
@@ -53,10 +53,10 @@ h2{margin:0;font-family:var(--hand);font-weight:700;font-size:clamp(48px,9vw,90p
 .card:hover{border-color:var(--chalk);transform:translateY(-3px)}
 .card .stamp{position:absolute;top:20px;right:20px;font-size:11px;letter-spacing:.16em;padding:5px 10px;border:2px solid currentColor;border-radius:3px;transform:rotate(-3deg);display:flex;gap:6px;align-items:center}
 .card .stamp svg{width:12px;height:12px}
-.b .stamp{color:var(--amber)}.s .stamp{color:var(--chalk)}
+.b .stamp{color:var(--amber)}.s .stamp{color:var(--red)}
 .card h3{margin:0;font-family:var(--hand);font-size:clamp(56px,12vw,80px);line-height:.9}
 .card .who{margin:0;align-self:flex-start;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1.5px solid currentColor}
-.b .who{color:var(--amber)}.s .who{color:var(--chalk)}
+.b .who{color:var(--amber)}.s .who{color:var(--red);background:rgba(255,77,64,.12)}
 .card .kind{font-family:var(--hand);font-size:clamp(26px,5vw,32px);line-height:1.1;margin:0}
 .card ul{margin:0;padding-left:18px;color:var(--dim);font-size:14px;display:flex;flex-direction:column;gap:4px}
 .card .nums{display:flex;gap:22px;border-top:1px dashed var(--faint);padding-top:12px}
@@ -71,6 +71,25 @@ h2{margin:0;font-family:var(--hand);font-weight:700;font-size:clamp(48px,9vw,90p
 .dots{display:flex;gap:8px}.dots i{width:24px;height:4px;border-radius:2px;background:var(--faint)}.dots i.on{background:var(--chalk)}
 .hint{font-size:12px;color:var(--dim);letter-spacing:.08em}
 footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);font-size:11.5px;color:var(--dim);letter-spacing:.08em}
+
+/* Solo: the hardcore card. Black like Solo, red, a slow pulse and a scanner line */
+.card.s{background:#000;border-color:rgba(255,77,64,.7);overflow:hidden;animation:pulse 2.6s ease-in-out infinite}
+.card.s:hover{border-color:var(--red)}
+.card.s::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),transparent);animation:scan 3.2s linear infinite;opacity:.9}
+.card.s::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)}
+.card.s h3{color:#fff;text-shadow:0 0 18px rgba(255,77,64,.45);letter-spacing:.01em}
+.card.s .label{color:var(--red)}
+.card.s .nums{border-top-color:rgba(255,77,64,.35)}
+.card.s .nums b{color:var(--red)}
+.card.s ul{color:rgba(236,234,226,.75)}
+.card.s .go{background:var(--red);border-color:var(--red);color:#000;font-weight:600}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 rgba(255,77,64,0)}50%{box-shadow:0 0 34px rgba(255,77,64,.35)}}
+@keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(560px)}}
+/* Beta: the friendly card. Softer corners, a gentle float */
+.card.b{border-radius:16px;border-style:dashed;animation:float 5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.card.b:hover{transform:translateY(-4px)}
+@media (prefers-reduced-motion:reduce){.card.s,.card.b,.card.s::before{animation:none}}
 @keyframes write{to{clip-path:inset(-0.3em -10% -0.3em -5%)}}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes rise{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
