@@ -440,7 +440,7 @@ td.n,th.n{text-align:right}
   $('sgNew').onclick = function(){ try { localStorage.removeItem(KEY); } catch (e) {} PLAN = null; Array.prototype.forEach.call(g.querySelectorAll('.plan'), function(q){ q.setAttribute('aria-checked', 'false'); });
     $('sgPlanNext').disabled = true; $('sgFormula').hidden = true; $('sgNew').hidden = true; $('sgDoneL').textContent = 'Step 3 of 3 · you\'re in'; show('sg1'); };
   if (SAVED && SAVED.hash){ done(SAVED); $('sgDoneL').textContent = 'You already signed up'; $('sgDoneH').textContent = 'Welcome back.'; $('sgNew').hidden = false; }
-  if (/^#costs$/.test(location.hash) && g.style.display !== 'none' && CUR === 'sg1') show('sg0');
+  if (!/^#start$/.test(location.hash) && g.style.display !== 'none' && CUR === 'sg1') show('sg0');   // no hash or #costs: the costs sheet first
   try { history.replaceState(g.style.display === 'none' ? { app: true } : { sg: CUR }, ''); } catch (e) {}
   INIT = false;
   $('sgGo').onclick = function(){ show('sg1'); };

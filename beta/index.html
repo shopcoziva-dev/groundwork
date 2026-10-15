@@ -268,7 +268,7 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
   <div class="in">
 
   <!-- 1 · welcome + costs -->
-  <section class="gp" id="gp1" hidden>
+  <section class="gp" id="gp1">
     <span class="label" id="gateEyebrow">Groundwork · beta</span>
     <h1 class="chalk write" id="gateTitle">Build the store.</h1>
     <svg class="splashline chalk" viewBox="0 0 420 16" aria-hidden="true"><path pathLength="1" d="M4 10 C 70 2, 150 15, 220 8 S 350 4, 416 10" fill="none" stroke="var(--line)" stroke-width="4" stroke-linecap="round"/></svg>
@@ -302,7 +302,7 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
   </section>
 
   <!-- 2 · pick a plan -->
-  <section class="gp" id="gp2">
+  <section class="gp" id="gp2" hidden>
     <div class="bhero">
       <span class="label rv" style="--d:0s">GTS Holdings presents</span>
       <span class="bgw hand rv" style="--d:.15s">Groundwork</span>
@@ -1831,7 +1831,7 @@ var PLANS = { once: { name: 'Pay once', price: '$2,499.99 one time' }, partner: 
 function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 function gshow(id){ ['gp1', 'gpCode', 'gp2', 'gp3', 'gp4'].forEach(function(x){ $(x).hidden = x !== id; }); $('gate').scrollTop = 0; var h = $(id).querySelector('h1,h2,button,input'); if (h && h.tagName !== 'H1' && h.tagName !== 'H2') h.focus({ preventScroll: true }); }
 // Back (browser or phone) walks these screens instead of jumping into the build
-var GINIT = true, GCUR = 'gp2', _gs = gshow;
+var GINIT = true, GCUR = 'gp1', _gs = gshow;
 gshow = function(id){ _gs(id); if (!GINIT && id !== GCUR){ try { history.pushState({ gp: id }, ''); } catch (e) {} } GCUR = id; };
 
 function agreementHTML(plan){
@@ -1909,7 +1909,7 @@ function startFlow(){
     var t = c.text + '\n\nSigned electronically by ' + c.name + ' <' + c.email + '> on ' + new Date(c.at).toISOString() + '\nPlan: ' + PLANS[c.plan].name + '\nAgreement fingerprint (SHA-256): ' + c.hash + '\n';
     var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'text/plain' })); a.download = 'groundwork-beta-agreement.txt'; document.body.appendChild(a); a.click(); a.remove(); };
   $('enterBtn').onclick = function(){ var c = lsGet('gwb.contract'); if (c){ openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); try { history.pushState({ app: true }, ''); } catch (e) {} } };
-  if (/^#costs$/.test(location.hash)) gshow('gp1');
+  if (/^#start$/.test(location.hash)) gshow('gp2');   // no hash or #costs: the costs sheet first
   else if (TAG && !/^(start|costs)$/.test(TAG)) gshow('gpCode');   // an invite link: straight to the code box
 }
 startFlow();
