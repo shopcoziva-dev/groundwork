@@ -274,24 +274,27 @@ td.n,th.n{text-align:right}
 #sgate .plan.off:hover{border-color:inherit}
 #sgate .plan .na{align-self:flex-start;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:3px 8px}
 #sgate .plan.off .pp{text-decoration:line-through;text-decoration-thickness:2px}
+#sgate .rvr{opacity:0;animation:rvo .7s ease forwards;animation-delay:var(--d,0s)}
+@keyframes rvo{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){#sgate .rvr{opacity:1;animation:none}}
 </style>
 <div id="sgate" role="dialog" aria-modal="true" aria-labelledby="sgT">
  <div class="in">
 
   <section class="gp" id="sg0" hidden>
-   <span class="eb">Groundwork Solo · what it runs on</span>
-   <h2 class="chalk cbig">The running costs.</h2>
-   <p class="lede">If you're here for Solo, these aren't numbers you lose sleep over. They're the cost of moving fast.</p>
-   <div class="tw"><table class="ctab"><tbody>
-    <tr class="req"><td>Claude Max</td><td class="n">from $100/mo</td><td class="note">runs every decision in Solo</td></tr>
-    <tr><td>Shopify</td><td class="n">$1/mo</td><td class="note">first 3 months, then their regular plan</td></tr>
-    <tr><td>Domain</td><td class="n">~$10/yr</td><td class="note">bought before launch</td></tr>
-    <tr><td>Photos (image AI)</td><td class="n">~$5–15</td><td class="note">for 50 products, on your own key</td></tr>
-    <tr><td>Google Ads</td><td class="n">your budget</td><td class="note">starts at $30/day, only when you turn it on</td></tr>
-    <tr class="tot"><td>To start</td><td class="n">~$116</td><td class="note">If this number worries you, you're not ready for Solo.</td></tr>
+   <span class="eb rv" style="--d:.1s">Groundwork Solo · what it runs on</span>
+   <h2 class="chalk cbig rv" style="--d:.3s">The running costs.</h2>
+   <p class="lede rv" style="--d:.6s">If you're here for Solo, these aren't numbers you lose sleep over. They're the cost of moving fast.</p>
+   <div class="tw rv" style="--d:.85s"><table class="ctab"><tbody>
+    <tr class="req rvr" style="--d:1.05s"><td>Claude Max</td><td class="n">from $100/mo</td><td class="note">runs every decision in Solo</td></tr>
+    <tr class="rvr" style="--d:1.25s"><td>Shopify</td><td class="n">$1/mo</td><td class="note">first 3 months, then their regular plan</td></tr>
+    <tr class="rvr" style="--d:1.35s"><td>Domain</td><td class="n">~$10/yr</td><td class="note">bought before launch</td></tr>
+    <tr class="rvr" style="--d:1.45s"><td>Photos (image AI)</td><td class="n">~$5–15</td><td class="note">for 50 products, on your own key</td></tr>
+    <tr class="rvr" style="--d:1.55s"><td>Google Ads</td><td class="n">your budget</td><td class="note">starts at $30/day, only when you turn it on</td></tr>
+    <tr class="tot rvr" style="--d:1.7s"><td>To start</td><td class="n">~$116</td><td class="note">If this number worries you, you're not ready for Solo.</td></tr>
    </tbody></table></div>
-   <span class="note">You pay those companies directly. Solo's own price is next.</span>
-   <div class="nav"><a href="../#paths" class="note">← Groundwork</a><button class="btn primary big" id="sgGo" type="button">Start with Solo →</button></div>
+   <span class="note rv" style="--d:1.9s">You pay those companies directly. Solo's own price is next.</span>
+   <div class="nav rv" style="--d:2.05s"><a href="../#paths" class="note">← Groundwork</a><button class="btn primary big" id="sgGo" type="button">Start with Solo →</button></div>
   </section>
 
   <section class="gp hero" id="sg1">
