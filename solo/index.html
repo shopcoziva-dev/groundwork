@@ -235,10 +235,6 @@ td.n,th.n{text-align:right}
   <section class="gp" id="sg2" hidden>
    <span class="eb">Step 1 of 3 · how you pay</span>
    <h2 class="chalk">Pick your plan</h2>
-   <div class="vs" aria-label="Solo or Beta">
-    <div class="me"><b>Solo</b><span>For business owners who want efficiency: the fastest path from a niche to a live campaign. Your Claude does the work; you approve.</span></div>
-    <div><b>Beta</b><span>Hands-on, for people who want their hand held along the way: every step taught with a lesson.</span><a href="../beta/">Want the guided version? Beta →</a></div>
-   </div>
    <div class="plans" role="radiogroup" aria-label="Plan">
     <button type="button" class="plan" role="radio" aria-checked="false" data-plan="once">
      <span class="pt">Pay once</span><span class="pp chalk" id="sgPrice"></span>
@@ -267,7 +263,7 @@ td.n,th.n{text-align:right}
    <span class="note" id="sgRead">Scroll to the end to sign.</span>
    <ul class="acks">
     <li><input type="checkbox" id="sa1"><label for="sa1">I read the whole agreement, including the plan I picked.</label></li>
-    <li><input type="checkbox" id="sa2"><label for="sa2">No one promised me earnings. My results depend on me, my market and my ad spend.</label></li>
+    <li><input type="checkbox" id="sa2"><label for="sa2">No one promised me earnings. My results depend on me and the effort I put in.</label></li>
     <li><input type="checkbox" id="sa3"><label for="sa3">I'll keep Groundwork's system and code confidential (section 6).</label></li>
    </ul>
    <div class="g2">
@@ -279,10 +275,10 @@ td.n,th.n{text-align:right}
   </section>
 
   <section class="gp" id="sg4" hidden>
-   <span class="eb">Step 3 of 3 · you're in</span>
+   <span class="eb" id="sgDoneL">Step 3 of 3 · you're in</span>
    <h2 class="chalk" id="sgDoneH">Signed.</h2>
    <div class="box"><div class="tw"><table><tbody id="sgDone"></tbody></table></div><span class="note">Preview: your signature is saved in this browser only, not sent anywhere yet.</span></div>
-   <div class="nav"><button class="btn small" id="sgDl" type="button">Download my copy</button><button class="btn primary" id="sgEnter" type="button">Open Solo →</button></div>
+   <div class="nav"><button class="btn small" id="sgDl" type="button">Download my copy</button><button class="lk" id="sgNew" type="button" hidden>Start a new agreement</button><button class="btn primary" id="sgEnter" type="button">Open Solo →</button></div>
   </section>
 
  </div>
@@ -294,7 +290,8 @@ td.n,th.n{text-align:right}
   var g = document.getElementById('sgate'), $ = function(id){ return document.getElementById(id); };
   function lsGet(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
   function lsSet(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-  if ((lsGet(KEY) || {}).hash){ g.remove(); return; }
+  var SAVED = lsGet(KEY);
+  if (SAVED && SAVED.hash && !/^#start$/.test(location.hash)){ g.remove(); return; }
   var PLAN = null, READ = false;
   var PLANS = { once: { name: 'Pay once', price: SOLO_PRICE + ' one time' }, partner: { name: 'Solo partner', price: '$0 upfront, 10% of monthly profit' } };
   $('sgPrice').textContent = SOLO_PRICE;
@@ -352,11 +349,13 @@ td.n,th.n{text-align:right}
   $('sgSign').onclick = function(){ $('sgSign').disabled = true; var t = text();
     crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)).then(function(b){
       var c = { v: V, plan: PLAN, name: $('sgName').value.trim(), email: $('sgEmail').value.trim(), at: Date.now(), hash: hex(b), text: t }; lsSet(KEY, c);
-      $('sgDoneH').textContent = PLAN === 'once' ? 'Signed. One step left.' : 'Signed. Welcome, partner.';
+      done(c); }); };
+  function done(c){
+      $('sgDoneH').textContent = c.plan === 'once' ? 'Signed. One step left.' : 'Signed. Welcome, partner.';
       var rows = [['Plan', PLANS[c.plan].name + ' · ' + PLANS[c.plan].price], ['Signed by', c.name + ' · ' + c.email], ['Date', new Date(c.at).toLocaleString()], ['Agreement', 'version ' + c.v + ' · fingerprint ' + c.hash.slice(0, 12)],
-        PLAN === 'once' ? ['Payment', 'Checkout (Stripe) connects here next. This preview skips it.'] : ['Access', 'Read-only Shopify and Google Ads access is set up at launch (step 11), not now.']];
+        c.plan === 'once' ? ['Payment', 'Checkout (Stripe) connects here next. This preview skips it.'] : ['Access', 'Read-only Shopify and Google Ads access is set up at launch (step 11), not now.']];
       var tb = $('sgDone'); tb.innerHTML = ''; rows.forEach(function(r){ var tr = document.createElement('tr'); r.forEach(function(v, i){ var td = document.createElement('td'); td.textContent = v; if (i) td.className = 'note'; tr.appendChild(td); }); tb.appendChild(tr); });
-      show('sg4'); }); };
+      show('sg4'); }
   $('sgDl').onclick = function(){ var c = lsGet(KEY); if (!c) return;
     var t = c.text + '\n\nSigned electronically by ' + c.name + ' <' + c.email + '> on ' + new Date(c.at).toISOString() + '\nPlan: ' + PLANS[c.plan].name + '\nAgreement fingerprint (SHA-256): ' + c.hash + '\n';
     var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'text/plain' })); a.download = 'groundwork-solo-agreement.txt'; document.body.appendChild(a); a.click(); a.remove(); };
@@ -364,7 +363,10 @@ td.n,th.n{text-align:right}
     if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ g.remove(); return; }
     var inner = g.firstElementChild; inner.style.transition = 'opacity .5s ease-out'; inner.style.opacity = '0';
     g.style.transition = 'opacity .7s ease-out .35s'; void g.offsetWidth; g.style.opacity = '0'; setTimeout(function(){ g.remove(); }, 1150); };
-  if (/^#start$/.test(location.hash)) show('sg2');
+  $('sgNew').onclick = function(){ try { localStorage.removeItem(KEY); } catch (e) {} PLAN = null; Array.prototype.forEach.call(g.querySelectorAll('.plan'), function(q){ q.setAttribute('aria-checked', 'false'); });
+    $('sgPlanNext').disabled = true; $('sgFormula').hidden = true; $('sgNew').hidden = true; $('sgDoneL').textContent = 'Step 3 of 3 · you\'re in'; show('sg2'); };
+  if (SAVED && SAVED.hash){ done(SAVED); $('sgDoneL').textContent = 'You already signed up'; $('sgDoneH').textContent = 'Welcome back.'; $('sgNew').hidden = false; }
+  else if (/^#start$/.test(location.hash)) show('sg2');
 })();
 </script>
 

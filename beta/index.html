@@ -309,7 +309,7 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
     <span class="note" id="readNote">Scroll to the end to sign.</span>
     <ul class="ticks gticks">
       <li><input type="checkbox" id="ag1"><div class="tt"><label for="ag1">I read the whole agreement, including the plan I picked.</label></div></li>
-      <li><input type="checkbox" id="ag2"><div class="tt"><label for="ag2">No one promised me earnings. My results depend on me, my market and my ad spend.</label></div></li>
+      <li><input type="checkbox" id="ag2"><div class="tt"><label for="ag2">No one promised me earnings. My results depend on me and the effort I put in.</label></div></li>
       <li><input type="checkbox" id="ag3"><div class="tt"><label for="ag3">I'll keep Groundwork's system, lessons and code confidential (section 6).</label></div></li>
     </ul>
     <div class="grid2">
@@ -322,10 +322,10 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
 
   <!-- 4 · done -->
   <section class="gp" id="gp4" hidden>
-    <span class="label">Step 3 of 3 · you're in</span>
+    <span class="label" id="doneL">Step 3 of 3 · you're in</span>
     <h2 class="chalk gh2" id="doneH">Signed.</h2>
     <div class="box" id="doneBox"></div>
-    <div class="row gl"><button class="small" id="dlCopy" type="button">Download my copy</button><button class="primary" id="enterBtn" type="button">Open Groundwork Beta →</button></div>
+    <div class="row gl"><button class="small" id="dlCopy" type="button">Download my copy</button><button class="linkish" id="newAg" type="button" hidden>Start a new agreement</button><button class="primary" id="enterBtn" type="button">Open Groundwork Beta →</button></div>
   </section>
 
   </div>
@@ -1842,7 +1842,12 @@ function startFlow(){
   if (/^#start$/.test(location.hash)) gshow('gp2');
 }
 startFlow();
-(function(){ var c = lsGet('gwb.contract'); if (c && c.hash && !lsGet('gwb.unlock')) openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); })();
+(function(){ var c = lsGet('gwb.contract'); if (!c || !c.hash || lsGet('gwb.unlock')) return;
+  if (/^#start$/.test(location.hash)){   // came back through "Start with Beta": show where they are instead of jumping in
+    PLAN = c.plan; doneView(c); $('doneL').textContent = 'You already signed up'; $('doneH').textContent = 'Welcome back.'; $('newAg').hidden = false; gshow('gp4'); return; }
+  openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); })();
+$('newAg').onclick = function(){ try { localStorage.removeItem('gwb.contract'); } catch (e) {} PLAN = null; Array.prototype.forEach.call(document.querySelectorAll('.plan'), function(q){ q.setAttribute('aria-checked', 'false'); });
+  $('planNext').disabled = true; $('formula').hidden = true; $('newAg').hidden = true; $('doneL').textContent = 'Step 3 of 3 · you\'re in'; gshow('gp2'); };
 })();
 </script>
 

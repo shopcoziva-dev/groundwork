@@ -83,6 +83,11 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
 .card button.go{font-family:var(--mono);cursor:pointer;border:2px solid var(--chalk)}
 .card .have{font-size:12px;color:var(--dim)}
 .card .have:hover{color:var(--chalk)}
+@media (min-width:900px){
+  .rail{max-width:1120px;overflow:visible;scroll-snap-type:none;padding:8px 0 18px;justify-content:center}
+  .card{flex:1 1 0;max-width:540px}
+  .hint,.ctl{display:none}
+}
 .dlv{list-style:none;margin:0;padding:0;width:100%;max-width:900px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:48px;text-align:left}
 @media (max-width:760px){.dlv{grid-template-columns:minmax(0,1fr)}}
 .dlv li{display:grid;grid-template-columns:2.4em minmax(0,1fr);column-gap:10px;padding:12px 0;border-bottom:1px solid rgba(111,211,255,.2)}
