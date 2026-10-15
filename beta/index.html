@@ -186,6 +186,44 @@ td input[type=text],td input[type=number]{height:32px;font-size:13px;width:100%}
 .ct{min-width:0;font-size:13px}.ct td{padding:5px 6px;border-bottom:1px solid rgba(111,211,255,.15)}.ct td.n{white-space:nowrap;color:var(--amber);text-align:right}.ct tr.tot td{border-top:2px solid var(--amber);border-bottom:none;font-weight:600;padding-top:9px}.ct tr.tot td.n{font-size:16px}
 [hidden]{display:none!important}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---- Start with Beta: plan, agreement, sign ---- */
+.gp{display:flex;flex-direction:column;gap:16px}
+.gp[hidden]{display:none}
+.gate .lede{font-size:28px;margin:0;line-height:1.2}
+.gh2{font-family:var(--hand);font-weight:700;font-size:clamp(40px,8vw,56px);line-height:1;margin:0}
+button.big{height:52px;font-size:14px;letter-spacing:.12em}
+.linkish{background:none;border:none;padding:0;height:auto;color:var(--line);font:inherit;font-size:12.5px;letter-spacing:.04em;text-transform:none;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.gl{justify-content:space-between;align-items:center;gap:10px 16px;font-size:12.5px}
+.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:620px){.plans{grid-template-columns:minmax(0,1fr)}}
+.plan{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:8px;padding:16px 18px;border:2px solid rgba(243,241,231,.45);border-radius:6px;background:rgba(8,26,49,.6);color:var(--chalk);text-align:left;font-family:var(--mono)}
+.plan:hover{border-color:var(--chalk)}
+.plan:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+.plan[aria-checked="true"]{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber) inset}
+.plan .pt{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--line)}
+.plan[aria-checked="true"] .pt{color:var(--amber)}
+.plan .pp{font-family:var(--hand);font-weight:700;font-size:44px;line-height:1}
+.plan .pd{font-size:13px;line-height:1.5}
+.plan .pd b{color:var(--amber);font-weight:600}
+.plan ul{margin:0;padding-left:18px;font-size:12px;line-height:1.55;color:var(--chalk-dim)}
+.formula{border:2px dashed var(--line-faint);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.formula[hidden]{display:none}
+.formula .fx{font-size:26px;margin:0;line-height:1.15;color:var(--amber)}
+.formula .ex{display:flex;flex-direction:column;gap:2px}
+.formula .ex b{color:var(--chalk)}
+.draft{font-size:11.5px;letter-spacing:.06em;color:var(--board);background:var(--amber);padding:6px 10px;border-radius:3px}
+.agree{max-height:min(52vh,460px);overflow:auto;border:2px solid rgba(243,241,231,.45);border-radius:6px;padding:16px 18px;background:rgba(5,18,36,.75);font-size:13px;line-height:1.6;color:var(--chalk)}
+.agree:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.agree h3{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--line);margin:18px 0 6px;font-weight:600}
+.agree h3:first-child{margin-top:0}
+.agree p,.agree li{margin:0 0 8px}
+.agree ul,.agree ol{padding-left:18px;margin:0 0 8px}
+.agree .yours{border-left:3px solid var(--amber);padding-left:10px}
+.agree .end{color:var(--chalk-dim);font-size:12px;margin-top:14px}
+.gticks li{align-items:flex-start}
+.sigline{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:2px solid var(--chalk-faint);padding-bottom:4px;min-height:52px}
+.sigline .hand{font-size:40px;line-height:1;color:var(--chalk)}
 </style>
 </head>
 <body>
@@ -194,29 +232,102 @@ td input[type=text],td input[type=number]{height:32px;font-size:13px;width:100%}
 
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
   <div class="in">
+
+  <!-- 1 · welcome + costs -->
+  <section class="gp" id="gp1">
     <span class="label" id="gateEyebrow">Groundwork · beta</span>
-    <h1 class="chalk write" id="gateTitle">Welcome.</h1>
+    <h1 class="chalk write" id="gateTitle">Build the store.</h1>
     <svg class="splashline chalk" viewBox="0 0 420 16" aria-hidden="true"><path pathLength="1" d="M4 10 C 70 2, 150 15, 220 8 S 350 4, 416 10" fill="none" stroke="var(--line)" stroke-width="4" stroke-linecap="round"/></svg>
-    <p class="hand" style="font-size:28px;margin:0;line-height:1.2" id="gateLede">You were invited to build a store with Groundwork. Type the access code from your invite.</p>
-    <form id="gateForm" class="row" autocomplete="off">
-      <label class="sr" for="gateCode">Access code</label>
-      <input type="text" class="code" id="gateCode" placeholder="XXXX-XXXX" maxlength="12" inputmode="text" autocapitalize="characters" spellcheck="false" style="flex:1 1 220px">
-      <button class="primary" id="gateGo" type="submit">Enter</button>
-    </form>
-    <div class="note" id="gateMsg" role="status">Checking…</div>
-    <div class="row"><a href="../#paths" style="font-size:12px">← Groundwork</a><button class="small quiet" id="gateAdmin" type="button">Admin</button></div>
+    <p class="hand lede">Every step taught, every check run on your own accounts. Niche in, store out.</p>
     <div class="costs" id="costs" aria-labelledby="costsH">
-      <span class="label" id="costsH">Before you start · what it costs you</span>
+      <span class="label" id="costsH">Before you start · what your store costs you</span>
       <table class="ct"><tbody>
         <tr><td>Shopify</td><td class="n">$1/mo</td><td class="note">first 3 months, then their regular plan</td></tr>
         <tr><td>Domain</td><td class="n">~$10/yr</td><td class="note">bought before launch</td></tr>
         <tr><td>Claude</td><td class="n">$20/mo</td><td class="note">Pro works; Max is recommended</td></tr>
         <tr><td>Photos (image AI)</td><td class="n">~$5–15</td><td class="note">for 50 products, on your own key</td></tr>
         <tr><td>Google Ads</td><td class="n">your budget</td><td class="note">we start at $30/day, only when you turn it on</td></tr>
-        <tr class="tot"><td>Lowest to start</td><td class="n">~$36</td><td class="note">plus your ad budget</td></tr>
+        <tr class="tot"><td>Lowest to start</td><td class="n">~$36</td><td class="note">plus your ad budget and Groundwork itself (next)</td></tr>
       </tbody></table>
-      <span class="note">Everything runs on your own accounts. You pay those companies directly, never us.</span>
+      <span class="note">You pay those companies directly. Groundwork's own price is the next screen.</span>
     </div>
+    <button class="primary big" id="startBtn" type="button">Start with Beta →</button>
+    <div class="row gl"><button class="linkish" id="codeBtn" type="button">Have an invite code?</button><a href="../#paths">← Groundwork</a><button class="small quiet" id="gateAdmin" type="button">Admin</button></div>
+  </section>
+
+  <!-- code (existing invites) -->
+  <section class="gp" id="gpCode" hidden>
+    <span class="label">Groundwork · beta</span>
+    <h2 class="chalk gh2">Your invite code</h2>
+    <form id="gateForm" class="row" autocomplete="off">
+      <label class="sr" for="gateCode">Access code</label>
+      <input type="text" class="code" id="gateCode" placeholder="XXXX-XXXX" maxlength="12" inputmode="text" autocapitalize="characters" spellcheck="false" style="flex:1 1 220px">
+      <button class="primary" id="gateGo" type="submit">Enter</button>
+    </form>
+    <div class="note" id="gateMsg" role="status">Codes look like XXXX-XXXX.</div>
+    <button class="linkish back" type="button" data-to="gp1">← Back</button>
+  </section>
+
+  <!-- 2 · pick a plan -->
+  <section class="gp" id="gp2" hidden>
+    <span class="label">Step 1 of 3 · how you pay</span>
+    <h2 class="chalk gh2">Pick your plan</h2>
+    <div class="plans" role="radiogroup" aria-label="Plan">
+      <button type="button" class="plan" role="radio" aria-checked="false" data-plan="once">
+        <span class="pt">Pay once</span>
+        <span class="pp chalk">$2,499.99</span>
+        <span class="pd">One payment. You keep <b>100%</b> of your profit.</span>
+        <ul><li>Full Beta: all 11 steps, lessons and checks</li><li>Your engine copy and updates during the beta</li><li>No share of your store, ever</li></ul>
+      </button>
+      <button type="button" class="plan" role="radio" aria-checked="false" data-plan="partner">
+        <span class="pt">Beta partner</span>
+        <span class="pp chalk">$0 now</span>
+        <span class="pd"><b>10% of your profit</b>, monthly, for 24 months or until <b>$5,000</b> total, whichever comes first.</span>
+        <ul><li>Same Beta, nothing held back</li><li>Pay nothing if your store makes no profit</li><li>Read-only access to your Shopify and Google Ads reports, so the number is never a guess</li></ul>
+      </button>
+    </div>
+    <div class="formula" id="formula" hidden>
+      <span class="label">The profit formula (beta partner)</span>
+      <p class="hand fx">Profit = sales − refunds − (product + shipping) − ad spend</p>
+      <table class="ct"><tbody>
+        <tr><td>Sales</td><td class="note">Shopify order totals for the month, before tax</td></tr>
+        <tr><td>Refunds</td><td class="note">Shopify refunds issued that month</td></tr>
+        <tr><td>Product + shipping</td><td class="note">what your supplier (CJ) charged for those orders</td></tr>
+        <tr><td>Ad spend</td><td class="note">Google Ads cost for the month</td></tr>
+      </tbody></table>
+      <div class="ex"><span class="label">Example month</span><span class="note">$6,000 sales − $200 refunds − $1,500 product − $3,000 ads = <b>$1,300 profit</b> → you pay <b>$130</b>. A month at zero or below: you pay $0, and nothing carries over.</span></div>
+    </div>
+    <div class="row gl"><button class="linkish back" type="button" data-to="gp1">← Back</button><button class="primary" id="planNext" type="button" disabled>Next: the agreement →</button></div>
+  </section>
+
+  <!-- 3 · agreement + sign -->
+  <section class="gp" id="gp3" hidden>
+    <span class="label">Step 2 of 3 · the agreement</span>
+    <h2 class="chalk gh2">Read it. Sign it.</h2>
+    <div class="draft" role="note">DRAFT for review. Not yet checked by a lawyer. Terms in [brackets] are placeholders.</div>
+    <div class="agree" id="agree" tabindex="0" aria-label="Groundwork Beta agreement"></div>
+    <span class="note" id="readNote">Scroll to the end to sign.</span>
+    <ul class="ticks gticks">
+      <li><input type="checkbox" id="ag1"><div class="tt"><label for="ag1">I read the whole agreement, including the plan I picked.</label></div></li>
+      <li><input type="checkbox" id="ag2"><div class="tt"><label for="ag2">No one promised me earnings. My results depend on me, my market and my ad spend.</label></div></li>
+      <li><input type="checkbox" id="ag3"><div class="tt"><label for="ag3">I'll keep Groundwork's system, lessons and code confidential (section 6).</label></div></li>
+    </ul>
+    <div class="grid2">
+      <div class="field"><label for="sgName">Full legal name (your signature)</label><input type="text" id="sgName" autocomplete="name" placeholder="First Last"></div>
+      <div class="field"><label for="sgEmail">Email</label><input type="text" id="sgEmail" autocomplete="email" inputmode="email" placeholder="you@email.com"></div>
+    </div>
+    <div class="sigline"><span class="hand" id="sigShow">&nbsp;</span><span class="note" id="sigDate"></span></div>
+    <div class="row gl"><button class="linkish back" type="button" data-to="gp2">← Back</button><button class="primary" id="signBtn" type="button" disabled>Sign and continue →</button></div>
+  </section>
+
+  <!-- 4 · done -->
+  <section class="gp" id="gp4" hidden>
+    <span class="label">Step 3 of 3 · you're in</span>
+    <h2 class="chalk gh2" id="doneH">Signed.</h2>
+    <div class="box" id="doneBox"></div>
+    <div class="row gl"><button class="small" id="dlCopy" type="button">Download my copy</button><button class="primary" id="enterBtn" type="button">Open Groundwork Beta →</button></div>
+  </section>
+
   </div>
 </div>
 
@@ -1646,6 +1757,91 @@ function card(name, lk, code, fresh0){
   r.appendChild(b1); r.appendChild(b2); r.appendChild(b3); o.appendChild(r); return o;
 }
 gate();
+
+// ===================================================================== Start with Beta: plan, agreement, signature
+var AG_V = 'beta-0.1 (draft)';
+var PLAN = null, AG_READ = false;
+var PLANS = { once: { name: 'Pay once', price: '$2,499.99 one time' }, partner: { name: 'Beta partner', price: '$0 upfront, 10% of monthly profit (24 months or $5,000, whichever first)' } };
+function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function gshow(id){ ['gp1', 'gpCode', 'gp2', 'gp3', 'gp4'].forEach(function(x){ $(x).hidden = x !== id; }); $('gate').scrollTop = 0; var h = $(id).querySelector('h1,h2,button,input'); if (h && h.tagName !== 'H1' && h.tagName !== 'H2') h.focus({ preventScroll: true }); }
+
+function agreementHTML(plan){
+  var once = plan === 'once', P = function(on, html){ return '<div' + (on ? ' class="yours"' : '') + '>' + html + '</div>'; };
+  return [
+    '<h3>Groundwork Beta agreement</h3>',
+    '<p>This agreement is between <b>GTS Holdings LLC</b>, a Virginia limited liability company ("GTS", "we"), and the person who signs below ("you"). It covers your use of Groundwork Beta and includes a confidentiality agreement (section 6).</p>',
+    '<h3>1 · What you get</h3>',
+    '<p>A personal, non-transferable license to use Groundwork Beta: the step-by-step site, its lessons and checks, and a private copy of the Groundwork engine code, to build and run your own online store [one store during the beta]. It is a beta: things may change, break or be fixed while you use it.</p>',
+    '<h3>2 · Your accounts, your store</h3>',
+    '<p>You open and own every account the store needs (GitHub, Shopify, CJdropshipping, Google, Claude, your image AI) and pay those companies directly. Your keys stay in your own accounts; we never ask for them. You own your store, its brand, its products and its customers.</p>',
+    '<h3>3 · Your plan and fees</h3>',
+    P(once, '<p><b>A. Pay once.</b> $2,499.99, paid before access opens. [Refund: in full within 7 days if you have not finished step 1; none after.] No share of your store, ever.</p>'),
+    P(!once, '<p><b>B. Beta partner.</b> No upfront fee. Instead you pay <b>10% of Monthly Profit</b> for <b>24 months</b> from your store\'s first sale, or until your payments total <b>$5,000</b>, whichever comes first.</p>' +
+      '<ul><li><b>Monthly Profit</b> = Shopify sales for the month (before tax) − refunds issued that month − what your supplier charged for those orders (product + shipping) − Google Ads cost for the month.</li>' +
+      '<li>A month at zero or below: you owe nothing, and the loss does not carry over.</li>' +
+      '<li>You report and pay by the 15th of the next month [payment method to be set].</li>' +
+      '<li>For the term you give GTS <b>read-only</b> access to your Shopify reports and Google Ads account, used only to check the number.</li>' +
+      '<li>You can buy out at any time by paying $2,499.99 minus what you have already paid.</li>' +
+      '<li>It applies to every store you build with Groundwork during the term. [If you sell a store during the term, the rest of the $5,000 cap is due at closing.]</li></ul>'),
+    '<h3>4 · No earnings promise</h3>',
+    '<p>Groundwork teaches a method and runs checks. It does <b>not</b> guarantee sales, profit, ad or product approval, or any result. Numbers and examples you see are illustrations, not typical results. Many new stores lose money in their first months. You can lose your ad spend and setup costs. You decide what to spend and when ads run.</p>',
+    '<h3>5 · Your responsibilities</h3>',
+    '<p>You follow the law and every platform\'s rules (Google Ads, Merchant Center, Shopify, your supplier), make only honest product claims, handle your own taxes, licences and customer service, and check every listing before it goes live.</p>',
+    '<h3>6 · Confidentiality</h3>',
+    '<p>"Confidential Information" means Groundwork\'s lessons, rulebook, formulas, checklists, prompts and engine code, and anything else marked confidential that you get through the beta. You will not share, publish, resell or teach it, or use it to build a competing product, during the beta and for [3] years after. It does not cover what was already public, what you knew before, or your own store\'s data. You may keep using what you learned for your own stores.</p>',
+    '<p>Your store data that we see (beta partner plan) is confidential to us too: we use it only to work out what you owe, and we do not share it.</p>',
+    '<h3>7 · The engine code</h3>',
+    '<p>Your copy of the engine is for your own stores. No redistributing, sublicensing or selling it, and keep its notices in place.</p>',
+    '<h3>8 · Feedback</h3>',
+    '<p>You will tell us what breaks or confuses you. We may use your feedback to improve Groundwork without owing you anything for it.</p>',
+    '<h3>9 · Ending it</h3>',
+    '<p>You can stop using Groundwork at any time. Fees already earned stay due' + (once ? '; refunds follow section 3.' : '; the profit share stops when you stop selling, the cap is reached, or the 24 months end.') + ' We may end your access if you break sections 5, 6 or 7.</p>',
+    '<h3>10 · Warranty and liability</h3>',
+    '<p>Groundwork is provided as is, without warranties. Our total liability is limited to what you paid us in the 12 months before a claim, and neither side is liable for indirect or lost-profit damages.</p>',
+    '<h3>11 · The rest</h3>',
+    '<p>Virginia law applies; disputes go to the courts of [Fairfax County], Virginia. This is the whole agreement between us on Groundwork Beta. Typing your name below is your electronic signature and is as binding as a handwritten one.</p>',
+    '<p class="end">Version ' + AG_V + ' · your plan: <b>' + PLANS[plan].name + '</b> · end of agreement</p>'
+  ].join('');
+}
+function agreementText(){ var d = document.createElement('div'); d.innerHTML = agreementHTML(PLAN).replace(/<\/(p|h3|li)>/g, '</$1>\n'); return d.textContent.replace(/\n{3,}/g, '\n\n'); }
+function sha(t){ return crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)).then(hexOf); }
+function emailOk(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e || ''); }
+function signReady(){
+  var n = $('sgName').value.trim(), ok = AG_READ && $('ag1').checked && $('ag2').checked && $('ag3').checked && n.split(/\s+/).length >= 2 && emailOk($('sgEmail').value.trim());
+  $('signBtn').disabled = !ok; $('sigShow').textContent = n || ' ';
+  $('readNote').textContent = AG_READ ? 'Read to the end. ✓' : 'Scroll to the end to sign.';
+}
+function doneView(c){
+  $('doneH').textContent = c.plan === 'once' ? 'Signed. One step left.' : 'Signed. Welcome, partner.';
+  var b = $('doneBox'); b.innerHTML = '';
+  var rows = [['Plan', PLANS[c.plan].name + ' · ' + PLANS[c.plan].price], ['Signed by', c.name + ' · ' + c.email], ['Date', new Date(c.at).toLocaleString()], ['Agreement', 'version ' + c.v + ' · fingerprint ' + c.hash.slice(0, 12)],
+    c.plan === 'once' ? ['Payment', 'Checkout (Stripe) connects here next. This preview skips it.'] : ['Access', 'Read-only Shopify and Google Ads access is set up at launch (step 11), not now.']];
+  var t = el('table', 'ct'); var tb = el('tbody'); rows.forEach(function(r){ var tr = el('tr'); tr.appendChild(el('td', null, r[0])); tr.appendChild(el('td', 'note', r[1])); tb.appendChild(tr); }); t.appendChild(tb); b.appendChild(t);
+  b.appendChild(el('div', 'note', 'Preview: your signature is saved in this browser only, not sent anywhere yet.'));
+}
+function startFlow(){
+  $('startBtn').onclick = function(){ gshow('gp2'); };
+  $('codeBtn').onclick = function(){ gshow('gpCode'); $('gateCode').focus(); };
+  Array.prototype.forEach.call(document.querySelectorAll('.gp .back'), function(b){ b.onclick = function(){ gshow(b.dataset.to); }; });
+  Array.prototype.forEach.call(document.querySelectorAll('.plan'), function(p){ p.onclick = function(){ PLAN = p.dataset.plan;
+    Array.prototype.forEach.call(document.querySelectorAll('.plan'), function(q){ q.setAttribute('aria-checked', q === p ? 'true' : 'false'); });
+    $('formula').hidden = PLAN !== 'partner'; $('planNext').disabled = false; }; });
+  $('planNext').onclick = function(){ if (!PLAN) return; AG_READ = false; var a = $('agree'); a.innerHTML = agreementHTML(PLAN); a.scrollTop = 0; $('sigDate').textContent = new Date().toLocaleDateString(); signReady(); gshow('gp3');
+    setTimeout(function(){ if (a.scrollHeight <= a.clientHeight + 4){ AG_READ = true; signReady(); } }, 50); };
+  $('agree').addEventListener('scroll', function(){ var a = $('agree'); if (!AG_READ && a.scrollTop + a.clientHeight >= a.scrollHeight - 24){ AG_READ = true; signReady(); } });
+  ['ag1', 'ag2', 'ag3'].forEach(function(id){ $(id).onchange = signReady; });
+  ['sgName', 'sgEmail'].forEach(function(id){ $(id).oninput = signReady; });
+  $('signBtn').onclick = function(){ $('signBtn').disabled = true; var txt = agreementText();
+    sha(txt).then(function(h){ var c = { v: AG_V, plan: PLAN, name: $('sgName').value.trim(), email: $('sgEmail').value.trim(), at: Date.now(), hash: h, text: txt };
+      lsSet('gwb.contract', c); doneView(c); gshow('gp4'); }); };
+  $('dlCopy').onclick = function(){ var c = lsGet('gwb.contract'); if (!c) return;
+    var t = c.text + '\n\nSigned electronically by ' + c.name + ' <' + c.email + '> on ' + new Date(c.at).toISOString() + '\nPlan: ' + PLANS[c.plan].name + '\nAgreement fingerprint (SHA-256): ' + c.hash + '\n';
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'text/plain' })); a.download = 'groundwork-beta-agreement.txt'; document.body.appendChild(a); a.click(); a.remove(); };
+  $('enterBtn').onclick = function(){ var c = lsGet('gwb.contract'); if (c) openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); };
+  if (/^#start$/.test(location.hash)) gshow('gp2');
+}
+startFlow();
+(function(){ var c = lsGet('gwb.contract'); if (c && c.hash && !lsGet('gwb.unlock')) openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); })();
 })();
 </script>
 
