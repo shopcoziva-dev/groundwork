@@ -74,6 +74,23 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
 
 /* Solo: exactly Beta's card; red only where Beta uses yellow */
 .card.s .nums b{color:var(--red)}
+
+.acts{margin-top:6px;display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.card button.go{font-family:var(--mono);cursor:pointer;border:2px solid var(--chalk)}
+.card .have{font-size:12px;color:var(--dim)}
+.card .have:hover{color:var(--chalk)}
+.dlv{width:100%;max-width:980px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;text-align:left}
+@media (max-width:860px){.dlv{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.dlv .d{border:1px solid rgba(111,211,255,.3);border-radius:8px;background:rgba(8,26,49,.6);padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.dlv b{font-family:var(--hand);font-size:clamp(22px,4vw,28px);line-height:1.05;color:var(--amber)}
+.dlv span{font-size:12.5px;color:var(--dim);line-height:1.45}
+#sd{padding-bottom:96px}
+.req[hidden]{display:none}
+.req{position:fixed;inset:0;z-index:20;background:rgba(8,26,49,.88);display:flex;align-items:center;justify-content:center;padding:16px}
+.req .rin{width:min(460px,100%);background:var(--board);border:2px solid var(--chalk);border-radius:10px;padding:22px;text-align:left;display:flex;flex-direction:column;gap:10px}
+.req h3{margin:0;font-family:var(--hand);font-size:44px;line-height:1}
+.req p{margin:0}.req .note{font-size:13px;color:var(--dim)}
+.req button{align-self:flex-start;min-height:42px;padding:0 18px;border-radius:5px;border:2px solid var(--chalk);background:transparent;color:var(--chalk);font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
 @keyframes write{to{clip-path:inset(-0.3em -10% -0.3em -5%)}}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes rise{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
@@ -101,15 +118,31 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
       <p class="big chalk" id="motto" aria-label="Niche in. Store out."><span class="w1">Niche in.</span><span class="b w2">Store out.</span></p>
       <p class="blurb" id="blurb">A step-by-step system for building a real e-commerce store that sells through Google ads: the niche, the look, the copy, the photos, the prices, the catalog and the launch. <b>Every number is real.</b> Every step has to pass before the next one opens.</p>
     </div>
-    <a class="down" href="#s3" aria-label="Next" style="animation-delay:.2s"><svg aria-hidden="true"><use href="#chev"/></svg></a>
+    <a class="down" href="#sd" aria-label="Next" style="animation-delay:.2s"><svg aria-hidden="true"><use href="#chev"/></svg></a>
+  </section>
+
+  <section class="screen" id="sd" aria-labelledby="hd">
+    <span class="label reveal">What you walk away with</span>
+    <h2 class="chalk reveal" id="hd">Not a course. A business.</h2>
+    <div class="dlv reveal">
+      <div class="d"><b class="chalk">A live store</b><span>Your brand, a site built from a top seller's layout, policies and pages done</span></div>
+      <div class="d"><b class="chalk">50 products</b><span>Real supplier items, priced by the formula, 5 photos and copy each, linked to the supplier</span></div>
+      <div class="d"><b class="chalk">Your sheets</b><span>Master Workbook: product tracker, pricing, ad tracker, accounts, important info</span></div>
+      <div class="d"><b class="chalk">Your books</b><span>Revenue, costs and profit per order, kept as you go</span></div>
+      <div class="d"><b class="chalk">An office</b><span>Agents that review your prices, ads and listings every day and tell you what needs you</span></div>
+      <div class="d"><b class="chalk">A launch plan</b><span>A campaign ready to turn on, day 7 / 14 / 30 checkpoints and the budget ladder</span></div>
+      <div class="d"><b class="chalk">A calendar + playbook</b><span>A year of tasks, and what to do when a number misses</span></div>
+      <div class="d"><b class="chalk">Email + SMS plan</b><span>Welcome, abandoned cart, post-purchase and win-back flows</span></div>
+    </div>
+    <a class="down" href="#s3" aria-label="Next"><svg aria-hidden="true"><use href="#chev"/></svg></a>
   </section>
 
   <section class="screen" id="s3" aria-labelledby="h2">
     <span class="label reveal">Two ways to build</span>
     <h2 class="chalk reveal" id="h2">Pick your speed</h2>
     <div class="rail reveal" id="rail" aria-label="Beta and Solo" tabindex="0">
-      <a class="card b" href="beta/" aria-label="Groundwork Beta, invite only">
-        <span class="stamp"><svg aria-hidden="true"><use href="#lock"/></svg>INVITE ONLY</span>
+      <article class="card b" aria-label="Groundwork Beta, beta testing">
+        <span class="stamp"><svg aria-hidden="true"><use href="#lock"/></svg>BETA TESTING</span>
         <span class="label">Groundwork</span>
         <h3 class="chalk">Beta</h3>
         <p class="who">For beginners</p>
@@ -120,10 +153,10 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
           <li>Your own supplier, Shopify and API keys: you pay your own store costs</li>
         </ul>
         <div class="nums"><div><b>11</b><span>steps</span></div><div><b>you</b><span>drive it</span></div></div>
-        <span class="go">Enter with your code →</span>
-      </a>
-      <a class="card s" href="solo/" aria-label="Groundwork Solo, private">
-        <span class="stamp"><svg aria-hidden="true"><use href="#lock"/></svg>PRIVATE</span>
+        <div class="acts"><button class="go" type="button" data-req="Beta">Request access →</button><a class="have" href="beta/">Have a code? Enter it</a></div>
+      </article>
+      <article class="card s" aria-label="Groundwork Solo, select invitational">
+        <span class="stamp"><svg aria-hidden="true"><use href="#lock"/></svg>SELECT INVITATIONAL</span>
         <span class="label">Groundwork</span>
         <h3 class="chalk">Solo</h3>
         <p class="who">For people who already know the game</p>
@@ -134,14 +167,23 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
           <li>Recommend → set → verify → approve</li>
         </ul>
         <div class="nums"><div><b>&lt;1h</b><span>niche to campaign</span></div><div><b>11</b><span>steps, you approve</span></div></div>
-        <span class="go">Unlock →</span>
-      </a>
+        <div class="acts"><button class="go" type="button" data-req="Solo">Request access →</button><a class="have" href="solo/">Have a code? Enter it</a></div>
+      </article>
     </div>
     <div class="ctl reveal"><button type="button" id="prev" aria-label="Show Beta">←</button><div class="dots" aria-hidden="true"><i class="on"></i><i></i></div><button type="button" id="next" aria-label="Show Solo">→</button></div>
     <span class="hint reveal">Swipe to see Solo</span>
     <footer>© 2026 GTS Holdings</footer>
   </section>
 </main>
+<div class="req" id="req" hidden role="dialog" aria-modal="true" aria-labelledby="reqT">
+  <div class="rin">
+    <span class="label" id="reqK"></span>
+    <h3 class="chalk" id="reqT">Request access</h3>
+    <p>Access is by invitation while we build. Requests open here soon.</p>
+    <p class="note">Already have a code? <a id="reqHave" href="beta/">Enter it here</a>.</p>
+    <button type="button" id="reqClose">Close</button>
+  </div>
+</div>
 <script>
 // every reload starts at the opening screen
 // a reload starts at the opening screen; coming BACK from Beta or Solo lands on "Pick your speed"
@@ -162,7 +204,7 @@ function gwIsBack(){
 }
 window.addEventListener('load', function(){ gwPlace(gwIsBack()); });
 window.addEventListener('pageshow', function(e){ if (e.persisted) gwPlace(true); });
-document.addEventListener('click', function(e){ var a = e.target.closest && e.target.closest('.card'); if (a){ try { sessionStorage.setItem('gw.left', '1'); } catch (err) {} } });
+document.addEventListener('click', function(e){ var a = e.target.closest && e.target.closest('.card a'); if (a){ try { sessionStorage.setItem('gw.left', '1'); } catch (err) {} } });
 (function(){
   var rail = document.getElementById('rail'), cards = rail.querySelectorAll('.card'), dots = document.querySelectorAll('.dots i');
   function go(i){ cards[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); }
@@ -181,6 +223,14 @@ document.addEventListener('click', function(e){ var a = e.target.closest && e.ta
     setTimeout(function(){ stage.classList.add('done'); }, 2700);
     setTimeout(function(){ s2.classList.add('ready'); }, 3600); }
   if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) play(); }); }, { threshold: 0.6 }).observe(s2); else play();
+  // request access (form comes later)
+  var req = document.getElementById('req');
+  document.querySelectorAll('[data-req]').forEach(function(b){ b.addEventListener('click', function(){ var k = b.getAttribute('data-req');
+    document.getElementById('reqK').textContent = 'Groundwork ' + k + (k === 'Solo' ? ' · select invitational' : ' · beta testing');
+    document.getElementById('reqHave').href = k === 'Solo' ? 'solo/' : 'beta/'; req.hidden = false; document.getElementById('reqClose').focus(); }); });
+  document.getElementById('reqClose').onclick = function(){ req.hidden = true; };
+  req.addEventListener('click', function(e){ if (e.target === req) req.hidden = true; });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') req.hidden = true; });
   var io = 'IntersectionObserver' in window ? new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) e.target.classList.add('in'); }); }, { threshold: 0.2 }) : null;
   document.querySelectorAll('.reveal').forEach(function(el){ io ? io.observe(el) : el.classList.add('in'); });
 })();
