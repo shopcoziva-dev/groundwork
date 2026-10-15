@@ -269,19 +269,6 @@ document.addEventListener('click', function(e){ var a = e.target.closest && e.ta
     if (!stage.classList.contains('done')){ played = true; stage.classList.add('done'); s2.classList.add('ready'); if (!e.target.closest('.down')) return; }
     go2('sd'); });
   document.getElementById('sd').addEventListener('click', function(e){ e.preventDefault(); go2('s3'); });
-// ===== TEST MODE (temporary, remove before launch): a strip on the far right edge skips to the next thing
-function gwTestStrip(next){
-  var t = document.createElement('button'); t.type = 'button'; t.setAttribute('aria-label', 'Test mode: skip to the next screen'); t.textContent = 'TEST ›';
-  t.style.cssText = 'position:fixed;top:0;right:0;bottom:0;width:30px;z-index:2147483000;border:0;border-left:1px dashed rgba(255,212,121,.55);background:rgba(255,212,121,.06);color:rgba(255,212,121,.85);font:600 10px/1 ui-monospace,monospace;letter-spacing:.2em;writing-mode:vertical-rl;cursor:pointer;padding:0';
-  t.onclick = function(e){ e.preventDefault(); e.stopPropagation(); try { next(); } catch (err) { console.log('[test] ' + err.message); } };
-  document.body.appendChild(t);
-}
-  gwTestStrip(function(){
-    var ids = ['s1', 's2', 'sd', 's3'], cur = ids.reduce(function(best, id){ var t = Math.abs(document.getElementById(id).getBoundingClientRect().top); return t < best[1] ? [id, t] : best; }, ['s1', 1e9])[0];
-    if (cur === 's1'){ document.getElementById('s1').classList.add('skip'); go2('s2'); }
-    else if (cur === 's2'){ played = true; stage.classList.add('done'); s2.classList.add('ready'); go2('sd'); }
-    else if (cur === 'sd') go2('s3');
-  });
   // tap anywhere on that screen (or press a key) to skip straight to the text
   function skip(){ if (!stage.classList.contains('done')){ played = true; stage.classList.add('done'); s2.classList.add('ready'); } }
   s2.addEventListener('click', function(e){ if (!e.target.closest('.down')) skip(); });

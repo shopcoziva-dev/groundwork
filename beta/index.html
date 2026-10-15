@@ -1953,22 +1953,6 @@ GINIT = false;
 window.addEventListener('popstate', function(e){ var st = e.state || {};
   if (st.app){ var c = lsGet('gwb.contract'); if (c) openApp(c.name.split(' ')[0], 'c' + c.hash.slice(0, 15)); return; }
   if (st.gp){ var from = GCUR; $('gate').hidden = false; $('app').setAttribute('aria-hidden', 'true'); _gs(st.gp); GCUR = st.gp; if (st.gp === 'gp2' && from === 'gp3') $('bPick').scrollIntoView(); } });
-// ===== TEST MODE (temporary, remove before launch): a strip on the far right edge skips to the next thing
-function gwTestStrip(next){
-  var t = document.createElement('button'); t.type = 'button'; t.setAttribute('aria-label', 'Test mode: skip to the next screen'); t.textContent = 'TEST ›';
-  t.style.cssText = 'position:fixed;top:0;right:0;bottom:0;width:30px;z-index:2147483000;border:0;border-left:1px dashed rgba(255,212,121,.55);background:rgba(255,212,121,.06);color:rgba(255,212,121,.85);font:600 10px/1 ui-monospace,monospace;letter-spacing:.2em;writing-mode:vertical-rl;cursor:pointer;padding:0';
-  t.onclick = function(e){ e.preventDefault(); e.stopPropagation(); try { next(); } catch (err) { console.log('[test] ' + err.message); } };
-  document.body.appendChild(t);
-}
-gwTestStrip(function(){
-  if (!$('gate').hidden){
-    if (GCUR === 'gp1' || GCUR === 'gpCode'){ gshow('gp2'); return; }
-    if (GCUR === 'gp2'){ if (!PLAN) document.querySelector('.plan[data-plan="partner"]').click(); $('planNext').click(); return; }
-    if (GCUR === 'gp3'){ AG_READ = true; ['ag1', 'ag2', 'ag3'].forEach(function(id){ $(id).checked = true; }); if (!$('sgName').value) $('sgName').value = 'Test Tester'; if (!$('sgEmail').value) $('sgEmail').value = 'test@example.com'; signReady(); $('signBtn').click(); return; }
-    if (GCUR === 'gp4'){ $('enterBtn').click(); return; }
-  }
-  var st = STEPS[S.at]; S.approved[st.id] = true; if (S.at < STEPS.length - 1) S.at++; save(); render(); window.scrollTo(0, 0);
-});
 })();
 </script>
 
