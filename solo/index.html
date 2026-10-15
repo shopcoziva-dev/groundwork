@@ -174,7 +174,16 @@ td.n,th.n{text-align:right}
   function hash(code){ return crypto.subtle.importKey('raw', new TextEncoder().encode(code), 'PBKDF2', false, ['deriveBits']).then(function(k){ return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: new TextEncoder().encode('groundwork-solo'), iterations: 150000, hash: 'SHA-256' }, k, 256); })
     .then(function(b){ return Array.prototype.map.call(new Uint8Array(b), function(x){ return ('0' + x.toString(16)).slice(-2); }).join('').slice(0, 40); }); }
   document.getElementById('sgF').onsubmit = function(e){ e.preventDefault(); var c = document.getElementById('sgC').value.toUpperCase().replace(/[^A-Z0-9]/g, ''); var m = document.getElementById('sgM'); m.textContent = 'Checking…';
-    hash(c).then(function(h){ if (h === H){ try { localStorage.setItem('gw.solo', H); } catch (e2) {} g.remove(); } else m.textContent = 'That code did not work.'; }); };
+    hash(c).then(function(h){ if (h === H){ try { localStorage.setItem('gw.solo', H); } catch (e2) {} unlock(); } else m.textContent = 'That code did not work.'; }); };
+  function unlock(){
+    var inner = g.firstElementChild; m.textContent = 'Unlocked.';
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { g.remove(); return; }
+    inner.style.transition = 'opacity .5s ease-out, transform .5s ease-out'; inner.style.opacity = '0'; inner.style.transform = 'scale(.97)';
+    g.style.transition = 'background-color .9s ease-in-out, opacity .7s ease-out .9s';
+    g.style.backgroundImage = 'none'; g.style.backgroundColor = '#000000';
+    setTimeout(function(){ g.style.opacity = '0'; }, 50);
+    setTimeout(function(){ g.remove(); }, 1700);
+  }
 })();
 </script>
 
