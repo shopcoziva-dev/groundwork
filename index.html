@@ -287,8 +287,9 @@ document.addEventListener('click', function(e){ var a = e.target.closest && e.ta
     document.getElementById('reqHave').href = k === 'Solo' ? 'solo/' : 'beta/'; openLayer(req); document.getElementById('reqClose').focus(); }); });
   document.getElementById('reqClose').onclick = closeLayer;
   req.addEventListener('click', function(e){ if (e.target === req) closeLayer(); });
-  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) e.target.classList.add('in'); }); }, { threshold: 0.2 }) : null;
-  document.querySelectorAll('.reveal').forEach(function(el){ io ? io.observe(el) : el.classList.add('in'); });
+  // a screen's text appears only once that screen has scrolled up into the top 45% of the view, so the next screen's heading never peeks in
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) e.target.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); }); }); }, { rootMargin: '0px 0px -55% 0px', threshold: 0 }) : null;
+  document.querySelectorAll('.screen').forEach(function(sc){ io ? io.observe(sc) : sc.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); }); });
 })();
 </script>
 </body>

@@ -219,11 +219,11 @@ td.n,th.n{text-align:right}
 #sgate h1.solo{font-size:clamp(132px,36vw,300px);line-height:.78;letter-spacing:-.01em;margin:0 0 6px}
 #sgate h1.solo .dot{color:var(--amber)}
 #sgate .hero .lede{font-size:clamp(28px,5.4vw,40px)}
-#sgate .note2{scroll-margin-top:24px;max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:12px;text-align:center;padding:24px 0 8px}
+#sgate .note2{scroll-margin-top:0;max-width:640px;margin:0 auto;display:flex;flex-direction:column;justify-content:center;gap:12px;text-align:center;padding:24px 0 96px;min-height:100vh;min-height:100svh;box-sizing:border-box;position:relative}
 #sgate .note2 p{margin:0;font-size:14.5px;line-height:1.75;color:var(--chalk)}
 #sgate .note2 .big1{font-family:var(--hand);font-size:clamp(34px,6vw,48px);line-height:1.05;font-weight:700}
 #sgate .note2 .from{font-family:var(--hand);font-size:32px;color:var(--amber)}
-#sgate .why{scroll-margin-top:24px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#sgate .why{scroll-margin-top:32px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 @media (max-width:760px){#sgate .why{grid-template-columns:minmax(0,1fr)}}
 #sgate .why div{border-top:1px solid var(--chalk-faint);padding-top:12px;display:flex;flex-direction:column;gap:6px}
 #sgate .why .k{font-size:11px;letter-spacing:.16em;color:var(--amber)}
@@ -294,6 +294,7 @@ td.n,th.n{text-align:right}
     <p>So we automated it. Niche, store, products, prices, copy, photos and the campaign, in one fast pipeline. You approve, it builds. Once it's running, it takes an hour or two of your week.</p>
     <p>If you know the game and want the fastest path to a live campaign, this is what you need.</p>
     <span class="from">— GTS Holdings</span>
+    <button class="down" id="sgDown2" type="button" aria-label="See what Solo does"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
    </div>
    <div class="why" id="sgWhy">
     <div><span class="k">01</span><b>Your Claude Max does the work</b><span>Every decision: the niche check, the reference store, pricing, copy, photos and a 50-product catalog.</span></div>
@@ -394,6 +395,9 @@ function gwGranted(product, theme, onCovered){
   $('sgPrice').textContent = SOLO_PRICE;
   var INIT = true, CUR = 'sg1';
   document.querySelector('#sgate .hx').addEventListener('click', function(e){ if (e.target.closest('a,button')) return; document.getElementById('sgNote').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  function toWhy(){ document.getElementById('sgWhy').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  document.getElementById('sgDown2').onclick = toWhy;
+  document.getElementById('sgNote').addEventListener('click', function(e){ if (e.target.closest('a,button')) return; toWhy(); });
   document.getElementById('sgDown').onclick = function(){ document.getElementById('sgNote').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
   function show0(id){ ['sg0', 'sg1', 'sg3', 'sg4'].forEach(function(x){ $(x).hidden = x !== id; }); g.scrollTop = 0; }
   function show(id){ show0(id); if (!INIT && id !== CUR){ try { history.pushState({ sg: id }, ''); } catch (e) {} } CUR = id; }

@@ -237,7 +237,8 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
 .bdown svg{width:34px;height:34px;animation:bbob 2s ease-in-out 2s infinite}
 .bdown:focus-visible{outline:2px solid var(--amber);outline-offset:4px;border-radius:50%}
 @keyframes bbob{0%,100%{transform:none}50%{transform:translateY(7px)}}
-.bnote{scroll-margin-top:24px;max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:12px;text-align:center;padding:24px 0 8px}
+.bnote{scroll-margin-top:0;max-width:640px;margin:0 auto;display:flex;flex-direction:column;justify-content:center;gap:12px;text-align:center;padding:24px 0 96px;min-height:100vh;min-height:100svh;box-sizing:border-box;position:relative}
+.bwhy{scroll-margin-top:32px}
 .bnote p{margin:0;font-size:14.5px;line-height:1.75}
 .bnote .big1{font-size:clamp(34px,6vw,48px);line-height:1.05;font-weight:700}
 .bnote .from{font-size:32px;color:var(--amber)}
@@ -270,6 +271,7 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
   .ctab td.note{grid-column:1 / -1;margin-top:2px}
   .ctab tr.tot{border-top:2px solid var(--amber);border-bottom:0;padding-top:10px}
 }
+.gate button.bdown,.gate button.bdown:hover{background:none;border:0;box-shadow:none;min-height:0;height:52px;padding:0;color:var(--chalk)}
 </style>
 </head>
 <body>
@@ -328,8 +330,9 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
       <p>This is the system we run our own stores on, taught step by step. Every step opens with a lesson. Then you do the work with real numbers, and the system checks it before you move on.</p>
       <p>You walk away with a live store and a skill set you keep. The next store, you build without us.</p>
       <span class="hand from">— GTS Holdings</span>
+      <button class="bdown" id="bDown2" type="button" aria-label="See what Beta gives you"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
-    <div class="bwhy">
+    <div class="bwhy" id="bWhy">
       <div><span class="k">01</span><b class="hand">A lesson at every step</b><span>The why before the how, on the chalkboard, with real examples.</span></div>
       <div><span class="k">02</span><b class="hand">Real checks, real numbers</b><span>The niche verdict, the pricing formula and the launch ladder check your work.</span></div>
       <div><span class="k">03</span><b class="hand">Your accounts, your store</b><span>It runs on your own accounts. The store and the skills are yours.</span></div>
@@ -1915,6 +1918,9 @@ function doneView(c){
 }
 function startFlow(){
   document.querySelector('.bhero').addEventListener('click', function(e){ if (e.target.closest('a,button')) return; $('bNote').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  function bToWhy(){ $('bWhy').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  $('bDown2').onclick = bToWhy;
+  $('bNote').addEventListener('click', function(e){ if (e.target.closest('a,button')) return; bToWhy(); });
   $('bDown').onclick = function(){ $('bNote').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
   $('startBtn').onclick = function(){ gshow(lsGet('gwb.contract') ? 'gp4' : 'gp2'); };   // already signed: the welcome-back screen
   $('codeBtn').onclick = function(){ gshow('gpCode'); $('gateCode').focus(); };
