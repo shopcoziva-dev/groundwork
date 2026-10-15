@@ -33,6 +33,21 @@ svg.u path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s ease-in-out 
 .big{margin:0;font-family:var(--hand);font-weight:700;font-size:clamp(56px,13vw,150px);line-height:.95}
 .big span{display:block}
 .big .b{color:var(--amber)}
+.stage{position:relative;width:min(760px,100%);min-height:clamp(220px,40vh,360px);display:grid;place-items:center}
+.stage>*{grid-area:1/1}
+#motto span{clip-path:inset(-0.3em 100% -0.3em 0)}
+.stage.write #motto .w1{animation:write 1.2s ease-out forwards}
+.stage.write #motto .w2{animation:write 1.2s ease-out 1.1s forwards}
+.stage.wipe #motto span{clip-path:inset(-0.3em -10% -0.3em -5%);animation:wipe 1s ease-in forwards}
+.stage.wipe #motto .w2{animation-delay:.15s}
+@keyframes wipe{0%{clip-path:inset(-0.3em -10% -0.3em -5%);filter:blur(0);opacity:1}100%{clip-path:inset(-0.3em -10% -0.3em 100%);filter:blur(6px);opacity:.2}}
+.blurb{margin:0;max-width:34ch;font-family:var(--hand);font-size:clamp(26px,4.6vw,40px);line-height:1.2;color:var(--chalk);opacity:0;transform:translateY(12px);transition:opacity .9s ease-out,transform .9s ease-out;pointer-events:none}
+.blurb b{color:var(--amber);font-weight:700}
+.stage.done .blurb{opacity:1;transform:none;pointer-events:auto}
+.stage.done #motto{visibility:hidden}
+#s2 .down{opacity:0;animation:none;transition:opacity .6s}
+#s2.ready .down{opacity:1}
+@media (prefers-reduced-motion:reduce){#motto{display:none}.blurb{opacity:1;transform:none}#s2 .down{opacity:1}}
 /* 3 */
 h2{margin:0;font-family:var(--hand);font-weight:700;font-size:clamp(48px,9vw,90px);line-height:1}
 .rail{width:100%;max-width:980px;display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 8% 18px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -80,7 +95,10 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
   </section>
 
   <section class="screen" id="s2" aria-label="Niche in. Store out.">
-    <p class="big chalk reveal"><span>Niche in.</span><span class="b">Store out.</span></p>
+    <div class="stage" id="stage">
+      <p class="big chalk" id="motto" aria-label="Niche in. Store out."><span class="w1">Niche in.</span><span class="b w2">Store out.</span></p>
+      <p class="blurb" id="blurb">A step-by-step system for building a real e-commerce store that sells through Google ads: the niche, the look, the copy, the photos, the prices, the catalog and the launch. <b>Every number is real.</b> Every step has to pass before the next one opens.</p>
+    </div>
     <a class="down" href="#s3" aria-label="Next" style="animation-delay:.2s"><svg aria-hidden="true"><use href="#chev"/></svg></a>
   </section>
 
@@ -130,6 +148,16 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
     cards.forEach(function(card, i){ var d = Math.abs(card.offsetLeft + card.offsetWidth / 2 - c); if (d < bd){ bd = d; best = i; } });
     dots.forEach(function(d, i){ d.classList.toggle('on', i === best); }); }, { passive: true });
   rail.addEventListener('keydown', function(e){ if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(0); });
+  // screen 2: write "Niche in. Store out.", wipe it, then the blurb
+  var stage = document.getElementById('stage'), s2 = document.getElementById('s2'), played = false;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function play(){ if (played) return; played = true;
+    if (reduce){ stage.classList.add('done'); s2.classList.add('ready'); return; }
+    stage.classList.add('write');
+    setTimeout(function(){ stage.classList.remove('write'); stage.classList.add('wipe'); }, 3300);
+    setTimeout(function(){ stage.classList.add('done'); }, 4500);
+    setTimeout(function(){ s2.classList.add('ready'); }, 5200); }
+  if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) play(); }); }, { threshold: 0.6 }).observe(s2); else play();
   var io = 'IntersectionObserver' in window ? new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) e.target.classList.add('in'); }); }, { threshold: 0.2 }) : null;
   document.querySelectorAll('.reveal').forEach(function(el){ io ? io.observe(el) : el.classList.add('in'); });
 })();
