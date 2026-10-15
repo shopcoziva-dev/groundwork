@@ -282,7 +282,7 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
       <button type="button" class="plan" role="radio" aria-checked="false" data-plan="partner">
         <span class="pt">Beta partner</span>
         <span class="pp chalk">$0 now</span>
-        <span class="pd"><b>10% of your profit</b>, monthly, for 24 months or until <b>$5,000</b> total, whichever comes first.</span>
+        <span class="pd"><b>10% of your profit</b>, paid monthly, for as long as your store sells. Buy out any time.</span>
         <ul><li>Same Beta, nothing held back</li><li>Pay nothing if your store makes no profit</li><li>Read-only access to your Shopify and Google Ads reports, so the number is never a guess</li></ul>
       </button>
     </div>
@@ -1761,7 +1761,7 @@ gate();
 // ===================================================================== Start with Beta: plan, agreement, signature
 var AG_V = 'beta-0.1 (draft)';
 var PLAN = null, AG_READ = false;
-var PLANS = { once: { name: 'Pay once', price: '$2,499.99 one time' }, partner: { name: 'Beta partner', price: '$0 upfront, 10% of monthly profit (24 months or $5,000, whichever first)' } };
+var PLANS = { once: { name: 'Pay once', price: '$2,499.99 one time' }, partner: { name: 'Beta partner', price: '$0 upfront, 10% of monthly profit' } };
 function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 function gshow(id){ ['gp1', 'gpCode', 'gp2', 'gp3', 'gp4'].forEach(function(x){ $(x).hidden = x !== id; }); $('gate').scrollTop = 0; var h = $(id).querySelector('h1,h2,button,input'); if (h && h.tagName !== 'H1' && h.tagName !== 'H2') h.focus({ preventScroll: true }); }
 
@@ -1776,13 +1776,13 @@ function agreementHTML(plan){
     '<p>You open and own every account the store needs (GitHub, Shopify, CJdropshipping, Google, Claude, your image AI) and pay those companies directly. Your keys stay in your own accounts; we never ask for them. You own your store, its brand, its products and its customers.</p>',
     '<h3>3 · Your plan and fees</h3>',
     P(once, '<p><b>A. Pay once.</b> $2,499.99, paid before access opens. [Refund: in full within 7 days if you have not finished step 1; none after.] No share of your store, ever.</p>'),
-    P(!once, '<p><b>B. Beta partner.</b> No upfront fee. Instead you pay <b>10% of Monthly Profit</b> for <b>24 months</b> from your store\'s first sale, or until your payments total <b>$5,000</b>, whichever comes first.</p>' +
+    P(!once, '<p><b>B. Beta partner.</b> No upfront fee. Instead you pay <b>10% of Monthly Profit</b> for every month your store makes a sale, starting with its first sale.</p>' +
       '<ul><li><b>Monthly Profit</b> = Shopify sales for the month (before tax) − refunds issued that month − what your supplier charged for those orders (product + shipping) − Google Ads cost for the month.</li>' +
       '<li>A month at zero or below: you owe nothing, and the loss does not carry over.</li>' +
       '<li>You report and pay by the 15th of the next month [payment method to be set].</li>' +
-      '<li>For the term you give GTS <b>read-only</b> access to your Shopify reports and Google Ads account, used only to check the number.</li>' +
+      '<li>While the share runs you give GTS <b>read-only</b> access to your Shopify reports and Google Ads account, used only to check the number.</li>' +
       '<li>You can buy out at any time by paying $2,499.99 minus what you have already paid.</li>' +
-      '<li>It applies to every store you build with Groundwork during the term. [If you sell a store during the term, the rest of the $5,000 cap is due at closing.]</li></ul>'),
+      '<li>It applies to every store you build with Groundwork. [If you sell a store, what happens to the share at closing is to be set.]</li></ul>'),
     '<h3>4 · No earnings promise</h3>',
     '<p>Groundwork teaches a method and runs checks. It does <b>not</b> guarantee sales, profit, ad or product approval, or any result. Numbers and examples you see are illustrations, not typical results. Many new stores lose money in their first months. You can lose your ad spend and setup costs. You decide what to spend and when ads run.</p>',
     '<h3>5 · Your responsibilities</h3>',
@@ -1795,7 +1795,7 @@ function agreementHTML(plan){
     '<h3>8 · Feedback</h3>',
     '<p>You will tell us what breaks or confuses you. We may use your feedback to improve Groundwork without owing you anything for it.</p>',
     '<h3>9 · Ending it</h3>',
-    '<p>You can stop using Groundwork at any time. Fees already earned stay due' + (once ? '; refunds follow section 3.' : '; the profit share stops when you stop selling, the cap is reached, or the 24 months end.') + ' We may end your access if you break sections 5, 6 or 7.</p>',
+    '<p>You can stop using Groundwork at any time. Fees already earned stay due' + (once ? '; refunds follow section 3.' : '; the profit share stops when your store stops selling or you buy out.') + ' We may end your access if you break sections 5, 6 or 7.</p>',
     '<h3>10 · Warranty and liability</h3>',
     '<p>Groundwork is provided as is, without warranties. Our total liability is limited to what you paid us in the 12 months before a claim, and neither side is liable for indirect or lost-profit damages.</p>',
     '<h3>11 · The rest</h3>',
