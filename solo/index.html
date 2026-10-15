@@ -152,6 +152,31 @@ td.n,th.n{text-align:right}
 </style>
 </head>
 <body>
+<div id="soloGate" role="dialog" aria-modal="true" aria-labelledby="sgT" style="position:fixed;inset:0;z-index:99;display:flex;align-items:center;justify-content:center;padding:16px;background-color:#0B2340;background-image:linear-gradient(rgba(111,211,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(111,211,255,.08) 1px,transparent 1px),linear-gradient(rgba(111,211,255,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(111,211,255,.15) 1px,transparent 1px);background-size:32px 32px,32px 32px,160px 160px,160px 160px;color:#F3F1E7;font-family:'IBM Plex Mono',ui-monospace,monospace">
+ <div style="width:min(520px,100%);display:flex;flex-direction:column;gap:14px">
+  <span style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#7BE0A6">Groundwork · Solo · Private</span>
+  <h1 id="sgT" style="margin:0;font-family:Caveat,cursive;font-weight:700;font-size:clamp(56px,13vw,96px);line-height:.95">Locked.</h1>
+  <p style="margin:0;font-family:Caveat,cursive;font-size:28px;line-height:1.2">Solo is private. Type your access code.</p>
+  <form id="sgF" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center" autocomplete="off">
+   <label for="sgC" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Access code</label>
+   <input id="sgC" type="password" placeholder="XXXX-XXXX" maxlength="12" autocapitalize="characters" spellcheck="false" style="flex:1 1 220px;min-width:0;height:52px;background:transparent;border:none;border-bottom:2px dashed rgba(243,241,231,.6);color:#F3F1E7;font-family:inherit;font-size:24px;letter-spacing:.18em">
+   <button type="submit" style="min-height:46px;padding:0 20px;border-radius:5px;border:2px solid #F3F1E7;background:#F3F1E7;color:#0B2340;font-family:inherit;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer">Unlock</button>
+  </form>
+  <div id="sgM" role="status" style="font-size:12.5px;color:rgba(243,241,231,.7)"></div>
+  <a href="../" style="font-size:12px;color:#6FD3FF">← Groundwork</a>
+ </div>
+</div>
+<script>
+(function(){
+  var H = '7d094aff9885dfadaac99ac8ce69f9f91809ffb8', g = document.getElementById('soloGate');
+  try { if (localStorage.getItem('gw.solo') === H) { g.remove(); return; } } catch (e) {}
+  document.getElementById('sgC').focus();
+  function hash(code){ return crypto.subtle.importKey('raw', new TextEncoder().encode(code), 'PBKDF2', false, ['deriveBits']).then(function(k){ return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: new TextEncoder().encode('groundwork-solo'), iterations: 150000, hash: 'SHA-256' }, k, 256); })
+    .then(function(b){ return Array.prototype.map.call(new Uint8Array(b), function(x){ return ('0' + x.toString(16)).slice(-2); }).join('').slice(0, 40); }); }
+  document.getElementById('sgF').onsubmit = function(e){ e.preventDefault(); var c = document.getElementById('sgC').value.toUpperCase().replace(/[^A-Z0-9]/g, ''); var m = document.getElementById('sgM'); m.textContent = 'Checking…';
+    hash(c).then(function(h){ if (h === H){ try { localStorage.setItem('gw.solo', H); } catch (e2) {} g.remove(); } else m.textContent = 'That code did not work.'; }); };
+})();
+</script>
 
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="chalk"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6"/></filter></defs></svg>
