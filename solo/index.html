@@ -255,6 +255,10 @@ td.n,th.n{text-align:right}
   .ctab td.note{grid-column:1 / -1;margin-top:2px}
   .ctab tr.tot{border-top:2px solid var(--amber);border-bottom:0;padding-top:10px}
 }
+#sgate .plan.off,#sgate .plan:disabled{opacity:.42;cursor:not-allowed;filter:grayscale(1);position:relative}
+#sgate .plan.off:hover{border-color:inherit}
+#sgate .plan .na{align-self:flex-start;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;border:1px solid currentColor;border-radius:3px;padding:3px 8px}
+#sgate .plan.off .pp{text-decoration:line-through;text-decoration-thickness:2px}
 </style>
 <div id="sgate" role="dialog" aria-modal="true" aria-labelledby="sgT">
  <div class="in">
@@ -301,7 +305,8 @@ td.n,th.n{text-align:right}
    <div class="pick">
     <span class="eb">Step 1 of 3 · pick your price</span>
     <div class="plans" role="radiogroup" aria-label="Plan">
-     <button type="button" class="plan" role="radio" aria-checked="false" data-plan="once">
+     <button type="button" class="plan off" role="radio" aria-checked="false" aria-disabled="true" data-plan="once" disabled>
+      <span class="na">Not available at the moment</span>
       <span class="pt">Pay once</span><span class="pp chalk" id="sgPrice"></span>
       <span class="pd">One payment. You keep <b>100%</b> of your profit.</span>
       <ul><li>Full Solo: all 11 steps on your Claude Max</li><li>Your engine copy and its updates</li><li>No share of your store, ever</li></ul>
@@ -469,7 +474,7 @@ function gwGranted(product, theme, onCovered){
   window.__gwGateNext = function(){
     if (g.style.display === 'none' || !document.body.contains(g)) return false;
     if (CUR === 'sg0'){ show('sg1'); return true; }
-    if (CUR === 'sg1'){ if (!PLAN) g.querySelector('.plan[data-plan="once"]').click(); $('sgPlanNext').click(); return true; }
+    if (CUR === 'sg1'){ if (!PLAN) g.querySelector('.plan[data-plan="partner"]').click(); $('sgPlanNext').click(); return true; }
     if (CUR === 'sg3'){ READ = true; ['sa1', 'sa2', 'sa3'].forEach(function(id){ $(id).checked = true; }); if (!$('sgName').value) $('sgName').value = 'Test Tester'; if (!$('sgEmail').value) $('sgEmail').value = 'test@example.com'; ready(); $('sgSign').click(); return true; }
     if (CUR === 'sg4'){ $('sgEnter').click(); return true; }
     return false; };

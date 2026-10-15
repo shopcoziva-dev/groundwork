@@ -337,7 +337,8 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
     <div class="bstats"><div><b class="hand">11</b><span>steps, each taught</span></div><div><b class="hand">50</b><span>products priced</span></div><div><b class="hand">you</b><span>drive it</span></div></div>
     <span class="label" id="bPick">Step 1 of 3 · pick your price</span>
     <div class="plans" role="radiogroup" aria-label="Plan">
-      <button type="button" class="plan" role="radio" aria-checked="false" data-plan="once">
+      <button type="button" class="plan off" role="radio" aria-checked="false" aria-disabled="true" data-plan="once" disabled>
+      <span class="na">Not available at the moment</span>
         <span class="pt">Pay once</span>
         <span class="pp chalk">$2,499.99</span>
         <span class="pd">One payment. You keep <b>100%</b> of your profit.</span>
@@ -1962,7 +1963,7 @@ function gwTestStrip(next){
 gwTestStrip(function(){
   if (!$('gate').hidden){
     if (GCUR === 'gp1' || GCUR === 'gpCode'){ gshow('gp2'); return; }
-    if (GCUR === 'gp2'){ if (!PLAN) document.querySelector('.plan[data-plan="once"]').click(); $('planNext').click(); return; }
+    if (GCUR === 'gp2'){ if (!PLAN) document.querySelector('.plan[data-plan="partner"]').click(); $('planNext').click(); return; }
     if (GCUR === 'gp3'){ AG_READ = true; ['ag1', 'ag2', 'ag3'].forEach(function(id){ $(id).checked = true; }); if (!$('sgName').value) $('sgName').value = 'Test Tester'; if (!$('sgEmail').value) $('sgEmail').value = 'test@example.com'; signReady(); $('signBtn').click(); return; }
     if (GCUR === 'gp4'){ $('enterBtn').click(); return; }
   }
