@@ -258,6 +258,18 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
 .bcosts summary{cursor:pointer;font-size:12.5px;color:var(--chalk-dim)}
 .bcosts[open] summary{margin-bottom:8px}
 .bcosts{scroll-margin-top:24px}
+.gate #gp1{width:min(720px,calc(100vw - 32px));align-self:center;min-height:calc(100svh - 64px);justify-content:center;gap:20px}
+.gate h1.cbig{font-size:clamp(64px,13vw,120px);line-height:.9}
+.ctab td{padding:10px 8px;font-size:13.5px}
+.ctab td:first-child{white-space:nowrap}
+.ctab tr.tot td.note{color:var(--amber);font-size:24px;line-height:1.1}
+@media (max-width:600px){
+  .ctab,.ctab tbody{display:block;width:100%}
+  .ctab tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;padding:8px 0;border-bottom:1px dashed rgba(236,234,226,.14)}
+  .ctab td{padding:0 2px !important;border:0 !important}
+  .ctab td.note{grid-column:1 / -1;margin-top:2px}
+  .ctab tr.tot{border-top:2px solid var(--amber);border-bottom:0;padding-top:10px}
+}
 </style>
 </head>
 <body>
@@ -269,23 +281,20 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
 
   <!-- 1 · welcome + costs -->
   <section class="gp" id="gp1">
-    <span class="label" id="gateEyebrow">Groundwork · beta</span>
-    <h1 class="chalk write" id="gateTitle">Build the store.</h1>
+    <span class="label" id="gateEyebrow">Groundwork Beta · what it runs on</span>
+    <h1 class="chalk write cbig" id="gateTitle">The running costs.</h1>
     <svg class="splashline chalk" viewBox="0 0 420 16" aria-hidden="true"><path pathLength="1" d="M4 10 C 70 2, 150 15, 220 8 S 350 4, 416 10" fill="none" stroke="var(--line)" stroke-width="4" stroke-linecap="round"/></svg>
-    <p class="hand lede">Every step taught, every check run on your own accounts. Niche in, store out.</p>
-    <div class="costs" id="costs" aria-labelledby="costsH">
-      <span class="label" id="costsH">Before you start · what your store costs you</span>
-      <table class="ct"><tbody>
-        <tr><td>Shopify</td><td class="n">$1/mo</td><td class="note">first 3 months, then their regular plan</td></tr>
-        <tr><td>Domain</td><td class="n">~$10/yr</td><td class="note">bought before launch</td></tr>
-        <tr><td>Claude</td><td class="n">$20/mo</td><td class="note">Pro works; Max is recommended</td></tr>
-        <tr><td>Photos (image AI)</td><td class="n">~$5–15</td><td class="note">for 50 products, on your own key</td></tr>
-        <tr><td>Google Ads</td><td class="n">your budget</td><td class="note">we start at $30/day, only when you turn it on</td></tr>
-        <tr class="tot"><td>Lowest to start</td><td class="n">~$36</td><td class="note">plus your ad budget and Groundwork itself (next)</td></tr>
-      </tbody></table>
-      <span class="note">You pay those companies directly. Groundwork's own price is the next screen.</span>
-    </div>
-    <button class="primary big" id="startBtn" type="button">Start with Beta →</button>
+    <p class="hand lede">Less than most courses cost, and at the end you own a real store.</p>
+    <table class="ct ctab"><tbody>
+      <tr><td>Shopify</td><td class="n">$1/mo</td><td class="note">first 3 months, then their regular plan</td></tr>
+      <tr><td>Domain</td><td class="n">~$10/yr</td><td class="note">bought before launch</td></tr>
+      <tr><td>Claude</td><td class="n">$20/mo</td><td class="note">Pro works; Max is recommended</td></tr>
+      <tr><td>Photos (image AI)</td><td class="n">~$5–15</td><td class="note">for 50 products, on your own key</td></tr>
+      <tr><td>Google Ads</td><td class="n">your budget</td><td class="note">we start at $30/day, only when you turn it on</td></tr>
+      <tr class="tot"><td>To start</td><td class="n">~$36</td><td class="note hand">A small price to learn the real thing.</td></tr>
+    </tbody></table>
+    <span class="note">You pay those companies directly. Beta's own price is next.</span>
+    <div class="row gl"><a href="../#paths">← Groundwork</a><button class="primary big" id="startBtn" type="button">Start with Beta →</button></div>
   </section>
 
   <!-- code (existing invites) -->
