@@ -375,6 +375,8 @@ function gwGranted(product, theme, onCovered){
   setTimeout(function(){ o.style.transition = 'opacity .8s ease-in'; o.style.opacity = '0'; setTimeout(function(){ o.remove(); }, 850); }, quick ? 900 : 2600);
 }
 (function(){
+  /* TEST MODE (GW_TEST_FRESH): every load is a first-time visit; remove before launch */
+  try { ['gws.contract', 'gw-solo-c'].forEach(function(k){ localStorage.removeItem(k); }); } catch (e) {}
   var SOLO_PRICE = '$3,999.99';   // the pay-once price
   var V = 'solo-0.1 (draft)', KEY = 'gws.contract';
   var g = document.getElementById('sgate'), $ = function(id){ return document.getElementById(id); };
@@ -386,6 +388,7 @@ function gwGranted(product, theme, onCovered){
   var PLANS = { once: { name: 'Pay once', price: SOLO_PRICE + ' one time' }, partner: { name: 'Solo partner', price: '$0 upfront, 10% of monthly profit' } };
   $('sgPrice').textContent = SOLO_PRICE;
   var INIT = true, CUR = 'sg1';
+  document.querySelector('#sgate .hx').addEventListener('click', function(e){ if (e.target.closest('a,button')) return; document.getElementById('sgNote').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
   document.getElementById('sgDown').onclick = function(){ document.getElementById('sgNote').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
   function show0(id){ ['sg0', 'sg1', 'sg3', 'sg4'].forEach(function(x){ $(x).hidden = x !== id; }); g.scrollTop = 0; }
   function show(id){ show0(id); if (!INIT && id !== CUR){ try { history.pushState({ sg: id }, ''); } catch (e) {} } CUR = id; }

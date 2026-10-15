@@ -274,6 +274,7 @@ button.big{height:52px;font-size:14px;letter-spacing:.12em}
 </head>
 <body>
 
+<script>/* TEST MODE (GW_TEST_FRESH): every load is a first-time visit; remove before launch */try{Object.keys(localStorage).forEach(function(k){if(k==='gwb.contract'||k==='gwb.unlock'||k.indexOf('gwb.s.')===0)localStorage.removeItem(k);});}catch(e){}</script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="chalk" x="-6%" y="-15%" width="112%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/></filter></defs></svg>
 
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
@@ -1912,6 +1913,7 @@ function doneView(c){
   b.appendChild(el('div', 'note', 'Preview: your signature is saved in this browser only, not sent anywhere yet.'));
 }
 function startFlow(){
+  document.querySelector('.bhero').addEventListener('click', function(e){ if (e.target.closest('a,button')) return; $('bNote').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
   $('bDown').onclick = function(){ $('bNote').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
   $('startBtn').onclick = function(){ gshow(lsGet('gwb.contract') ? 'gp4' : 'gp2'); };   // already signed: the welcome-back screen
   $('codeBtn').onclick = function(){ gshow('gpCode'); $('gateCode').focus(); };
