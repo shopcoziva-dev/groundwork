@@ -131,6 +131,8 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
 .reveal{opacity:0;transform:translateY(16px);transition:opacity .8s ease-out,transform .8s ease-out}
 .reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){h1,.presents,.down{animation:none;opacity:1;clip-path:none}.down svg{animation:none}svg.u path{animation:none;stroke-dashoffset:0}.reveal{opacity:1;transform:none;transition:none}main{scroll-behavior:auto}}
+.dcard video.vid{display:block;width:100%;aspect-ratio:16/9;height:auto;border-radius:6px;background:#000;object-fit:cover;padding:0;border:1px solid var(--faint)}
+.dcard .dlen{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
 </style>
 </head>
 <body>
@@ -209,8 +211,8 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
     <div class="dhead"><span class="label">See it run</span><button type="button" id="demosClose" class="x" aria-label="Close demos">✕</button></div>
     <h2 class="chalk" id="demosT">Demos</h2>
     <div class="dgrid">
-      <div class="card b dcard"><div class="ctop"><span class="label">Groundwork</span><span class="stamp">BETA</span></div><h3 class="chalk">Beta</h3><div class="vid">Demo coming soon</div></div>
-      <div class="card s dcard"><div class="ctop"><span class="label">Groundwork</span><span class="stamp">SOLO</span></div><h3 class="chalk">Solo</h3><div class="vid">Demo coming soon</div></div>
+      <div class="card b dcard"><div class="ctop"><span class="label">Groundwork</span><span class="stamp">BETA</span></div><h3 class="chalk">Beta</h3><video class="vid" controls playsinline preload="none" poster="demos/beta.jpg" aria-label="Groundwork Beta demo, 17 seconds"><source src="demos/beta.mp4" type="video/mp4"></video><span class="dlen">17 seconds · sound on</span></div>
+      <div class="card s dcard"><div class="ctop"><span class="label">Groundwork</span><span class="stamp">SOLO</span></div><h3 class="chalk">Solo</h3><video class="vid" controls playsinline preload="none" poster="demos/solo.jpg" aria-label="Groundwork Solo demo, 17 seconds"><source src="demos/solo.mp4" type="video/mp4"></video><span class="dlen">17 seconds · sound on</span></div>
     </div>
   </div>
 </div>
@@ -276,7 +278,8 @@ document.addEventListener('click', function(e){ var a = e.target.closest && e.ta
   var demos = document.getElementById('demos'), req = document.getElementById('req');
   function openLayer(el){ el.hidden = false; document.body.style.overflow = 'hidden'; history.pushState({ layer: el.id }, ''); }
   function closeLayer(){ if (history.state && history.state.layer) history.back(); else hideLayers(); }
-  function hideLayers(){ demos.hidden = true; req.hidden = true; document.body.style.overflow = ''; }
+  document.querySelectorAll('.dcard video').forEach(function(v){ v.addEventListener('play', function(){ document.querySelectorAll('.dcard video').forEach(function(o){ if (o !== v) o.pause(); }); }); });
+  function hideLayers(){ document.querySelectorAll('.dcard video').forEach(function(v){ v.pause(); }); demos.hidden = true; req.hidden = true; document.body.style.overflow = ''; }
   window.addEventListener('popstate', hideLayers);
   document.getElementById('demoBtn').onclick = function(){ openLayer(demos); document.getElementById('demosClose').focus(); };
   document.getElementById('demosClose').onclick = closeLayer;
