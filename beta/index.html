@@ -22,7 +22,7 @@
 html,body{min-height:100%}
 body{margin:0;background-color:var(--board);color:var(--chalk);font-family:var(--mono);font-size:14px;line-height:1.5;
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),linear-gradient(var(--grid-major) 1px,transparent 1px),linear-gradient(90deg,var(--grid-major) 1px,transparent 1px);
-  background-size:32px 32px,32px 32px,160px 160px,160px 160px}
+  background-size:32px 32px,32px 32px,160px 160px,160px 160px;background-position:50% 50%;background-attachment:fixed}
 a{color:var(--line)}a:hover{color:var(--chalk)}
 .wrap{max-width:1240px;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:24px}
 @media (max-width:640px){.wrap{padding:16px 16px 48px}}
@@ -168,7 +168,7 @@ td input[type=text],td input[type=number]{height:32px;font-size:13px;width:100%}
 .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-top:1.5px dashed var(--chalk-faint);padding-top:16px}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--chalk);color:var(--board);padding:10px 16px;border-radius:5px;font-size:13px;z-index:40;max-width:calc(100vw - 32px)}
 /* gate / splash */
-.gate{position:fixed;inset:0;z-index:30;display:flex;align-items:flex-start;justify-content:center;padding:16px;background-color:var(--board);background-image:inherit;background-size:inherit;overflow:auto}
+.gate{position:fixed;inset:0;z-index:30;display:flex;align-items:flex-start;justify-content:center;padding:16px;background-color:var(--board);background-image:inherit;background-size:inherit;background-position:50% 50%;overflow:auto}
 .gate .in{margin:auto 0;width:min(560px,100%);display:flex;flex-direction:column;gap:16px}
 .gate h1{font-family:var(--hand);font-size:clamp(56px,12vw,104px);line-height:.95;font-weight:700}
 .gate .code{font-size:26px;letter-spacing:.2em;text-transform:uppercase;height:52px}
@@ -204,7 +204,7 @@ td input[type=text],td input[type=number]{height:32px;font-size:13px;width:100%}
       <button class="primary" id="gateGo" type="submit">Enter</button>
     </form>
     <div class="note" id="gateMsg" role="status">Checking…</div>
-    <div class="row"><a href="../" style="font-size:12px">← Groundwork</a><button class="small quiet" id="gateAdmin" type="button">Admin</button></div>
+    <div class="row"><a href="../#paths" style="font-size:12px">← Groundwork</a><button class="small quiet" id="gateAdmin" type="button">Admin</button></div>
     <div class="costs" id="costs" aria-labelledby="costsH">
       <span class="label" id="costsH">Before you start · what it costs you</span>
       <table class="ct"><tbody>

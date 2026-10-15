@@ -15,14 +15,14 @@
 html,body{margin:0;height:100%}
 body{background-color:var(--board);color:var(--chalk);font-family:var(--mono);font-size:15px;line-height:1.6;
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),linear-gradient(var(--grid-major) 1px,transparent 1px),linear-gradient(90deg,var(--grid-major) 1px,transparent 1px);
-  background-size:32px 32px,32px 32px,160px 160px,160px 160px;background-attachment:fixed}
+  background-size:32px 32px,32px 32px,160px 160px,160px 160px;background-position:50% 50%;background-attachment:fixed}
 main{height:100svh;overflow-y:auto;scroll-snap-type:y mandatory;scroll-behavior:smooth}
 .screen{min-height:100svh;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px 16px;position:relative;text-align:center}
 .chalk{filter:url(#chalk)}
 .label{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--line)}
 /* 1 */
 .presents{font-size:13px;letter-spacing:.34em;text-transform:uppercase;color:var(--amber);opacity:0;animation:rise .8s ease-out .2s forwards}
-h1{margin:0;font-family:var(--hand);font-weight:700;font-size:clamp(64px,17vw,200px);line-height:.85;clip-path:inset(-0.2em 100% -0.2em 0);animation:write 1.6s ease-out .6s forwards}
+h1{margin:0;padding:0 .14em;font-family:var(--hand);font-weight:700;font-size:clamp(64px,17vw,200px);line-height:.85;clip-path:inset(-0.2em 100% -0.2em 0);animation:write 1.6s ease-out .6s forwards}
 svg.u{width:min(520px,80vw);height:22px}
 svg.u path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s ease-in-out 1.9s forwards}
 /* chevron */
@@ -53,10 +53,10 @@ h2{margin:0;font-family:var(--hand);font-weight:700;font-size:clamp(48px,9vw,90p
 .card:hover{border-color:var(--chalk);transform:translateY(-3px)}
 .card .stamp{position:absolute;top:20px;right:20px;font-size:11px;letter-spacing:.16em;padding:5px 10px;border:2px solid currentColor;border-radius:3px;transform:rotate(-3deg);display:flex;gap:6px;align-items:center}
 .card .stamp svg{width:12px;height:12px}
-.b .stamp{color:var(--amber)}.s .stamp{color:var(--pass)}
+.b .stamp{color:var(--amber)}.s .stamp{color:var(--chalk)}
 .card h3{margin:0;font-family:var(--hand);font-size:clamp(56px,12vw,80px);line-height:.9}
 .card .who{margin:0;align-self:flex-start;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1.5px solid currentColor}
-.b .who{color:var(--amber)}.s .who{color:var(--pass)}
+.b .who{color:var(--amber)}.s .who{color:var(--chalk)}
 .card .kind{font-family:var(--hand);font-size:clamp(26px,5vw,32px);line-height:1.1;margin:0}
 .card ul{margin:0;padding-left:18px;color:var(--dim);font-size:14px;display:flex;flex-direction:column;gap:4px}
 .card .nums{display:flex;gap:22px;border-top:1px dashed var(--faint);padding-top:12px}
@@ -141,10 +141,25 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
 </main>
 <script>
 // every reload starts at the opening screen
+// a reload starts at the opening screen; coming BACK from Beta or Solo lands on "Pick your speed"
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-if (location.hash) history.replaceState(null, '', location.pathname + location.search);
-window.addEventListener('load', function(){ var m = document.getElementById('main'); m.style.scrollBehavior = 'auto'; m.scrollTop = 0; window.scrollTo(0, 0); m.style.scrollBehavior = ''; });
-window.addEventListener('pageshow', function(e){ if (e.persisted) location.reload(); });
+function gwPlace(back){
+  var m = document.getElementById('main'); m.style.scrollBehavior = 'auto';
+  if (back){ var t = document.getElementById('s3'); m.scrollTop = t.offsetTop; t.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); }); }
+  else m.scrollTop = 0;
+  window.scrollTo(0, 0); setTimeout(function(){ m.style.scrollBehavior = ''; }, 50);
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+}
+function gwIsBack(){
+  if (location.hash === '#paths') return true;
+  var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
+  if (nav.type === 'reload') return false;
+  var from = ''; try { from = sessionStorage.getItem('gw.left') || ''; } catch (e) {}
+  return nav.type === 'back_forward' && !!from;
+}
+window.addEventListener('load', function(){ gwPlace(gwIsBack()); });
+window.addEventListener('pageshow', function(e){ if (e.persisted) gwPlace(true); });
+document.addEventListener('click', function(e){ var a = e.target.closest && e.target.closest('.card'); if (a){ try { sessionStorage.setItem('gw.left', '1'); } catch (err) {} } });
 (function(){
   var rail = document.getElementById('rail'), cards = rail.querySelectorAll('.card'), dots = document.querySelectorAll('.dots i');
   function go(i){ cards[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); }
