@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Draft store preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;600&family=Gloock&family=Jost:wght@400;600&family=Familjen+Grotesk:wght@500;700&family=Instrument+Sans:wght@400;600&display=swap">
+<style>
+:root{--ink:#1C1917;--bg:#FAF7F2;--sand:#F1EBE2;--acc:#C2410C;--mute:#57534E;--h:'Young Serif',Georgia,serif;--b:'Figtree',system-ui,sans-serif;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--b);font-size:16px;line-height:1.55}
+img{max-width:100%}
+.draft{position:sticky;top:0;z-index:5;background:#111;color:#eee;font:12px/1.4 ui-monospace,Menlo,monospace;padding:8px 16px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.draft nav{display:flex;gap:6px;flex-wrap:wrap}
+.draft a{color:#F2C66D;text-decoration:none;border:1px solid #444;border-radius:3px;padding:3px 8px}
+.ann{background:var(--ink);color:var(--bg);text-align:center;font-size:13px;padding:9px 16px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--sand);background:var(--bg)}
+.logo{font-family:var(--h);font-size:26px;letter-spacing:.01em}
+header nav{display:flex;gap:22px;font-size:14px}
+header nav span:last-child{color:var(--acc);font-weight:600}
+.icons{display:flex;gap:14px;font-size:13px;color:var(--mute)}
+@media (max-width:760px){header nav{display:none}header{padding:12px 16px}}
+.sec{padding:48px 24px;max-width:1200px;margin:0 auto}
+@media (max-width:600px){.sec{padding:36px 16px}}
+h1,h2,h3{font-family:var(--h);font-weight:400;margin:0;text-wrap:balance}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:0;background:var(--sand);min-height:420px}
+.hero .copy{padding:56px 40px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.hero h1{font-size:clamp(34px,5vw,58px);line-height:1.02}
+.hero .art{background:linear-gradient(160deg,var(--sand),#d9cbb6);position:relative}
+.hero .art::after{content:"Lifestyle photo (step 7)";position:absolute;left:16px;bottom:12px;font-size:12px;color:var(--mute)}
+.btn{display:inline-block;background:var(--acc);color:#fff;padding:14px 26px;border-radius:2px;font-weight:600;text-decoration:none;align-self:flex-start;min-height:48px}
+@media (max-width:760px){.hero{grid-template-columns:1fr}.hero .art{min-height:240px}.hero .copy{padding:36px 16px}}
+.quick{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:18px 16px;border-bottom:1px solid var(--sand)}
+.quick span{border:1px solid var(--sand);border-radius:999px;padding:8px 16px;font-size:14px;background:#fff}
+.row-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px;gap:12px}
+.row-head h2{font-size:30px}
+.row-head a{color:var(--ink);font-size:14px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+.pcard{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.pcard .ph{aspect-ratio:1;background:#EDE7DD;border-radius:2px;position:relative;overflow:hidden}
+.pcard .ph i{position:absolute;inset:30% 18% 22%;border-radius:40% 40% 18% 18%;background:linear-gradient(var(--sand),#d8ccbb)}
+
+.price{font-weight:600}.was{color:var(--mute);text-decoration:line-through;font-weight:400;margin-left:6px}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{aspect-ratio:4/5;background:linear-gradient(180deg,#e9dfd0,#cdbca4);border-radius:2px;display:flex;align-items:flex-end;padding:16px;font-family:var(--h);font-size:22px;color:var(--ink)}
+.trust{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;background:var(--sand);padding:28px 24px;font-size:14px;text-align:left}
+.trust b{display:block;font-size:15px}
+@media (max-width:760px){.trust{grid-template-columns:repeat(2,minmax(0,1fr));padding:24px 16px}}
+.feat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+@media (max-width:760px){.feat{grid-template-columns:1fr}}
+.feat div h3{font-size:21px;margin-bottom:6px}
+.news{background:var(--ink);color:var(--bg);text-align:left}
+.news .sec{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+.news input{padding:12px;border:0;min-width:240px;font-size:16px;flex:1}
+footer{background:var(--ink);color:#cfc8bd;font-size:14px}
+footer .sec{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;padding-top:28px;border-top:1px solid #333}
+@media (max-width:760px){footer .sec{grid-template-columns:repeat(2,minmax(0,1fr))}}
+footer b{color:#fff;display:block;margin-bottom:6px}
+.page{border-top:6px solid #111}
+.pdp{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:36px}
+@media (max-width:860px){.pdp{grid-template-columns:1fr}}
+.gal{display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px}
+.gal .thumbs{display:flex;flex-direction:column;gap:8px}.gal .thumbs i{aspect-ratio:1;background:#EDE7DD;display:block}
+.gal .main{aspect-ratio:1;background:#EDE7DD;position:relative}
+.gal .main::before{content:"";position:absolute;inset:34% 14% 20%;border-radius:40% 40% 18% 18%;background:linear-gradient(var(--sand),#d8ccbb)}
+
+.buy{display:flex;flex-direction:column;gap:14px}
+.buy h1{font-size:32px;line-height:1.1}
+.buy .price{font-size:28px}
+.opts{display:flex;gap:8px;flex-wrap:wrap}.opts span{border:1px solid var(--ink);padding:10px 16px;min-height:44px;font-size:14px}.opts span.on{background:var(--ink);color:var(--bg)}
+.atc{background:var(--acc);color:#fff;text-align:center;padding:16px;font-weight:600;min-height:52px}
+.tl{font-size:14px;color:var(--mute);display:flex;flex-direction:column;gap:4px}
+details{border-top:1px solid var(--sand);padding:12px 0}summary{cursor:pointer;font-weight:600}
+.coll{display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px}
+@media (max-width:760px){.coll{grid-template-columns:1fr}.filters{display:none}}
+.filters{font-size:14px;display:flex;flex-direction:column;gap:10px}
+.dummy{font:12px ui-monospace,Menlo,monospace;color:var(--acc)}
+</style>
+</head>
+<body>
+<div class="draft"><span>DRAFT PREVIEW · not on Shopify yet · products arrive in step 9</span><nav><a href="#home">Homepage</a><a href="#product">Product page</a><a href="#collection">Collection</a></nav></div>
+<div id="home">
+  <div class="ann">Free US shipping over $70 · Defective item? We replace or refund it</div>
+  <header><div class="logo" data-name>Store</div><nav data-nav><span>Shop all</span></nav><div class="icons"><span>Search</span><span>Account</span><span>Cart (0)</span></div></header>
+  <section class="hero" data-code="h"><div class="copy"><h1 data-hero-h>Shop the range</h1><p data-hero-p>Free US shipping over $70.</p><a class="btn" href="#collection">Shop now</a></div><div class="art" role="img" aria-label="Lamp lifestyle image placeholder"></div></section>
+  <div class="quick" data-code="q" data-quick></div>
+  <div class="sec" data-code="p"><div class="row-head"><h2>Top picks</h2><a href="#collection">Shop all</a></div><div class="cards" data-cards="4"></div></div>
+  <div class="sec" data-code="t"><div class="row-head"><h2>Shop by type</h2></div><div class="tiles" data-tiles></div></div>
+  <div class="trust" data-code="s"><div><b>Free shipping</b>On US orders over $70</div><div><b>7-12 day delivery</b>Tracked to your door</div><div><b>Defective? Covered</b>Replacement or refund</div><div><b>Secure checkout</b>Shop Pay, Apple Pay, cards</div></div>
+  <div class="sec" data-code="x"><div class="row-head"><h2 data-feat-h>How we pick what we sell</h2></div><div class="feat" data-feat></div></div>
+  <div class="sec" data-code="g"><div class="row-head"><h2>New arrivals</h2><a href="#collection">Shop all</a></div><div class="cards" data-cards="4"></div></div>
+  <div class="news" data-code="n"><div class="sec"><h2>New lamps, first.</h2><input type="email" placeholder="Email address" aria-label="Email address"></div></div>
+  <footer><div class="sec"><div><b>Shop</b>Floor lamps<br>Table lamps<br>Desk lamps</div><div><b>Help</b>Contact<br>FAQ<br>Shipping<br>Returns<br>Track order</div><div><b>About</b>Our story<br>Privacy<br>Terms</div><div><b><span data-name>Store</span></b>hello@<span data-domain>store</span>.com<br>© 2026</div></div></footer>
+</div>
+<div id="product" class="page">
+  <div class="sec pdp">
+    <div class="gal"><div class="thumbs"><i></i><i></i><i></i><i></i><i></i></div><div class="main" role="img" aria-label="Product image placeholder"></div></div>
+    <div class="buy"><span class="dummy">DUMMY PRODUCT · deleted before launch</span><h1 data-pdp-t>Product</h1><div><span class="price" data-pdp-p>$0</span><span class="was" data-pdp-w>$0</span></div>
+      <div class="opts"><span class="on">Small</span><span>Medium</span><span>Large</span></div>
+      <div class="atc">Add to cart</div>
+      <div class="tl"><span>Free US shipping over $70</span><span>Delivered in 7-12 business days</span><span>Defective item? Replacement or refund</span></div>
+      <details open><summary>Details</summary><p data-pdp-d>Written from the supplier spec sheet in step 8.</p></details>
+      <details><summary>Size and power</summary><p>From the supplier spec sheet in live mode.</p></details>
+      <details><summary>Shipping and returns</summary><p>Free over $70. 7-12 business days. Defective items replaced or refunded.</p></details>
+    </div>
+  </div>
+  <div class="sec"><div class="row-head"><h2>You may also like</h2></div><div class="cards" data-cards="4"></div></div>
+</div>
+<div id="collection" class="page">
+  <div class="sec"><div class="row-head"><h2 data-coll-h>All products</h2><span style="font-size:14px">Sort: Featured</span></div>
+    <div class="coll"><div class="filters"><b>Filter</b><span>Price</span><span>Colour</span><span>Size</span><span>Type</span></div><div class="cards" data-cards="8"></div></div></div>
+</div>
+<script>
+(function(){
+  var h = (location.hash || '').replace('#', '');
+  var re = /n-([A-Za-z0-9]+)-p(\d)-f(\d)-c([0-9a-fA-F]{30})/, m = re.exec(h);
+  if (!m){ try { m = re.exec(sessionStorage.getItem('gw-prev') || ''); } catch (e) {} }
+  var FONTS = [["'Young Serif',Georgia,serif", "'Figtree',system-ui,sans-serif"], ["'Gloock',Georgia,serif", "'Jost',system-ui,sans-serif"], ["'Familjen Grotesk',system-ui,sans-serif", "'Instrument Sans',system-ui,sans-serif"]];
+  var name = 'Store';
+  if (m){
+    name = m[1]; var f = FONTS[+m[3]] || FONTS[0]; var c = m[4].match(/.{6}/g).map(function(x){ return '#' + x; });
+    var r = document.documentElement.style; r.setProperty('--ink', c[0]); r.setProperty('--bg', c[1]); r.setProperty('--sand', c[2]); r.setProperty('--acc', c[3]); r.setProperty('--mute', c[4]); r.setProperty('--h', f[0]); r.setProperty('--b', f[1]);
+    try { sessionStorage.setItem('gw-prev', h); } catch (e) {}
+  }
+  document.querySelectorAll('[data-name]').forEach(function(e){ e.textContent = name; });
+  document.querySelectorAll('[data-domain]').forEach(function(e){ e.textContent = name.toLowerCase(); });
+  var so = /-s([a-z]+)/.exec(h); var order = so ? so[1] : '';
+  try { if (!order) order = (/-s([a-z]+)/.exec(sessionStorage.getItem('gw-prev') || '') || [])[1] || ''; } catch (e) {}
+  if (order){ var home = document.getElementById('home'), foot = home.querySelector('footer'); var used = {};
+    order.split('').forEach(function(c){ var el = home.querySelector('[data-code="' + c + '"]:not([data-used])'); if (el){ el.setAttribute('data-used', '1'); home.insertBefore(el, foot); used[c] = 1; } });
+    home.querySelectorAll('[data-code]:not([data-used])').forEach(function(el){ el.remove(); }); }
+  var P = [];
+  function fill(D){
+  var it = (D.shelf && D.shelf.items) || []; P = it.map(function(x){ return [x.name, x.price, x.type]; });
+  var types = (D.gate && D.gate.types) || [];
+  var nav = document.querySelector('[data-nav]'); if (nav && types.length){ nav.innerHTML = ''; types.concat(['Sale']).forEach(function(t, i){ var sp = document.createElement('span'); sp.textContent = t; nav.appendChild(sp); }); }
+  var q = document.querySelector('[data-quick]'); if (q) types.concat(['Under $100']).forEach(function(t){ var sp = document.createElement('span'); sp.textContent = t; q.appendChild(sp); });
+  var tl = document.querySelector('[data-tiles]'); if (tl) types.forEach(function(t){ var d = document.createElement('div'); d.className = 'tile'; d.textContent = t; tl.appendChild(d); });
+  var hh = document.querySelector('[data-hero-h]'); if (hh && D.hero) hh.textContent = D.hero;
+  var hp = document.querySelector('[data-hero-p]'); if (hp && D.tagline) hp.textContent = D.tagline;
+  var fh = document.querySelector('[data-feat]'); if (fh) (D.features || []).forEach(function(f){ var d = document.createElement('div'); var h3 = document.createElement('h3'); h3.textContent = f[0]; var pp = document.createElement('p'); pp.textContent = f[1]; d.appendChild(h3); d.appendChild(pp); fh.appendChild(d); });
+  var ch = document.querySelector('[data-coll-h]'); if (ch && D.gate) ch.textContent = D.gate.niche;
+  if (it[0]){ document.querySelector('[data-pdp-t]').textContent = (D.copy && D.copy.title_example) || it[0].name; document.querySelector('[data-pdp-p]').textContent = '$' + it[0].price.toFixed(2); document.querySelector('[data-pdp-w]').textContent = '$' + (it[0].price + 30).toFixed(2); }
+  document.querySelectorAll('[data-cards]').forEach(function(box){
+    var n = +box.getAttribute('data-cards'); if (!P.length) return;
+    for (var i = 0; i < n; i++){ var p = P[i % P.length]; var d = document.createElement('div'); d.className = 'pcard';
+      d.innerHTML = '<div class="ph"><i></i></div><span></span><span class="price"></span>'; d.children[1].textContent = p[0];
+      d.children[2].textContent = '$' + p[1].toFixed(2); var was = document.createElement('span'); was.className = 'was'; was.textContent = '$' + (p[1] + 30).toFixed(2); d.children[2].appendChild(was); box.appendChild(d); }
+  });
+  }
+  fetch('demo.json').then(function(r){ return r.json(); }).then(fill).catch(function(){ fill({}); });
+})();
+</script>
+</body>
+</html>
