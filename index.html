@@ -56,7 +56,7 @@ h2{margin:0;font-family:var(--hand);font-weight:700;font-size:clamp(48px,9vw,90p
 .b .stamp{color:var(--amber)}.s .stamp{color:var(--red)}
 .card h3{margin:0;font-family:var(--hand);font-size:clamp(56px,12vw,80px);line-height:.9}
 .card .who{margin:0;align-self:flex-start;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1.5px solid currentColor}
-.b .who{color:var(--amber)}.s .who{color:var(--red);background:rgba(255,77,64,.12)}
+.b .who{color:var(--amber)}.s .who{color:var(--red)}
 .card .kind{font-family:var(--hand);font-size:clamp(26px,5vw,32px);line-height:1.1;margin:0}
 .card ul{margin:0;padding-left:18px;color:var(--dim);font-size:14px;display:flex;flex-direction:column;gap:4px}
 .card .nums{display:flex;gap:22px;border-top:1px dashed var(--faint);padding-top:12px}
@@ -72,24 +72,11 @@ h2{margin:0;font-family:var(--hand);font-weight:700;font-size:clamp(48px,9vw,90p
 .hint{font-size:12px;color:var(--dim);letter-spacing:.08em}
 footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);font-size:11.5px;color:var(--dim);letter-spacing:.08em}
 
-/* Solo: the hardcore card. Black like Solo, red, a slow pulse and a scanner line */
-.card.s{background:#000;border-color:rgba(255,77,64,.7);overflow:hidden;animation:pulse 2.6s ease-in-out infinite}
+/* Solo: same card as Beta, red accents only */
+.card.s{border-color:rgba(255,77,64,.55)}
 .card.s:hover{border-color:var(--red)}
-.card.s::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),transparent);animation:scan 3.2s linear infinite;opacity:.9}
-.card.s::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)}
-.card.s h3{color:#fff;text-shadow:0 0 18px rgba(255,77,64,.45);letter-spacing:.01em}
-.card.s .label{color:var(--red)}
-.card.s .nums{border-top-color:rgba(255,77,64,.35)}
 .card.s .nums b{color:var(--red)}
-.card.s ul{color:rgba(236,234,226,.75)}
-.card.s .go{background:var(--red);border-color:var(--red);color:#000;font-weight:600}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 rgba(255,77,64,0)}50%{box-shadow:0 0 34px rgba(255,77,64,.35)}}
-@keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(560px)}}
-/* Beta: the friendly card. Softer corners, a gentle float */
-.card.b{border-radius:16px;border-style:dashed;animation:float 5s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-.card.b:hover{transform:translateY(-4px)}
-@media (prefers-reduced-motion:reduce){.card.s,.card.b,.card.s::before{animation:none}}
+.card.s .go{border-color:var(--red);color:var(--red)}
 @keyframes write{to{clip-path:inset(-0.3em -10% -0.3em -5%)}}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes rise{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
@@ -143,13 +130,13 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
         <span class="label">Groundwork</span>
         <h3 class="chalk">Solo</h3>
         <p class="who">For people who already know the game</p>
-        <p class="kind chalk">You know e-commerce and want the fastest path. The machine builds it, you approve.</p>
+        <p class="kind chalk">Know e-commerce? Niche to live campaign in under an hour.</p>
         <ul>
           <li>Real supplier, ad and cost data pulled for you</li>
           <li>Site, copy, photos and 50 priced products built for you</li>
           <li>Recommend → set → verify → approve</li>
         </ul>
-        <div class="nums"><div><b>11</b><span>steps</span></div><div><b>~1h</b><span>your time</span></div></div>
+        <div class="nums"><div><b>&lt;1h</b><span>niche to campaign</span></div><div><b>11</b><span>steps, you approve</span></div></div>
         <span class="go">Unlock →</span>
       </a>
     </div>
