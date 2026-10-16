@@ -58,6 +58,8 @@ svg.u path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s ease-in-out 
 .stage.done #motto{opacity:0;transform:translateY(-10px)}
 .blurb{margin:0;max-width:34ch;font-family:var(--hand);font-size:clamp(26px,4.6vw,40px);line-height:1.22;color:var(--chalk);opacity:0;transform:translateY(10px);transition:opacity .8s ease .55s,transform .8s ease .55s}
 .blurb b{color:var(--amber);font-weight:700}
+.blurb .bh{display:block}
+.blurb .bt{display:block;margin:18px auto 0;max-width:44ch;font-family:var(--mono);font-size:clamp(14px,1.6vw,17px);line-height:1.7;color:var(--dim);letter-spacing:.01em}
 .stage.done .blurb{opacity:1;transform:none}
 #s2 .down{opacity:1;animation:none}
 @media (prefers-reduced-motion:reduce){#motto{display:none}.blurb{opacity:1;transform:none;transition:none}#s2 .down{opacity:1}}
@@ -165,7 +167,7 @@ footer{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);fon
   <section class="screen" id="s2" aria-label="Niche in. Store out.">
     <div class="stage" id="stage">
       <p class="big chalk" id="motto" aria-label="Niche in. Store out."><span class="w1">Niche in.</span><span class="b w2">Store out.</span></p>
-      <p class="blurb" id="blurb"><b>The most efficient path from an idea to a store that's built to sell.</b><br><br>Pick a niche. Groundwork builds the store, prices the products and sets up the ads, checking the math at every step.</p>
+      <p class="blurb" id="blurb"><b class="bh">The most efficient path from an idea to a live ad campaign.</b><span class="bt">Find a niche. Make the calls. Groundwork engineers the rest: the store, the products, the prices and the ads. Built on numbers, not guesses.</span></p>
     </div>
     <a class="down" href="#sd" aria-label="Next" style="animation-delay:.2s"><svg aria-hidden="true"><use href="#chev"/></svg></a>
   </section>
